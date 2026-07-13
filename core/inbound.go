@@ -174,13 +174,14 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerCon
 			return nil, fmt.Errorf("marshal reality dest error: %s", err)
 		}
 		in.StreamSetting.REALITYSettings = &coreConf.REALITYConfig{
-			Dest:        d,
-			Xver:        xver,
-			Show:        false,
-			ServerNames: serverNames,
-			PrivateKey:  v.TlsSettings.PrivateKey,
-			ShortIds:    shortIds,
-			Mldsa65Seed: v.TlsSettings.Mldsa65Seed,
+			Dest:         d,
+			Xver:         xver,
+			Show:         false,
+			ServerNames:  serverNames,
+			PrivateKey:   v.TlsSettings.PrivateKey,
+			MinClientVer: "0.0.1",
+			ShortIds:     shortIds,
+			Mldsa65Seed:  v.TlsSettings.Mldsa65Seed,
 		}
 	default:
 		break
