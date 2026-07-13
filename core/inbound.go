@@ -95,6 +95,17 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerCon
 			}
 		}
 	}
+	// Set socket settings for trusted X-Forwarded-For headers
+	if len(nodeInfo.Common.TrustedXForwardedFor) > 0 {
+		if in.StreamSetting == nil {
+			return nil, errors.New("stream settings must be configured to set trusted X-Forwarded-For headers")
+		}
+		if in.StreamSetting.SocketSettings == nil {
+			in.StreamSetting.SocketSettings = &coreConf.SocketConfig{}
+		}
+		in.StreamSetting.SocketSettings.TrustedXForwardedFor = nodeInfo.Common.TrustedXForwardedFor
+	}
+
 	// Set server port
 	in.PortList = &coreConf.PortList{
 		Range: []coreConf.PortRange{
