@@ -62,6 +62,10 @@ type CommonNode struct {
 	Obfs                    string `json:"obfs"`
 	ObfsPassword            string `json:"obfs_password"`
 	Ignore_Client_Bandwidth bool   `json:"ignore_client_bandwidth"`
+	//mieru
+	Transport    string `json:"transport"`
+	Mtu          int32  `json:"mtu"`
+	Multiplexing string `json:"multiplexing"`
 }
 
 type Route struct {
@@ -162,7 +166,7 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 	case "vmess", "trojan", "hysteria2", "tuic", "anytls", "vless":
 		node.Type = cm.Protocol
 		node.Security = cm.Tls
-	case "shadowsocks":
+	case "shadowsocks", "mieru":
 		node.Type = cm.Protocol
 		node.Security = 0
 	default:
