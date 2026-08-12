@@ -7,16 +7,17 @@ import (
 	"strings"
 	"time"
 
-	panel "github.com/wyx2685/v2node/api/v2board"
-	"github.com/wyx2685/v2node/common/counter"
-	"github.com/wyx2685/v2node/common/format"
-	"github.com/wyx2685/v2node/core/app/dispatcher"
+	panel "github.com/wyusgw/v2node/api/v2board"
+	"github.com/wyusgw/v2node/common/counter"
+	"github.com/wyusgw/v2node/common/format"
+	"github.com/wyusgw/v2node/core/app/dispatcher"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/serial"
 	"github.com/xtls/xray-core/infra/conf"
 	"github.com/xtls/xray-core/proxy"
 	"github.com/xtls/xray-core/proxy/anytls"
 	hyaccount "github.com/xtls/xray-core/proxy/hysteria/account"
+	"github.com/xtls/xray-core/proxy/mieru"
 	"github.com/xtls/xray-core/proxy/shadowsocks"
 	"github.com/xtls/xray-core/proxy/shadowsocks_2022"
 	"github.com/xtls/xray-core/proxy/trojan"
@@ -131,6 +132,8 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 		users = buildTuicUsers(p.Tag, p.Users)
 	case "anytls":
 		users = buildAnyTLSUsers(p.Tag, p.Users)
+	case "mieru":
+		users = buildMieruUsers(p.Tag, p.Users)
 	default:
 		return 0, fmt.Errorf("unsupported node type: %s", p.NodeInfo.Type)
 	}
@@ -320,5 +323,28 @@ func buildAnyTLSUser(tag string, userInfo *panel.UserInfo) (user *protocol.User)
 		Level:   0,
 		Email:   format.UserTag(tag, userInfo.Uuid),
 		Account: serial.ToTypedMessage(anyTLSAccount),
+	}
+}
+
+func buildMieruUsers(tag string, userInfo []panel.UserInfo) (users []*protocol.User) {
+	users = make([]*protocol.User, len(userInfo))
+	for i := range userInfo {
+		users[i] = buildMieruUser(tag, &userInfo[i])
+	}
+	return users
+}
+
+// buildMieruUser maps a panel user onto a mieru account. mieru keys on a user
+// name as well as a password, and the panel has only the one credential, so the
+// UUID fills both — the same way buildTuicUser handles TUIC's uuid/password pair.
+func buildMieruUser(tag string, userInfo *panel.UserInfo) (user *protocol.User) {
+	mieruAccount := &mieru.Account{
+		Username: userInfo.Uuid,
+		Password: userInfo.Uuid,
+	}
+	return &protocol.User{
+		Level:   0,
+		Email:   format.UserTag(tag, userInfo.Uuid),
+		Account: serial.ToTypedMessage(mieruAccount),
 	}
 }

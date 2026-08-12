@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/wyx2685/v2node/conf"
+	"github.com/wyusgw/v2node/conf"
 )
 
 // Panel is the interface for different panel's api.

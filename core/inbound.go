@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	panel "github.com/wyx2685/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/v2board"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/features/inbound"
@@ -66,6 +66,8 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerCon
 		err = buildTuic(nodeInfo, in)
 	case "anytls":
 		err = buildAnyTLS(nodeInfo, in)
+	case "mieru":
+		err = buildMieru(nodeInfo, in)
 	default:
 		return nil, fmt.Errorf("unsupported node type: %s", nodeInfo.Type)
 	}
@@ -528,6 +530,28 @@ func buildAnyTLS(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig
 	inbound.Settings = (*json.RawMessage)(&sets)
 	if err != nil {
 		return fmt.Errorf("marshal anytls settings error: %s", err)
+	}
+	return nil
+}
+
+// buildMieru builds the mieru inbound. mieru carries traffic over its own
+// obfuscated transport and binds its own sockets, so it needs no TLS and no
+// Xray stream settings beyond the transport marker — the "mieru" network is
+// what routes the listener to transport/internet/mieru.
+func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
+	inbound.Protocol = "mieru"
+	s := nodeInfo.Common
+	settings := &coreConf.MieruServerConfig{
+		Transport:    s.Transport,
+		Mtu:          s.Mtu,
+		Multiplexing: s.Multiplexing,
+	}
+	t := coreConf.TransportProtocol("mieru")
+	inbound.StreamSetting = &coreConf.StreamConfig{Network: &t}
+	sets, err := json.Marshal(settings)
+	inbound.Settings = (*json.RawMessage)(&sets)
+	if err != nil {
+		return fmt.Errorf("marshal mieru settings error: %s", err)
 	}
 	return nil
 }
