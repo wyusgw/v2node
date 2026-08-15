@@ -23,8 +23,12 @@ type LogConfig struct {
 }
 
 type NodeConfig struct {
-	APIHost    string `mapstructure:"ApiHost"`
-	NodeID     int    `mapstructure:"NodeID"`
+	APIHost string `mapstructure:"ApiHost"`
+	NodeID  int    `mapstructure:"NodeID"`
+	// NodeType is the protocol this node serves. The panel keeps one server
+	// table per protocol, so node ids are not unique across them and every
+	// request has to say which table to look NodeID up in. Required.
+	NodeType   string `mapstructure:"NodeType"`
 	Key        string `mapstructure:"ApiKey"`
 	Timeout    int    `mapstructure:"Timeout"`
 	RetryCount *int   `mapstructure:"RetryCount"`

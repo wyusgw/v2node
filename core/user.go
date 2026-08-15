@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
 	"github.com/wyusgw/v2node/common/counter"
 	"github.com/wyusgw/v2node/common/format"
@@ -23,6 +24,7 @@ import (
 	"github.com/xtls/xray-core/proxy/trojan"
 	"github.com/xtls/xray-core/proxy/tuic"
 	"github.com/xtls/xray-core/proxy/vless"
+	"github.com/xtls/xray-core/proxy/wireguard"
 )
 
 func (v *V2Core) GetUserManager(tag string) (proxy.UserManager, error) {
@@ -134,6 +136,11 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 		users = buildAnyTLSUsers(p.Tag, p.Users)
 	case "mieru":
 		users = buildMieruUsers(p.Tag, p.Users)
+	case "wireguard":
+		users, err = buildWireGuardUsers(p.Tag, p.Users, p.Common)
+		if err != nil {
+			return 0, err
+		}
 	default:
 		return 0, fmt.Errorf("unsupported node type: %s", p.NodeInfo.Type)
 	}
@@ -347,4 +354,56 @@ func buildMieruUser(tag string, userInfo *panel.UserInfo) (user *protocol.User) 
 		Email:   format.UserTag(tag, userInfo.Uuid),
 		Account: serial.ToTypedMessage(mieruAccount),
 	}
+}
+
+func buildWireGuardUsers(tag string, userInfo []panel.UserInfo, common *panel.CommonNode) ([]*protocol.User, error) {
+	networks, err := wireGuardNetworks(common)
+	if err != nil {
+		return nil, err
+	}
+	// One key for the whole node, but WireGuard carries it per peer.
+	preSharedKey, err := wireGuardPreSharedKey(common.PreSharedKey)
+	if err != nil {
+		return nil, err
+	}
+	users := make([]*protocol.User, 0, len(userInfo))
+	for i := range userInfo {
+		user, err := buildWireGuardUser(tag, &userInfo[i], networks, preSharedKey)
+		if err != nil {
+			// A single user the address pool has no room for is not worth
+			// taking the node down for: the rest keep working, and the log
+			// says which pool to widen.
+			log.WithFields(log.Fields{
+				"tag": tag,
+				"id":  userInfo[i].Id,
+				"err": err,
+			}).Error("Build wireguard peer failed")
+			continue
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
+
+// buildWireGuardUser maps a panel user onto a wireguard peer. There is no
+// credential to pass along: the peer is identified by the public key derived
+// from its uuid, and reached at the tunnel address derived from its id.
+func buildWireGuardUser(tag string, userInfo *panel.UserInfo, networks []wgNetwork, preSharedKey string) (*protocol.User, error) {
+	publicKey, err := wireGuardPublicKey(userInfo.Uuid)
+	if err != nil {
+		return nil, err
+	}
+	allowedIPs, err := wireGuardPeerIPs(networks, userInfo.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &protocol.User{
+		Level: 0,
+		Email: format.UserTag(tag, userInfo.Uuid),
+		Account: serial.ToTypedMessage(&wireguard.PeerConfig{
+			PublicKey:    publicKey,
+			PreSharedKey: preSharedKey,
+			AllowedIps:   allowedIPs,
+		}),
+	}, nil
 }

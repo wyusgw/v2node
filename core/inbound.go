@@ -68,6 +68,8 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerCon
 		err = buildAnyTLS(nodeInfo, in)
 	case "mieru":
 		err = buildMieru(nodeInfo, in)
+	case "wireguard":
+		err = buildWireGuard(nodeInfo, in)
 	default:
 		return nil, fmt.Errorf("unsupported node type: %s", nodeInfo.Type)
 	}
@@ -553,5 +555,54 @@ func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig)
 	if err != nil {
 		return fmt.Errorf("marshal mieru settings error: %s", err)
 	}
+	return nil
+}
+
+// buildWireGuard builds the wireguard inbound. WireGuard binds its own UDP
+// socket and brings its own crypto, so it needs neither TLS nor stream
+// settings; the peers are left empty here and added one by one as users, keyed
+// by the public key derived from each uuid (see wireguard.go).
+func buildWireGuard(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
+	inbound.Protocol = "wireguard"
+	s := nodeInfo.Common
+	// No private key from the panel means it keeps none for this node: derive
+	// the same one it derived when it published this node's public key.
+	secretKey := wireGuardSecretKey(s)
+	if secretKey == "" {
+		secretKey = wireGuardNodeSecretKey(nodeInfo.Token, nodeInfo.Id)
+	}
+	if s.PublicKey != "" {
+		if err := checkWireGuardKeyPair(secretKey, s.PublicKey); err != nil {
+			return err
+		}
+	}
+	networks, err := wireGuardNetworks(s)
+	if err != nil {
+		return err
+	}
+	addresses := make([]string, len(networks))
+	for i := range networks {
+		addresses[i] = networks[i].server.String()
+	}
+	reserved, err := wireGuardReserved(s.Reserved)
+	if err != nil {
+		return err
+	}
+	// Checked here rather than per peer: a bad key would otherwise take down
+	// every user's handshake with only a line in the log to show for it.
+	if _, err := wireGuardPreSharedKey(s.PreSharedKey); err != nil {
+		return err
+	}
+	settings := &coreConf.WireGuardConfig{
+		SecretKey: secretKey,
+		Address:   addresses,
+		MTU:       s.Mtu,
+		Reserved:  reserved,
+	}
+	sets, err := json.Marshal(settings)
+	if err != nil {
+		return fmt.Errorf("marshal wireguard settings error: %s", err)
+	}
+	inbound.Settings = (*json.RawMessage)(&sets)
 	return nil
 }

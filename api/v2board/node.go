@@ -28,7 +28,11 @@ type NodeInfo struct {
 	PushInterval time.Duration
 	PullInterval time.Duration
 	Tag          string
-	Common       *CommonNode
+	// Token is the panel's server token. WireGuard derives the node's own key
+	// pair from it when the panel hands out no private key (see
+	// core/wireguard.go), so it has to reach the inbound builder.
+	Token  string
+	Common *CommonNode
 }
 
 type CommonNode struct {
@@ -66,6 +70,29 @@ type CommonNode struct {
 	Transport    string `json:"transport"`
 	Mtu          int32  `json:"mtu"`
 	Multiplexing string `json:"multiplexing"`
+	//wireguard
+	SecretKey string `json:"secret_key"`
+	// PrivateKey is an alias of SecretKey, for panels that use WireGuard's own
+	// wording. SecretKey wins when both are sent. Empty means the panel keeps
+	// no key for this node and both sides derive it from token + node id.
+	PrivateKey string `json:"private_key"`
+	// PublicKey is the node's own public key as the panel knows it. It is what
+	// the panel writes into every subscription, so the key the node ends up
+	// running has to match it; buildWireGuard checks that and refuses to start
+	// on a mismatch rather than fail every handshake silently.
+	PublicKey string `json:"public_key"`
+	// PreSharedKey is an optional extra secret mixed into every handshake. The
+	// panel puts it in each user's subscription, so a node that ignores one the
+	// panel set would reject every client it has.
+	PreSharedKey string `json:"pre_shared_key"`
+	// Reserved is WireGuard's 3-byte reserved field, sent as [0,0,0] or null.
+	// Ints rather than []byte: encoding/json reads []byte from a base64
+	// string, not from a JSON array, and would fail the whole config parse.
+	Reserved []int `json:"reserved"`
+	// Address holds the node's own tunnel address(es); their prefixes are the
+	// pool every peer address is allocated from. Kept raw so that a panel
+	// sending a bare string instead of a list cannot break the whole config.
+	Address json.RawMessage `json:"address"`
 }
 
 type Route struct {
@@ -119,7 +146,7 @@ type EncSettings struct {
 }
 
 func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
-	const path = "/api/v2/server/config"
+	const path = "/api/v1/server/UniProxy/config"
 	r, err := c.client.
 		R().
 		SetContext(ctx).
@@ -154,7 +181,8 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 		return nil, fmt.Errorf("received nil response")
 	}
 	node = &NodeInfo{
-		Id: c.NodeId,
+		Id:    c.NodeId,
+		Token: c.Token,
 	}
 	// parse protocol params
 	cm := &CommonNode{}
@@ -162,24 +190,27 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("decode node params error: %s", err)
 	}
-	switch cm.Protocol {
+	// The protocol comes from the local config, not from the response: this
+	// panel splits its servers into one table per protocol and sends no
+	// "protocol" field, since node_type already told it which table to read.
+	switch c.NodeType {
 	case "vmess", "trojan", "hysteria2", "tuic", "anytls", "vless":
-		node.Type = cm.Protocol
+		node.Type = c.NodeType
 		node.Security = cm.Tls
-	case "shadowsocks", "mieru":
-		node.Type = cm.Protocol
+	case "shadowsocks", "mieru", "wireguard":
+		node.Type = c.NodeType
 		node.Security = 0
 	default:
-		return nil, fmt.Errorf("unsupport protocol: %s", cm.Protocol)
+		return nil, fmt.Errorf("unsupport protocol: %s", c.NodeType)
 	}
 	node.Tag = fmt.Sprintf("[%s]-%s:%d", c.APIHost, node.Type, node.Id)
 	cf := cm.TlsSettings.CertFile
 	kf := cm.TlsSettings.KeyFile
 	if cf == "" {
-		cf = filepath.Join("/etc/v2node/", cm.Protocol+strconv.Itoa(c.NodeId)+".cer")
+		cf = filepath.Join("/etc/v2node/", node.Type+strconv.Itoa(c.NodeId)+".cer")
 	}
 	if kf == "" {
-		kf = filepath.Join("/etc/v2node/", cm.Protocol+strconv.Itoa(c.NodeId)+".key")
+		kf = filepath.Join("/etc/v2node/", node.Type+strconv.Itoa(c.NodeId)+".key")
 	}
 	cm.CertInfo = &CertInfo{
 		CertMode:         cm.TlsSettings.CertMode,
