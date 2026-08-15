@@ -54,7 +54,7 @@ import (
 	_ "github.com/xtls/xray-core/proxy/vmess/inbound"
 	_ "github.com/xtls/xray-core/proxy/vmess/outbound"
 
-	//_ "github.com/xtls/xray-core/proxy/wireguard"
+	_ "github.com/xtls/xray-core/proxy/wireguard"
 
 	// Transports
 	_ "github.com/xtls/xray-core/transport/internet/grpc"
