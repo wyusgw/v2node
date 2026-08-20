@@ -96,6 +96,8 @@ type TlsSettings struct {
 	CertMode         string   `json:"cert_mode"`
 	CertFile         string   `json:"cert_file"`
 	KeyFile          string   `json:"key_file"`
+	TlsCert          string   `json:"tls_cert"`
+	TlsKey           string   `json:"tls_key"`
 	Provider         string   `json:"provider"`
 	DNSEnv           string   `json:"dns_env"`
 	RejectUnknownSni string   `json:"reject_unknown_sni"`
@@ -105,6 +107,8 @@ type CertInfo struct {
 	CertMode         string
 	CertFile         string
 	KeyFile          string
+	TlsCert          string
+	TlsKey           string
 	Email            string
 	CertDomain       string
 	DNSEnv           map[string]string
@@ -215,7 +219,10 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 			}
 		}
 	}
-
+	if cm.CertInfo.CertMode == "remote" {
+		cm.CertInfo.TlsCert = cm.TlsSettings.TlsCert
+		cm.CertInfo.TlsKey = cm.TlsSettings.TlsKey
+	}
 	// set interval
 	node.PushInterval = intervalToTime(cm.BaseConfig.PushInterval)
 	node.PullInterval = intervalToTime(cm.BaseConfig.PullInterval)
