@@ -106,6 +106,13 @@ jobs:
         with:
           go-version: '1.26.1'
 
+      - name: Configure access to private module
+        env:
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config --global url."https://${PRIVATE_REPO_TOKEN}@github.com/".insteadOf "https://github.com/"
+          echo "GOPRIVATE=github.com/wyusgw/xray-core" >> $GITHUB_ENV
+
       - name: Get project dependencies
         run: |
           go mod download
