@@ -40,7 +40,6 @@ var nodeTypes = map[string]bool{
 	"tuic":        true,
 	"anytls":      true,
 	"mieru":       true,
-	"wireguard":   true,
 }
 
 // normalizeNodeType rejects a missing or unknown NodeType up front. The panel
