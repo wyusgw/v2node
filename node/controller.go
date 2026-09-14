@@ -75,19 +75,26 @@ func (c *Controller) Start(x *core.V2Core) error {
 		}
 	}
 	// Add new tag
-	err = c.server.AddNode(c.tag, node)
+	err = c.server.AddNode(c.tag, node, c.userList)
 	if err != nil {
 		return fmt.Errorf("add new node error: %s", err)
 	}
-	added, err := c.server.AddUsers(&core.AddUsersParams{
-		Tag:      c.tag,
-		Users:    c.userList,
-		NodeInfo: node,
-	})
-	if err != nil {
-		return fmt.Errorf("add users error: %s", err)
+	// mieru's listener refuses to start with zero users, so AddNode already
+	// baked c.userList into its config at construction time; adding them
+	// again here would just fail as duplicates.
+	if node.Type != "mieru" {
+		added, err := c.server.AddUsers(&core.AddUsersParams{
+			Tag:      c.tag,
+			Users:    c.userList,
+			NodeInfo: node,
+		})
+		if err != nil {
+			return fmt.Errorf("add users error: %s", err)
+		}
+		log.WithField("tag", c.tag).Infof("Added %d new users", added)
+	} else {
+		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
-	log.WithField("tag", c.tag).Infof("Added %d new users", added)
 	c.info = node
 	c.startTasks(node)
 	return nil

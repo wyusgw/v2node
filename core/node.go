@@ -6,8 +6,8 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-func (v *V2Core) AddNode(tag string, info *panel.NodeInfo) error {
-	inBoundConfig, err := buildInbound(info, tag)
+func (v *V2Core) AddNode(tag string, info *panel.NodeInfo, users []panel.UserInfo) error {
+	inBoundConfig, err := buildInbound(info, tag, users)
 	if err != nil {
 		return fmt.Errorf("build inbound error: %s", err)
 	}
