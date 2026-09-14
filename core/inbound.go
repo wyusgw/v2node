@@ -13,6 +13,7 @@ import (
 	"time"
 
 	panel "github.com/wyusgw/v2node/api/v2board"
+	"github.com/wyusgw/v2node/common/format"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/core"
 	"github.com/xtls/xray-core/features/inbound"
@@ -48,7 +49,7 @@ func (v *V2Core) addInbound(config *core.InboundHandlerConfig) error {
 }
 
 // BuildInbound build Inbound config for different protocol
-func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerConfig, error) {
+func buildInbound(nodeInfo *panel.NodeInfo, tag string, users []panel.UserInfo) (*core.InboundHandlerConfig, error) {
 	in := &coreConf.InboundDetourConfig{}
 	var err error
 	switch nodeInfo.Type {
@@ -67,7 +68,7 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string) (*core.InboundHandlerCon
 	case "anytls":
 		err = buildAnyTLS(nodeInfo, in)
 	case "mieru":
-		err = buildMieru(nodeInfo, in)
+		err = buildMieru(nodeInfo, in, tag, users)
 	default:
 		return nil, fmt.Errorf("unsupported node type: %s", nodeInfo.Type)
 	}
@@ -538,13 +539,20 @@ func buildAnyTLS(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig
 // obfuscated transport and binds its own sockets, so it needs no TLS and no
 // Xray stream settings beyond the transport marker — the "mieru" network is
 // what routes the listener to transport/internet/mieru.
-func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
+//
+// Unlike Xray's own inbounds, mieru's underlying listener (mieru's Mux)
+// refuses to start at all when it has zero users — AddUser added afterwards
+// is too late, since the listener has already failed. So the fetched user
+// list is baked into the config here, at construction time, rather than left
+// for the post-AddNode AddUsers() call the other protocols rely on.
+func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig, tag string, users []panel.UserInfo) error {
 	inbound.Protocol = "mieru"
 	s := nodeInfo.Common
 	settings := &coreConf.MieruServerConfig{
 		Transport:    s.Transport,
 		Mtu:          s.Mtu,
 		Multiplexing: s.Multiplexing,
+		Users:        buildMieruConfigUsers(tag, users),
 	}
 	t := coreConf.TransportProtocol("mieru")
 	inbound.StreamSetting = &coreConf.StreamConfig{Network: &t}
@@ -554,4 +562,19 @@ func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig)
 		return fmt.Errorf("marshal mieru settings error: %s", err)
 	}
 	return nil
+}
+
+// buildMieruConfigUsers maps panel users onto mieru's config-level user list,
+// the same UUID-as-both-credentials convention buildMieruUser uses for the
+// AddUser path.
+func buildMieruConfigUsers(tag string, userInfo []panel.UserInfo) []*coreConf.MieruUserConfig {
+	users := make([]*coreConf.MieruUserConfig, len(userInfo))
+	for i := range userInfo {
+		users[i] = &coreConf.MieruUserConfig{
+			Username: userInfo[i].Uuid,
+			Password: userInfo[i].Uuid,
+			Email:    format.UserTag(tag, userInfo[i].Uuid),
+		}
+	}
+	return users
 }
