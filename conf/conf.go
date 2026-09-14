@@ -25,9 +25,11 @@ type LogConfig struct {
 type NodeConfig struct {
 	APIHost string `mapstructure:"ApiHost"`
 	NodeID  int    `mapstructure:"NodeID"`
-	// NodeType is the protocol this node serves. The panel keeps one server
-	// table per protocol, so node ids are not unique across them and every
-	// request has to say which table to look NodeID up in. Required.
+	// NodeType is optional. Leave it empty (or set it to "v2node") to let the
+	// panel's unified v2node table tell the node which protocol to run via
+	// the config API's "protocol" field. Set it to a specific protocol name
+	// (vmess/vless/trojan/shadowsocks/hysteria2/tuic/anytls/mieru) instead to
+	// pin this node to that protocol's own table, bypassing the v2node table.
 	NodeType   string `mapstructure:"NodeType"`
 	Key        string `mapstructure:"ApiKey"`
 	Timeout    int    `mapstructure:"Timeout"`
