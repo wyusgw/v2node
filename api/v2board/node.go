@@ -119,7 +119,14 @@ type EncSettings struct {
 }
 
 func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
-	const path = "/api/v1/server/UniProxy/config"
+	// A pinned NodeType reads its own protocol-specific table through the
+	// legacy UniProxy endpoint, which never sends a "protocol" field back
+	// since node_type already told it which table to use. The default
+	// "v2node" instead reads the panel's unified table, which does send one.
+	path := "/api/v1/server/UniProxy/config"
+	if c.NodeType == "v2node" {
+		path = "/api/v2/server/config"
+	}
 	r, err := c.client.
 		R().
 		SetContext(ctx).
@@ -162,18 +169,22 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("decode node params error: %s", err)
 	}
-	// The protocol comes from the local config, not from the response: this
-	// panel splits its servers into one table per protocol and sends no
-	// "protocol" field, since node_type already told it which table to read.
-	switch c.NodeType {
+	// Under "v2node", the protocol comes from the response's "protocol"
+	// field. Under a pinned NodeType, the endpoint above never sends one, so
+	// the protocol is whatever node_type already told the panel to use.
+	protocol := cm.Protocol
+	if c.NodeType != "v2node" {
+		protocol = c.NodeType
+	}
+	switch protocol {
 	case "vmess", "trojan", "hysteria2", "tuic", "anytls", "vless":
-		node.Type = c.NodeType
+		node.Type = protocol
 		node.Security = cm.Tls
 	case "shadowsocks", "mieru":
-		node.Type = c.NodeType
+		node.Type = protocol
 		node.Security = 0
 	default:
-		return nil, fmt.Errorf("unsupport protocol: %s", c.NodeType)
+		return nil, fmt.Errorf("unsupport protocol: %s", protocol)
 	}
 	node.Tag = fmt.Sprintf("[%s]-%s:%d", c.APIHost, node.Type, node.Id)
 	cf := cm.TlsSettings.CertFile
