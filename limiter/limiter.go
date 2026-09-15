@@ -182,7 +182,14 @@ func (l *Limiter) CheckLimit(taguuid string, ip string, noUDPsource bool) (Dynam
 						l.OldUserOnline.Delete(ip)
 					}
 				} else if deviceLimit > 0 {
-					if deviceLimit <= aliveIp {
+					// aliveIp only refreshes once per node.PullInterval from the
+					// panel, so several new devices connecting to this node within
+					// the same window would all be checked against the same stale
+					// value and all get admitted. Fold in how many this node has
+					// already admitted so far this cycle (oldipMap, minus the entry
+					// just stored above for ip itself) so the gate still tightens
+					// as devices arrive, instead of waiting for the next sync.
+					if deviceLimit <= max(aliveIp, mapLen(oldipMap)-1) {
 						oldipMap.Delete(ip)
 						return nil, true
 					}
@@ -214,6 +221,15 @@ func (l *Limiter) CheckLimit(taguuid string, ip string, noUDPsource bool) (Dynam
 	} else {
 		return nil, false
 	}
+}
+
+func mapLen(m *sync.Map) int {
+	n := 0
+	m.Range(func(_, _ interface{}) bool {
+		n++
+		return true
+	})
+	return n
 }
 
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {
