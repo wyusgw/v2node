@@ -159,7 +159,7 @@ func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire ti
 	return nil
 }
 
-func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string, noUDPsource bool) (DynamicBucket *rate.DynamicBucket, Reject bool) {
+func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (DynamicBucket *rate.DynamicBucket, Reject bool) {
 	// check if ipv4 mapped ipv6
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
@@ -186,28 +186,30 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string, noU
 	} else {
 		return nil, true
 	}
-	if noUDPsource || l.Nodetype == "hysteria2" || l.Nodetype == "tuic" {
-		// Store online user for device limit
-		newipMap := new(sync.Map)
-		newipMap.Store(ip, uid)
-		// If any device is online
-		if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newipMap); loaded {
-			oldipMap := v.(*sync.Map)
-			// If this is a new ip
-			if _, loaded := oldipMap.LoadOrStore(ip, uid); !loaded {
-				if v, loaded := l.OldUserOnline.Load(ip); loaded && v.(int) == uid {
-					l.OldUserOnline.Delete(ip)
-				} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
-					oldipMap.Delete(ip)
-					return nil, true
-				}
+	// Store online user for device limit. This runs for every inbound
+	// regardless of TCP/UDP: a device whose only traffic to this node is UDP
+	// (e.g. DNS-only, or a protocol other than hysteria2/tuic that never
+	// opens a TCP connection here) used to skip this whole block and so was
+	// never subject to the device limit at all.
+	newipMap := new(sync.Map)
+	newipMap.Store(ip, uid)
+	// If any device is online
+	if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newipMap); loaded {
+		oldipMap := v.(*sync.Map)
+		// If this is a new ip
+		if _, loaded := oldipMap.LoadOrStore(ip, uid); !loaded {
+			if v, loaded := l.OldUserOnline.Load(ip); loaded && v.(int) == uid {
+				l.OldUserOnline.Delete(ip)
+			} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
+				oldipMap.Delete(ip)
+				return nil, true
 			}
-		} else if v, ok := l.OldUserOnline.Load(ip); ok && v.(int) == uid {
-			l.OldUserOnline.Delete(ip)
-		} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
-			l.UserOnlineIP.Delete(taguuid)
-			return nil, true
 		}
+	} else if v, ok := l.OldUserOnline.Load(ip); ok && v.(int) == uid {
+		l.OldUserOnline.Delete(ip)
+	} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
+		l.UserOnlineIP.Delete(taguuid)
+		return nil, true
 	}
 
 	limit := int64(determineSpeedLimit(nodeLimit, userLimit)) * 1000000 / 8 // If you need the Speed limit
