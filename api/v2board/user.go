@@ -158,3 +158,38 @@ func (c *Client) ReportNodeOnlineUsers(ctx context.Context, data *map[int][]stri
 
 	return nil
 }
+
+type claimDeviceResult struct {
+	Allow bool `json:"allow"`
+}
+
+// ClaimDevice atomically checks-and-registers ip against uid's device limit
+// in the panel's Redis-backed, cross-node online-IP set, which is the only
+// way to enforce the limit correctly when a user's devices are spread across
+// more than one node: each node's own locally-cached alive count is only
+// refreshed periodically, so nodes can't see each other's admissions in
+// between syncs. Callers must treat a returned error as a reject
+// (fail-closed) rather than letting the device through.
+func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimit int) (bool, error) {
+	const path = "/api/v1/server/UniProxy/claimDevice"
+	r, err := c.client.R().
+		SetContext(ctx).
+		SetBody(map[string]interface{}{
+			"uid":          uid,
+			"ip":           ip,
+			"device_limit": deviceLimit,
+		}).
+		ForceContentType("application/json").
+		Post(path)
+	if err != nil {
+		return false, err
+	}
+	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
+		return false, fmt.Errorf("claim device: unexpected response")
+	}
+	var result claimDeviceResult
+	if err := json.Unmarshal(r.Body(), &result); err != nil {
+		return false, fmt.Errorf("unmarshal claim device response: %w", err)
+	}
+	return result.Allow, nil
+}
