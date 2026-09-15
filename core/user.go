@@ -107,6 +107,25 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 	return nil, nil
 }
 
+// RegisterUidMap populates the tag+uuid -> panel UID lookup that
+// GetUserTrafficSlice uses to resolve a traffic counter's email back to a
+// user. mieru's initial user set is baked into the inbound config at
+// construction time by AddNode, because its listener refuses to start
+// with zero users and adding them again afterward via AddUsers would
+// fail as a duplicate (see Controller.Start) — so unlike every other
+// protocol, mieru's initial users never go through AddUsers() and never
+// get a uidMap entry. Without one, GetUserTrafficSlice can't resolve
+// their traffic counters to a UID and silently drops them every
+// reporting cycle (uidMap[email] == 0 looks identical to "unknown user"),
+// so mieru's online users never get reported to the panel at all.
+func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
+	v.users.mapLock.Lock()
+	defer v.users.mapLock.Unlock()
+	for i := range users {
+		v.users.uidMap[format.UserTag(tag, users[i].Uuid)] = users[i].Id
+	}
+}
+
 func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()

@@ -93,6 +93,12 @@ func (c *Controller) Start(x *core.V2Core) error {
 		}
 		log.WithField("tag", c.tag).Infof("Added %d new users", added)
 	} else {
+		// AddNode already baked c.userList into mieru's inbound config, so
+		// calling AddUsers here would just fail as a duplicate registration —
+		// but AddUsers is also the only thing that populates the uidMap
+		// GetUserTrafficSlice needs to report traffic back to the panel.
+		// Register it directly instead of skipping it entirely.
+		c.server.RegisterUidMap(c.tag, c.userList)
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
 	c.info = node
