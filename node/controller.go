@@ -66,7 +66,7 @@ func (c *Controller) Start(x *core.V2Core) error {
 	c.tag = node.Tag
 
 	// add limiter
-	l := limiter.AddLimiter(c.info.Type, c.tag, c.userList, c.aliveMap)
+	l := limiter.AddLimiter(c.info.Type, c.tag, c.userList, c.aliveMap, c.apiClient)
 	c.limiter = l
 	if node.Security == panel.Tls {
 		err = c.requestCert()

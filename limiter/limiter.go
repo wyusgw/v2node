@@ -1,6 +1,7 @@
 package limiter
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"sync"
@@ -13,6 +14,12 @@ import (
 
 var limitLock sync.RWMutex
 var limiter map[string]*Limiter
+
+// claimDeviceTimeout bounds how long a brand-new device's first connection
+// on a node can be held up waiting on the panel's cross-node device-claim
+// check, so a slow/unreachable panel delays new connections by a fixed,
+// short amount rather than the client's full request timeout/retry budget.
+const claimDeviceTimeout = 3 * time.Second
 
 func Init() {
 	limiter = map[string]*Limiter{}
@@ -27,6 +34,7 @@ type Limiter struct {
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
 	SpeedLimiter  *sync.Map      // key: TagUUID, value: *DynamicBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
+	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
 }
 
 type UserLimitInfo struct {
@@ -38,7 +46,7 @@ type UserLimitInfo struct {
 	OverLimit         bool
 }
 
-func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList map[int]int) *Limiter {
+func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList map[int]int, client *panel.Client) *Limiter {
 	l := &Limiter{
 		Nodetype:      nodetype,
 		UserOnlineIP:  new(sync.Map),
@@ -46,6 +54,7 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		SpeedLimiter:  new(sync.Map),
 		AliveList:     aliveList,
 		OldUserOnline: new(sync.Map),
+		Client:        client,
 	}
 	uuidmap := make(map[string]int)
 	for i := range users {
@@ -150,7 +159,7 @@ func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire ti
 	return nil
 }
 
-func (l *Limiter) CheckLimit(taguuid string, ip string, noUDPsource bool) (DynamicBucket *rate.DynamicBucket, Reject bool) {
+func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string, noUDPsource bool) (DynamicBucket *rate.DynamicBucket, Reject bool) {
 	// check if ipv4 mapped ipv6
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
@@ -181,41 +190,23 @@ func (l *Limiter) CheckLimit(taguuid string, ip string, noUDPsource bool) (Dynam
 		// Store online user for device limit
 		newipMap := new(sync.Map)
 		newipMap.Store(ip, uid)
-		aliveIp := l.AliveList[uid]
 		// If any device is online
 		if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newipMap); loaded {
 			oldipMap := v.(*sync.Map)
 			// If this is a new ip
 			if _, loaded := oldipMap.LoadOrStore(ip, uid); !loaded {
-				if v, loaded := l.OldUserOnline.Load(ip); loaded {
-					if v.(int) == uid {
-						l.OldUserOnline.Delete(ip)
-					}
-				} else if deviceLimit > 0 {
-					// aliveIp only refreshes once per node.PullInterval from the
-					// panel, so several new devices connecting to this node within
-					// the same window would all be checked against the same stale
-					// value and all get admitted. Fold in how many this node has
-					// already admitted so far this cycle (oldipMap, minus the entry
-					// just stored above for ip itself) so the gate still tightens
-					// as devices arrive, instead of waiting for the next sync.
-					if deviceLimit <= max(aliveIp, mapLen(oldipMap)-1) {
-						oldipMap.Delete(ip)
-						return nil, true
-					}
-				}
-			}
-		} else if v, ok := l.OldUserOnline.Load(ip); ok {
-			if v.(int) == uid {
-				l.OldUserOnline.Delete(ip)
-			}
-		} else {
-			if deviceLimit > 0 {
-				if deviceLimit <= aliveIp {
-					l.UserOnlineIP.Delete(taguuid)
+				if v, loaded := l.OldUserOnline.Load(ip); loaded && v.(int) == uid {
+					l.OldUserOnline.Delete(ip)
+				} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
+					oldipMap.Delete(ip)
 					return nil, true
 				}
 			}
+		} else if v, ok := l.OldUserOnline.Load(ip); ok && v.(int) == uid {
+			l.OldUserOnline.Delete(ip)
+		} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
+			l.UserOnlineIP.Delete(taguuid)
+			return nil, true
 		}
 	}
 
@@ -247,13 +238,23 @@ func (l *Limiter) clearOnlineState(taguuid string, uid int) {
 	})
 }
 
-func mapLen(m *sync.Map) int {
-	n := 0
-	m.Range(func(_, _ interface{}) bool {
-		n++
+// claimDevice asks the panel to atomically check ip against uid's device
+// limit in its cross-node online-IP set and register it if admitted. It
+// fails closed: a nil client (gating not wired up) is treated as "no limit
+// configured" and allowed, but any request error (panel or Redis
+// unreachable, timeout, bad response) is treated as a reject rather than
+// letting an unverifiable device through.
+func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLimit int) bool {
+	if l.Client == nil {
 		return true
-	})
-	return n
+	}
+	cctx, cancel := context.WithTimeout(ctx, claimDeviceTimeout)
+	defer cancel()
+	allow, err := l.Client.ClaimDevice(cctx, uid, ip, deviceLimit)
+	if err != nil {
+		return false
+	}
+	return allow
 }
 
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {
