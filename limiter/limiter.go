@@ -29,7 +29,6 @@ type Limiter struct {
 	Nodetype      string         // Node type, e.g. "v2ray", "trojan", "shadowsocks"
 	SpeedLimit    int            // Node speed limit in Mbps
 	UserOnlineIP  *sync.Map      // Key: TagUUID, value: {Key: Ip, value: Uid}
-	OldUserOnline *sync.Map      // Key: Ip, value: Uid
 	UUIDtoUID     map[string]int // Key: UUID, value: Uid
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
 	SpeedLimiter  *sync.Map      // key: TagUUID, value: *DynamicBucket
@@ -53,7 +52,6 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		UserLimitInfo: new(sync.Map),
 		SpeedLimiter:  new(sync.Map),
 		AliveList:     aliveList,
-		OldUserOnline: new(sync.Map),
 		Client:        client,
 	}
 	uuidmap := make(map[string]int)
@@ -106,14 +104,13 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 			u := v.(*UserLimitInfo)
 			u.SpeedLimit = modified[i].SpeedLimit
 			if u.DeviceLimit != modified[i].DeviceLimit {
-				// A device that was already online gets waved through future
-				// checks without being re-counted (see CheckLimit's
-				// OldUserOnline branches), so a lowered limit would otherwise
-				// never apply to devices that connected before the change.
-				// Drop this user's online-tracking state so the next
-				// connection from every device re-earns admission under the
-				// new limit instead of being grandfathered in forever.
-				l.clearOnlineState(format.UserTag(tag, modified[i].Uuid), u.UID)
+				// Devices already admitted this report cycle won't be
+				// re-checked against the limit until the cycle rolls over
+				// (up to one PushInterval away). Drop this user's
+				// per-cycle tracking now so the very next connection from
+				// every device re-earns admission under the new limit
+				// immediately instead of waiting for that rollover.
+				l.clearOnlineState(format.UserTag(tag, modified[i].Uuid))
 			}
 			u.DeviceLimit = modified[i].DeviceLimit
 			l.UserLimitInfo.Store(format.UserTag(tag, modified[i].Uuid), u)
@@ -191,22 +188,29 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Dy
 	// (e.g. DNS-only, or a protocol other than hysteria2/tuic that never
 	// opens a TCP connection here) used to skip this whole block and so was
 	// never subject to the device limit at all.
+	//
+	// UserOnlineIP only dedups within the current report cycle (it's wiped
+	// by GetOnlineDevice() every cycle): the first connection this cycle
+	// from a given ip always goes through claimDevice, including for a
+	// device that's been continuously online for a while. That's
+	// deliberate, not just an optimization boundary - the panel's
+	// Redis-backed claim entry for that ip has to be re-confirmed at least
+	// once per cycle, or it ages out of the shared claim set (device_claim
+	// TTL) while the device is still connected, freeing its slot for a
+	// different device to claim and letting the user exceed deviceLimit in
+	// aggregate even though no single node ever saw too many at once.
 	newipMap := new(sync.Map)
 	newipMap.Store(ip, uid)
 	// If any device is online
 	if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newipMap); loaded {
 		oldipMap := v.(*sync.Map)
-		// If this is a new ip
+		// If this is a new ip this cycle
 		if _, loaded := oldipMap.LoadOrStore(ip, uid); !loaded {
-			if v, loaded := l.OldUserOnline.Load(ip); loaded && v.(int) == uid {
-				l.OldUserOnline.Delete(ip)
-			} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
+			if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
 				oldipMap.Delete(ip)
 				return nil, true
 			}
 		}
-	} else if v, ok := l.OldUserOnline.Load(ip); ok && v.(int) == uid {
-		l.OldUserOnline.Delete(ip)
 	} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
 		l.UserOnlineIP.Delete(taguuid)
 		return nil, true
@@ -226,18 +230,11 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Dy
 	}
 }
 
-// clearOnlineState drops taguuid's per-cycle admitted-IP set and scrubs any
-// entries for uid out of OldUserOnline, so every device this user currently
-// has open must re-earn admission under whatever limit now applies, instead
-// of being grandfathered in indefinitely.
-func (l *Limiter) clearOnlineState(taguuid string, uid int) {
+// clearOnlineState drops taguuid's per-cycle admitted-IP set, so the next
+// connection from every device this user currently has open is treated as
+// new-this-cycle and goes through claimDevice again immediately.
+func (l *Limiter) clearOnlineState(taguuid string) {
 	l.UserOnlineIP.Delete(taguuid)
-	l.OldUserOnline.Range(func(k, v interface{}) bool {
-		if v.(int) == uid {
-			l.OldUserOnline.Delete(k)
-		}
-		return true
-	})
 }
 
 // claimDevice asks the panel to atomically check ip against uid's device
@@ -261,18 +258,16 @@ func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLim
 
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {
 	var onlineUser []panel.OnlineUser
-	l.OldUserOnline = new(sync.Map)
 	l.UserOnlineIP.Range(func(key, value interface{}) bool {
 		taguuid := key.(string)
 		ipMap := value.(*sync.Map)
 		ipMap.Range(func(key, value interface{}) bool {
 			uid := value.(int)
 			ip := key.(string)
-			l.OldUserOnline.Store(ip, uid)
 			onlineUser = append(onlineUser, panel.OnlineUser{UID: uid, IP: ip})
 			return true
 		})
-		l.UserOnlineIP.Delete(taguuid) // Reset online device
+		l.UserOnlineIP.Delete(taguuid) // Reset online device, forcing every device through claimDevice again next cycle
 		return true
 	})
 
