@@ -96,6 +96,16 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, modified[i].Uuid)); ok {
 			u := v.(*UserLimitInfo)
 			u.SpeedLimit = modified[i].SpeedLimit
+			if u.DeviceLimit != modified[i].DeviceLimit {
+				// A device that was already online gets waved through future
+				// checks without being re-counted (see CheckLimit's
+				// OldUserOnline branches), so a lowered limit would otherwise
+				// never apply to devices that connected before the change.
+				// Drop this user's online-tracking state so the next
+				// connection from every device re-earns admission under the
+				// new limit instead of being grandfathered in forever.
+				l.clearOnlineState(format.UserTag(tag, modified[i].Uuid), u.UID)
+			}
 			u.DeviceLimit = modified[i].DeviceLimit
 			l.UserLimitInfo.Store(format.UserTag(tag, modified[i].Uuid), u)
 		}
@@ -221,6 +231,20 @@ func (l *Limiter) CheckLimit(taguuid string, ip string, noUDPsource bool) (Dynam
 	} else {
 		return nil, false
 	}
+}
+
+// clearOnlineState drops taguuid's per-cycle admitted-IP set and scrubs any
+// entries for uid out of OldUserOnline, so every device this user currently
+// has open must re-earn admission under whatever limit now applies, instead
+// of being grandfathered in indefinitely.
+func (l *Limiter) clearOnlineState(taguuid string, uid int) {
+	l.UserOnlineIP.Delete(taguuid)
+	l.OldUserOnline.Range(func(k, v interface{}) bool {
+		if v.(int) == uid {
+			l.OldUserOnline.Delete(k)
+		}
+		return true
+	})
 }
 
 func mapLen(m *sync.Map) int {
