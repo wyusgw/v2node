@@ -18,10 +18,28 @@ type DynamicBucket struct {
 	v atomic.Value // *ratelimit.Bucket
 }
 
+// fillInterval controls how often the bucket is refilled. Refilling the
+// whole per-second quota in one go (fillInterval = time.Second) lets a
+// connection burst at full, uncapped speed until that quota is drained,
+// then stall until the next tick - measured/instantaneous throughput
+// spikes well above the configured limit even though the 1s average is
+// correct. Refilling in smaller slices bounds the burst size to a
+// fraction of a second, so the observed speed tracks the configured
+// limit much more precisely.
+const fillInterval = 20 * time.Millisecond
+const ticksPerSecond = int64(time.Second / fillInterval)
+
+func newBucket(rate int64) *ratelimit.Bucket {
+	quantum := rate / ticksPerSecond
+	if quantum < 1 {
+		quantum = 1
+	}
+	return ratelimit.NewBucketWithQuantum(fillInterval, quantum, quantum)
+}
+
 func NewDynamicBucket(rate int64) *DynamicBucket {
-	b := ratelimit.NewBucketWithQuantum(time.Second, rate, rate)
 	d := &DynamicBucket{}
-	d.v.Store(b)
+	d.v.Store(newBucket(rate))
 	return d
 }
 
@@ -30,8 +48,7 @@ func (d *DynamicBucket) Get() *ratelimit.Bucket {
 }
 
 func (d *DynamicBucket) Update(rate int64) {
-	newB := ratelimit.NewBucketWithQuantum(time.Second, rate, rate)
-	d.v.Store(newB)
+	d.v.Store(newBucket(rate))
 }
 
 func NewRateLimitWriter(writer buf.Writer, limiter *DynamicBucket) buf.Writer {
