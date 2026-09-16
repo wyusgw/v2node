@@ -31,7 +31,7 @@ type Client struct {
 // pinnedNodeTypes are the protocol-specific tables a node can be pinned to
 // instead of the panel's unified v2node table. Anything outside this set
 // (including empty, which defaults to "v2node") is rejected up front, since
-// the panel answers an unknown node_type with a 500 "server is not exist"
+// the panel answers an unknown node_type with a 404 "server is not exist"
 // that says nothing about the cause.
 var pinnedNodeTypes = map[string]bool{
 	"vless":       true,
