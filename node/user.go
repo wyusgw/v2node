@@ -29,7 +29,10 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 			currentUserNum++
 		}
 	}
-	log.WithField("tag", c.tag).Infof("current user num: %d", currentUserNum)
+	// Warn, not Info: this summary line should stay visible at the normal
+	// "warning" log level instead of requiring the verbose "info" level
+	// that would also surface every other per-cycle detail line below.
+	log.WithField("tag", c.tag).Warnf("current user num: %d", currentUserNum)
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
 	if len(userTraffic) > 0 {
@@ -88,7 +91,9 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 					onlineUID = append(onlineUID, uid)
 				}
 				sort.Ints(onlineUID)
-				log.WithField("tag", c.tag).Infof("submit data success, alive user: %v", onlineUID)
+				// Warn, not Info: same as current user num above - kept
+				// visible at the normal "warning" log level.
+				log.WithField("tag", c.tag).Warnf("submit data success, alive user: %v", onlineUID)
 			}
 		}
 	}
