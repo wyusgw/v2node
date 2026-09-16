@@ -200,29 +200,38 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Dy
 	// TTL) while the device is still connected, freeing its slot for a
 	// different device to claim and letting the user exceed deviceLimit in
 	// aggregate even though no single node ever saw too many at once.
-	newipMap := new(sync.Map)
-	newipMap.Store(ip, uid)
-	// If any device is online
-	if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newipMap); loaded {
-		oldipMap := v.(*sync.Map)
-		// If this is a new ip this cycle
-		if _, loaded := oldipMap.LoadOrStore(ip, uid); !loaded {
-			if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
-				oldipMap.Delete(ip)
-				return nil, true
-			}
+	//
+	// An ip is only ever written into UserOnlineIP after claimDevice has
+	// confirmed it (or immediately, when there's no limit to confirm against).
+	// GetOnlineDevice() - the periodic report to the panel - runs
+	// concurrently on its own timer and takes a live snapshot of this map.
+	// claimDevice's HTTP round trip can take up to claimDeviceTimeout, so
+	// writing the ip optimistically and deleting it again on rejection would
+	// leave a window where a report snapshot lands between the write and the
+	// delete and wrongly tells the panel a device is online right before
+	// it's rejected.
+	var ipMap *sync.Map
+	if v, ok := l.UserOnlineIP.Load(taguuid); ok {
+		ipMap = v.(*sync.Map)
+	}
+	isNewIPThisCycle := true
+	if ipMap != nil {
+		if _, ok := ipMap.Load(ip); ok {
+			isNewIPThisCycle = false
 		}
-	} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
-		// newipMap is the exact value now published under taguuid (LoadOrStore
-		// returns the value actually stored when loaded is false). Other
-		// goroutines racing in on the same taguuid at this instant already see
-		// it via their own LoadOrStore and may be adding their own (possibly
-		// admitted) ip into it right now, concurrently with the up-to-3s
-		// claimDevice call above. Deleting the whole taguuid key here would
-		// wipe those out too - remove only this ip.
-		newipMap.Delete(ip)
+	}
+	if isNewIPThisCycle && deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
 		return nil, true
 	}
+	if ipMap == nil {
+		newIPMap := new(sync.Map)
+		if v, loaded := l.UserOnlineIP.LoadOrStore(taguuid, newIPMap); loaded {
+			ipMap = v.(*sync.Map)
+		} else {
+			ipMap = newIPMap
+		}
+	}
+	ipMap.Store(ip, uid)
 
 	limit := int64(determineSpeedLimit(nodeLimit, userLimit)) * 1000000 / 8 // If you need the Speed limit
 	if limit > 0 {
