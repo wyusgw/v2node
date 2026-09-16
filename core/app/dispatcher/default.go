@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/wyusgw/v2node/common/behavior"
 	"github.com/wyusgw/v2node/common/counter"
 	"github.com/wyusgw/v2node/common/rate"
 	"github.com/wyusgw/v2node/limiter"
@@ -146,7 +147,7 @@ func (*DefaultDispatcher) Start() error {
 // Close implements common.Closable.
 func (*DefaultDispatcher) Close() error { return nil }
 
-func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *transport.Link, *limiter.Limiter, error) {
+func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *transport.Link, *limiter.Limiter, *behaviorTracker, error) {
 	opt := pipe.OptionsFromContext(ctx)
 	uplinkReader, uplinkWriter := pipe.New(opt...)
 	downlinkReader, downlinkWriter := pipe.New(opt...)
@@ -168,6 +169,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 	}
 
 	var limit *limiter.Limiter
+	var bTracker *behaviorTracker
 	var err error
 	if user != nil && len(user.Email) > 0 {
 		limit, err = limiter.GetLimiter(sessionInbound.Tag)
@@ -177,7 +179,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			common.Close(inboundLink.Writer)
 			common.Interrupt(outboundLink.Reader)
 			common.Interrupt(inboundLink.Reader)
-			return nil, nil, nil, errors.New("get limiter ", sessionInbound.Tag, " error: ", err)
+			return nil, nil, nil, nil, errors.New("get limiter ", sessionInbound.Tag, " error: ", err)
 		}
 		// Speed Limit and Device Limit
 		w, reject := limit.CheckLimit(ctx, user.Email,
@@ -188,7 +190,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			common.Close(inboundLink.Writer)
 			common.Interrupt(outboundLink.Reader)
 			common.Interrupt(inboundLink.Reader)
-			return nil, nil, nil, errors.New("Limited ", user.Email, " by conn or ip")
+			return nil, nil, nil, nil, errors.New("Limited ", user.Email, " by conn or ip")
 		}
 		var lm *LinkManager
 		if lmloaded, ok := d.LinkManagers.Load(user.Email); !ok {
@@ -229,9 +231,25 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			Counter: downcounter,
 			Writer:  outboundLink.Writer,
 		}
+
+		if behavior.IsEnabled(sessionInbound.Tag) {
+			bTracker = &behaviorTracker{
+				tag:         sessionInbound.Tag,
+				email:       user.Email,
+				connectedAt: time.Now(),
+			}
+			inboundLink.Writer = &dispatcher.SizeStatWriter{
+				Counter: &counter.XrayTrafficCounter{V: &bTracker.up},
+				Writer:  inboundLink.Writer,
+			}
+			outboundLink.Writer = &dispatcher.SizeStatWriter{
+				Counter: &counter.XrayTrafficCounter{V: &bTracker.down},
+				Writer:  outboundLink.Writer,
+			}
+		}
 	}
 
-	return inboundLink, outboundLink, limit, nil
+	return inboundLink, outboundLink, limit, bTracker, nil
 }
 
 func (d *DefaultDispatcher) shouldOverride(ctx context.Context, result SniffResult, request session.SniffingRequest, destination net.Destination) bool {
@@ -287,12 +305,12 @@ func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destin
 		ctx = session.ContextWithContent(ctx, content)
 	}
 	sniffingRequest := content.SniffingRequest
-	inbound, outbound, _, err := d.getLink(ctx)
+	inbound, outbound, _, bTracker, err := d.getLink(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if !sniffingRequest.Enabled {
-		go d.routedDispatch(ctx, outbound, destination)
+		go d.routedDispatch(ctx, outbound, destination, bTracker)
 	} else {
 		go func() {
 			cReader := &cachedReader{
@@ -321,7 +339,7 @@ func (d *DefaultDispatcher) Dispatch(ctx context.Context, destination net.Destin
 					ob.Target = destination
 				}
 			}
-			d.routedDispatch(ctx, outbound, destination)
+			d.routedDispatch(ctx, outbound, destination, bTracker)
 		}()
 	}
 	return inbound, nil
@@ -353,6 +371,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 	}
 
 	var limit *limiter.Limiter
+	var bTracker *behaviorTracker
 	var err error
 	if user != nil && len(user.Email) > 0 {
 		limit, err = limiter.GetLimiter(sessionInbound.Tag)
@@ -408,11 +427,27 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			Counter: downcounter,
 			Writer:  outbound.Writer,
 		}
+
+		if behavior.IsEnabled(sessionInbound.Tag) {
+			bTracker = &behaviorTracker{
+				tag:         sessionInbound.Tag,
+				email:       user.Email,
+				connectedAt: time.Now(),
+			}
+			outbound.Reader = &CounterReader{
+				Reader:  outbound.Reader.(buf.TimeoutReader),
+				Counter: &bTracker.up,
+			}
+			outbound.Writer = &dispatcher.SizeStatWriter{
+				Counter: &counter.XrayTrafficCounter{V: &bTracker.down},
+				Writer:  outbound.Writer,
+			}
+		}
 	}
 
 	sniffingRequest := content.SniffingRequest
 	if !sniffingRequest.Enabled {
-		d.routedDispatch(ctx, outbound, destination)
+		d.routedDispatch(ctx, outbound, destination, bTracker)
 	} else {
 		cReader := &cachedReader{
 			reader: outbound.Reader.(buf.TimeoutReader),
@@ -440,7 +475,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 				ob.Target = destination
 			}
 		}
-		d.routedDispatch(ctx, outbound, destination)
+		d.routedDispatch(ctx, outbound, destination, bTracker)
 	}
 
 	return nil
@@ -502,7 +537,7 @@ func sniffer(ctx context.Context, cReader *cachedReader, metadataOnly bool, netw
 	return contentResult, contentErr
 }
 
-func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.Link, destination net.Destination) {
+func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.Link, destination net.Destination, bTracker *behaviorTracker) {
 	outbounds := session.OutboundsFromContext(ctx)
 	ob := outbounds[len(outbounds)-1]
 
@@ -573,4 +608,5 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 	}
 
 	handler.Dispatch(ctx, link)
+	bTracker.finish(destination)
 }

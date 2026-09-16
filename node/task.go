@@ -31,6 +31,20 @@ func (c *Controller) startTasks(node *panel.NodeInfo) {
 	_ = c.nodeInfoMonitorPeriodic.Start(false)
 	log.WithField("tag", c.tag).Info("Start report node status")
 	_ = c.userReportPeriodic.Start(false)
+	// behavior logging is opt-in per node (behavior.AddRecorder was only
+	// called in Start() when the panel turned it on for this node), so only
+	// pay for a periodic report cycle when there's actually something to
+	// drain.
+	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
+		c.behaviorReportPeriodic = &task.Task{
+			Name:     "reportBehaviorLogTask",
+			Interval: node.PushInterval,
+			Execute:  c.reportBehaviorLogTask,
+			ReloadCh: c.server.ReloadCh,
+		}
+		log.WithField("tag", c.tag).Info("Start report behavior log")
+		_ = c.behaviorReportPeriodic.Start(false)
+	}
 	if node.Security == panel.Tls {
 		switch c.info.Common.CertInfo.CertMode {
 		case "none", "", "file", "self":
