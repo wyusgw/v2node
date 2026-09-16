@@ -3,11 +3,30 @@ package node
 import (
 	"context"
 	"errors"
-	"sort"
+	"fmt"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
+
+// logSummary writes a compact "timestamp\tLEVEL\tmessage" status line
+// directly to the same output the rest of the app logs to (respecting
+// -o/Log.Output), instead of the tag=/err= key=value fields logrus's
+// TextFormatter attaches to every other log call. These three lines are
+// meant to be read as an at-a-glance status feed, not troubleshooting
+// detail, so they're deliberately logged at Warn severity - that's what
+// keeps them visible at the normal "warning" Log.Level instead of
+// requiring "info" - while still displaying as "INFO" since that's what
+// they semantically are. minLevel gates them the same way any other log
+// call is gated by the configured level.
+func logSummary(minLevel log.Level, format string, args ...interface{}) {
+	if log.GetLevel() < minLevel {
+		return
+	}
+	fmt.Fprintf(log.StandardLogger().Out, "%s\tINFO\t%s\n",
+		time.Now().Format("2006/01/02 15:04:05"), fmt.Sprintf(format, args...))
+}
 
 func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 	var reportmin = 0
@@ -29,10 +48,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 			currentUserNum++
 		}
 	}
-	// Warn, not Info: this summary line should stay visible at the normal
-	// "warning" log level instead of requiring the verbose "info" level
-	// that would also surface every other per-cycle detail line below.
-	log.WithField("tag", c.tag).Warnf("current user num: %d", currentUserNum)
+	logSummary(log.WarnLevel, "current user num: %d", currentUserNum)
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
 	if len(userTraffic) > 0 {
@@ -86,18 +102,11 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 					return err
 				}
 			} else {
-				onlineUID := make([]int, 0, len(data))
-				for uid := range data {
-					onlineUID = append(onlineUID, uid)
-				}
-				sort.Ints(onlineUID)
-				// Warn, not Info: same as current user num above - kept
-				// visible at the normal "warning" log level.
-				log.WithField("tag", c.tag).Warnf("submit data success, alive user: %v", onlineUID)
+				logSummary(log.WarnLevel, "submit data success, alive user: %d", len(data))
 				// len(result) counts one entry per (uid, ip) pair reported
 				// this cycle, i.e. total online devices - distinct from
 				// alive user above, which counts distinct users.
-				log.WithField("tag", c.tag).Warnf("device num: %d", len(result))
+				logSummary(log.WarnLevel, "device num: %d", len(result))
 			}
 		}
 	}
