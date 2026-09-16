@@ -184,16 +184,8 @@ func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimi
 	if err != nil {
 		return false, err
 	}
-	if r == nil || r.RawResponse == nil {
-		return false, fmt.Errorf("claim device: no response")
-	}
-	if r.StatusCode() >= 399 {
-		body := strings.TrimSpace(string(r.Body()))
-		const maxBodyLen = 300
-		if len(body) > maxBodyLen {
-			body = body[:maxBodyLen] + "..."
-		}
-		return false, fmt.Errorf("claim device: panel returned status %d: %s", r.StatusCode(), body)
+	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
+		return false, fmt.Errorf("claim device: unexpected response")
 	}
 	var result claimDeviceResult
 	if err := json.Unmarshal(r.Body(), &result); err != nil {
