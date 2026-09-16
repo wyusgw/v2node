@@ -8,6 +8,7 @@ import (
 	"time"
 
 	panel "github.com/wyusgw/v2node/api/v2board"
+	"github.com/wyusgw/v2node/common/behavior"
 	"github.com/wyusgw/v2node/common/counter"
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/core/app/dispatcher"
@@ -105,6 +106,42 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 		return trafficSlice, nil
 	}
 	return nil, nil
+}
+
+// GetBehaviorSlice drains this tag's buffered behavior records (see
+// common/behavior) and resolves each one's dispatcher-session email back to
+// a panel UID via the same tag+uuid -> UID map GetUserTrafficSlice uses.
+// Records whose email isn't in the map (e.g. the user was removed between
+// connecting and this drain) are dropped rather than reported with a UID of
+// 0.
+func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
+	entries := behavior.Drain(tag)
+	if len(entries) == 0 {
+		return nil, nil
+	}
+	vc.users.mapLock.RLock()
+	defer vc.users.mapLock.RUnlock()
+	records := make([]panel.BehaviorRecord, 0, len(entries))
+	for _, e := range entries {
+		uid := vc.users.uidMap[e.Email]
+		if uid == 0 {
+			continue
+		}
+		records = append(records, panel.BehaviorRecord{
+			UID:         uid,
+			Domain:      e.Domain,
+			Port:        e.Port,
+			Network:     e.Network,
+			ConnectedAt: e.ConnectedAt.Unix(),
+			Duration:    int64(e.Duration.Seconds()),
+			Upload:      e.Upload,
+			Download:    e.Download,
+		})
+	}
+	if len(records) == 0 {
+		return nil, nil
+	}
+	return records, nil
 }
 
 // RegisterUidMap populates the tag+uuid -> panel UID lookup that
