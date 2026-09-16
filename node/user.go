@@ -36,19 +36,12 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 		devicemin = c.info.Common.BaseConfig.DeviceOnlineMinTraffic
 	}
 
-	// AliveList is the panel's own record of which users it has seen online
-	// (from GetUserAlive/alivelist), refreshed independently on the
-	// nodeInfoMonitor cycle. A user never present there has never actually
-	// come online through the panel, as opposed to one that's merely
-	// inactive right now, so this count excludes them rather than reporting
-	// every provisioned-but-unused account as part of the node's user base.
-	currentUserNum := 0
-	for _, u := range c.userList {
-		if _, ok := c.limiter.AliveList[u.Id]; ok {
-			currentUserNum++
-		}
-	}
-	logSummary(log.WarnLevel, "current user num: %d", currentUserNum)
+	// c.userList is the panel's /user response for this node, which only
+	// ever contains users with a currently valid subscription assigned to
+	// it - not a locally-tracked online-history set, so this is the count
+	// of currently-valid-subscription users regardless of whether they've
+	// ever connected.
+	logSummary(log.WarnLevel, "current user num: %d", len(c.userList))
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
 	if len(userTraffic) > 0 {
