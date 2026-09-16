@@ -94,6 +94,10 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				// Warn, not Info: same as current user num above - kept
 				// visible at the normal "warning" log level.
 				log.WithField("tag", c.tag).Warnf("submit data success, alive user: %v", onlineUID)
+				// len(result) counts one entry per (uid, ip) pair reported
+				// this cycle, i.e. total online devices - distinct from
+				// alive user above, which counts distinct users.
+				log.WithField("tag", c.tag).Warnf("device num: %d", len(result))
 			}
 		}
 	}
