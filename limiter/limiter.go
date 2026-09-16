@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/common/rate"
@@ -258,7 +259,21 @@ func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLim
 	defer cancel()
 	allow, err := l.Client.ClaimDevice(cctx, uid, ip, deviceLimit)
 	if err != nil {
+		log.WithFields(log.Fields{
+			"nodetype": l.Nodetype,
+			"uid":      uid,
+			"ip":       ip,
+			"err":      err,
+		}).Warn("claim device request failed, rejecting")
 		return false
+	}
+	if !allow {
+		log.WithFields(log.Fields{
+			"nodetype":     l.Nodetype,
+			"uid":          uid,
+			"ip":           ip,
+			"device_limit": deviceLimit,
+		}).Info("device rejected: exceeds device limit")
 	}
 	return allow
 }

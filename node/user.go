@@ -73,7 +73,11 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 					onlineUID = append(onlineUID, uid)
 				}
 				sort.Ints(onlineUID)
-				log.WithField("tag", c.tag).Infof("submit data success, alive user: %v", onlineUID)
+				deviceCount := make(map[int]int, len(data))
+				for uid, ips := range data {
+					deviceCount[uid] = len(ips)
+				}
+				log.WithField("tag", c.tag).Infof("submit data success, alive user: %v, device count: %v", onlineUID, deviceCount)
 			}
 		}
 	}
