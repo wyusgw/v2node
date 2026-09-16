@@ -3,6 +3,7 @@ package node
 import (
 	"context"
 	"errors"
+	"sort"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
@@ -66,9 +67,15 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 					return err
 				}
+			} else {
+				onlineUID := make([]int, 0, len(data))
+				for uid := range data {
+					onlineUID = append(onlineUID, uid)
+				}
+				sort.Ints(onlineUID)
+				log.WithField("tag", c.tag).Infof("submit data success, alive user: %v", onlineUID)
 			}
 		}
-		log.WithField("tag", c.tag).Infof("Total %d online users, %d Reported", len(*onlineDevice), len(result))
 	}
 
 	return nil
