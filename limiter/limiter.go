@@ -212,7 +212,14 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Dy
 			}
 		}
 	} else if deviceLimit > 0 && !l.claimDevice(ctx, uid, ip, deviceLimit) {
-		l.UserOnlineIP.Delete(taguuid)
+		// newipMap is the exact value now published under taguuid (LoadOrStore
+		// returns the value actually stored when loaded is false). Other
+		// goroutines racing in on the same taguuid at this instant already see
+		// it via their own LoadOrStore and may be adding their own (possibly
+		// admitted) ip into it right now, concurrently with the up-to-3s
+		// claimDevice call above. Deleting the whole taguuid key here would
+		// wipe those out too - remove only this ip.
+		newipMap.Delete(ip)
 		return nil, true
 	}
 
