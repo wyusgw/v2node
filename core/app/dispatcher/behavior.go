@@ -16,6 +16,7 @@ import (
 type behaviorTracker struct {
 	tag         string
 	email       string
+	sourceIP    string
 	connectedAt time.Time
 	up          atomic.Int64
 	down        atomic.Int64
@@ -31,6 +32,7 @@ func (t *behaviorTracker) finish(destination net.Destination) {
 	}
 	behavior.Record(t.tag, behavior.Entry{
 		Email:       t.email,
+		SourceIP:    t.sourceIP,
 		Domain:      destination.Address.String(),
 		Port:        int(destination.Port.Value()),
 		Network:     destination.Network.SystemString(),

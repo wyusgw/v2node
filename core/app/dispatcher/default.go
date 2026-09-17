@@ -236,6 +236,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			bTracker = &behaviorTracker{
 				tag:         sessionInbound.Tag,
 				email:       user.Email,
+				sourceIP:    sessionInbound.Source.Address.IP().String(),
 				connectedAt: time.Now(),
 			}
 			inboundLink.Writer = &dispatcher.SizeStatWriter{
@@ -432,6 +433,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			bTracker = &behaviorTracker{
 				tag:         sessionInbound.Tag,
 				email:       user.Email,
+				sourceIP:    sessionInbound.Source.Address.IP().String(),
 				connectedAt: time.Now(),
 			}
 			outbound.Reader = &CounterReader{
