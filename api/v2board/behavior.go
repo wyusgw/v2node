@@ -2,6 +2,8 @@ package panel
 
 import (
 	"context"
+	"errors"
+	"strconv"
 )
 
 // BehaviorRecord is one completed connection's behavior record, as reported
@@ -22,13 +24,26 @@ type BehaviorRecord struct {
 // to the panel.
 func (c *Client) ReportBehaviorLog(ctx context.Context, records []BehaviorRecord) error {
 	const path = "/api/v1/server/UniProxy/behaviorLog"
-	_, err := c.client.R().
+	r, err := c.client.R().
 		SetContext(ctx).
 		SetBody(records).
 		ForceContentType("application/json").
 		Post(path)
 	if err != nil {
 		return err
+	}
+	// resty only returns a non-nil err for transport-level failures, not HTTP
+	// error statuses - without this check a 400/500 from the panel (e.g. the
+	// v2_behavior_log table missing, or a validation failure) would look
+	// exactly like success, and the caller (reportBehaviorLogTask) has
+	// already drained the buffer by the time it gets our return value, so
+	// the records would just be silently lost.
+	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
+		status := -1
+		if r != nil {
+			status = r.StatusCode()
+		}
+		return errors.New("report behavior log: unexpected status " + strconv.Itoa(status))
 	}
 	return nil
 }
