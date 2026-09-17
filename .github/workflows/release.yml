@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
+      - dev
     paths:
       - "**/*.go"
       - "go.mod"
@@ -123,8 +124,12 @@ jobs:
         if: ${{ github.event_name == 'release' }}
         run: |
           echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
+      - name: Get dev version
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+        run: |
+          echo "version=beta-${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Get other version
-        if: ${{ github.event_name != 'release' }}
+        if: ${{ github.event_name != 'release' && !(github.event_name == 'push' && github.ref == 'refs/heads/dev') }}
         run: |
           echo "version=${{ github.sha }}" >> $GITHUB_ENV
       - name: Build v2node
@@ -185,3 +190,14 @@ jobs:
           file: ./v2node-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
           tag: ${{ github.ref }}
           file_glob: true
+      - name: Upload dev build to rolling beta release
+        uses: svenstaro/upload-release-action@v2
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./v2node-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
+          tag: beta
+          file_glob: true
+          overwrite: true
+          prerelease: true
+          body: "dev 分支滚动构建，对应 commit ${{ github.sha }}，非正式发布版，可能不稳定"
