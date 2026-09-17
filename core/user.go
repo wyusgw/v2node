@@ -129,6 +129,7 @@ func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 		}
 		records = append(records, panel.BehaviorRecord{
 			UID:         uid,
+			SourceIP:    e.SourceIP,
 			Domain:      e.Domain,
 			Port:        e.Port,
 			Network:     e.Network,

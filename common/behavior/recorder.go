@@ -18,6 +18,7 @@ import (
 // core.V2Core; callers resolve it when draining (see core.GetBehaviorSlice).
 type Entry struct {
 	Email       string
+	SourceIP    string
 	Domain      string
 	Port        int
 	Network     string

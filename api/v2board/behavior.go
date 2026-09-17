@@ -10,6 +10,7 @@ import (
 // to the panel for user-behavior auditing.
 type BehaviorRecord struct {
 	UID         int    `json:"uid"`
+	SourceIP    string `json:"source_ip"`
 	Domain      string `json:"domain"`
 	Port        int    `json:"port"`
 	Network     string `json:"network"`
