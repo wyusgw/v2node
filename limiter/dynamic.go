@@ -1,7 +1,7 @@
 package limiter
 
-// determineSpeedLimit returns the minimum non-zero rate
-func determineSpeedLimit(limit1, limit2 int) (limit int) {
+// determineSpeedLimit returns the minimum non-zero rate (both in bytes/s)
+func determineSpeedLimit(limit1, limit2 int64) (limit int64) {
 	if limit1 == 0 || limit2 == 0 {
 		if limit1 > limit2 {
 			return limit1
