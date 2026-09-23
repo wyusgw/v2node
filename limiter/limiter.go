@@ -38,7 +38,8 @@ type Limiter struct {
 
 type UserLimitInfo struct {
 	UID               int
-	SpeedLimit        int64 // bytes/s
+	SpeedLimit        int64 // download, bytes/s
+	SpeedLimitUp      int64 // upload, bytes/s
 	DeviceLimit       int
 	DynamicSpeedLimit int64 // bytes/s
 	ExpireTime        int64
@@ -59,9 +60,8 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		uuidmap[users[i].Uuid] = users[i].Id
 		userLimit := &UserLimitInfo{}
 		userLimit.UID = users[i].Id
-		if limit := users[i].SpeedLimitBytes(); limit != 0 {
-			userLimit.SpeedLimit = limit
-		}
+		userLimit.SpeedLimit = users[i].SpeedLimitBytes()
+		userLimit.SpeedLimitUp = users[i].SpeedLimitUpBytes()
 		if users[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = users[i].DeviceLimit
 		}
@@ -103,6 +103,7 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, modified[i].Uuid)); ok {
 			u := v.(*UserLimitInfo)
 			u.SpeedLimit = modified[i].SpeedLimitBytes()
+			u.SpeedLimitUp = modified[i].SpeedLimitUpBytes()
 			if u.DeviceLimit != modified[i].DeviceLimit {
 				// Devices already admitted this report cycle won't be
 				// re-checked against the limit until the cycle rolls over
@@ -115,13 +116,15 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 			u.DeviceLimit = modified[i].DeviceLimit
 			l.UserLimitInfo.Store(format.UserTag(tag, modified[i].Uuid), u)
 		}
-		limit := determineSpeedLimit(panel.MbpsToBytes(l.SpeedLimit), modified[i].SpeedLimitBytes())
-		if limit > 0 {
+		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
+		up := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitUpBytes())
+		down := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitBytes())
+		if up > 0 || down > 0 {
 			if v, ok := l.SpeedLimiter.Load(format.UserTag(tag, modified[i].Uuid)); ok {
 				d := v.(*rate.DuplexBucket)
-				d.Update(limit)
+				d.Update(up, down)
 			} else {
-				d := rate.NewDuplexBucket(limit)
+				d := rate.NewDuplexBucket(up, down)
 				l.SpeedLimiter.Store(format.UserTag(tag, modified[i].Uuid), d)
 			}
 		} else {
@@ -132,10 +135,8 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		userLimit := &UserLimitInfo{
 			UID: added[i].Id,
 		}
-		if limit := added[i].SpeedLimitBytes(); limit != 0 {
-			userLimit.SpeedLimit = limit
-			userLimit.ExpireTime = 0
-		}
+		userLimit.SpeedLimit = added[i].SpeedLimitBytes()
+		userLimit.SpeedLimitUp = added[i].SpeedLimitUpBytes()
 		if added[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = added[i].DeviceLimit
 		}
@@ -162,7 +163,7 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 
 	// check and gen speed limit Bucket
 	nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
-	var userLimit int64
+	var userLimit, userLimitUp int64
 	deviceLimit := 0
 	var uid int
 	if v, ok := l.UserLimitInfo.Load(taguuid); ok {
@@ -170,8 +171,9 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 		deviceLimit = u.DeviceLimit
 		uid = u.UID
 		if u.ExpireTime < time.Now().Unix() && u.ExpireTime != 0 {
-			if u.SpeedLimit != 0 {
+			if u.SpeedLimit != 0 || u.SpeedLimitUp != 0 {
 				userLimit = u.SpeedLimit
+				userLimitUp = u.SpeedLimitUp
 				u.DynamicSpeedLimit = 0
 				u.ExpireTime = 0
 			} else {
@@ -179,6 +181,7 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 			}
 		} else {
 			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
+			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)
 		}
 	} else {
 		return nil, true
@@ -232,12 +235,13 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	}
 	ipMap.Store(ip, uid)
 
-	limit := determineSpeedLimit(nodeLimit, userLimit) // If you need the Speed limit
-	if limit > 0 {
+	down := determineSpeedLimit(nodeLimit, userLimit)
+	up := determineSpeedLimit(nodeLimit, userLimitUp)
+	if up > 0 || down > 0 {
 		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
 			return v.(*rate.DuplexBucket), false
 		} else {
-			d := rate.NewDuplexBucket(limit)
+			d := rate.NewDuplexBucket(up, down)
 			l.SpeedLimiter.Store(taguuid, d)
 			return d, false
 		}
