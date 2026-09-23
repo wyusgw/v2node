@@ -129,12 +129,15 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	// 需要断开让客户端重连；限速值之间的调整由限速桶实时更新，不必断开
 	var speedToggled []panel.UserInfo
 	if len(modified) > 0 {
-		oldLimit := make(map[string]int64, len(c.userList))
+		limited := func(u panel.UserInfo) bool {
+			return u.SpeedLimitBytes() > 0 || u.SpeedLimitUpBytes() > 0
+		}
+		oldLimited := make(map[string]bool, len(c.userList))
 		for _, u := range c.userList {
-			oldLimit[u.Uuid] = u.SpeedLimitBytes()
+			oldLimited[u.Uuid] = limited(u)
 		}
 		for _, u := range modified {
-			if (oldLimit[u.Uuid] == 0) != (u.SpeedLimitBytes() == 0) {
+			if oldLimited[u.Uuid] != limited(u) {
 				speedToggled = append(speedToggled, u)
 			}
 		}

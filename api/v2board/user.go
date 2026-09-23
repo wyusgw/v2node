@@ -25,7 +25,11 @@ type UserInfo struct {
 	// alongside SpeedLimit (whole Mbps, rounded up) so limits set in KB/s or
 	// MB/s aren't rounded; older panels omit it and SpeedLimit is used instead.
 	SpeedLimitBps int64 `json:"speed_limit_bps" msgpack:"speed_limit_bps"`
-	DeviceLimit   int   `json:"device_limit" msgpack:"device_limit"`
+	// SpeedLimitUpBps is the upload limit in bytes/s (SpeedLimitBps is then
+	// the download limit), 0 meaning unlimited. nil means the panel predates
+	// separate upload/download limits, and the one limit applies both ways.
+	SpeedLimitUpBps *int64 `json:"speed_limit_up_bps" msgpack:"speed_limit_up_bps"`
+	DeviceLimit     int    `json:"device_limit" msgpack:"device_limit"`
 }
 
 // SpeedLimitBytes returns the user's speed limit in bytes/s, 0 meaning unlimited.
@@ -34,6 +38,14 @@ func (u UserInfo) SpeedLimitBytes() int64 {
 		return u.SpeedLimitBps
 	}
 	return MbpsToBytes(u.SpeedLimit)
+}
+
+// SpeedLimitUpBytes returns the user's upload limit in bytes/s, 0 meaning unlimited.
+func (u UserInfo) SpeedLimitUpBytes() int64 {
+	if u.SpeedLimitUpBps != nil {
+		return *u.SpeedLimitUpBps
+	}
+	return u.SpeedLimitBytes()
 }
 
 // MbpsToBytes converts a Mbps rate to bytes/s.

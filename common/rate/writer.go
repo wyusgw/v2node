@@ -30,6 +30,9 @@ const fillInterval = 20 * time.Millisecond
 const ticksPerSecond = int64(time.Second / fillInterval)
 
 func newBucket(rate int64) *ratelimit.Bucket {
+	if rate <= 0 {
+		return nil // unlimited
+	}
 	quantum := rate / ticksPerSecond
 	if quantum < 1 {
 		quantum = 1
@@ -58,16 +61,18 @@ type DuplexBucket struct {
 	Down *DynamicBucket
 }
 
-func NewDuplexBucket(rate int64) *DuplexBucket {
+// NewDuplexBucket takes the upload and download rates in bytes/s; a rate of
+// 0 leaves that direction unlimited.
+func NewDuplexBucket(up, down int64) *DuplexBucket {
 	return &DuplexBucket{
-		Up:   NewDynamicBucket(rate),
-		Down: NewDynamicBucket(rate),
+		Up:   NewDynamicBucket(up),
+		Down: NewDynamicBucket(down),
 	}
 }
 
-func (d *DuplexBucket) Update(rate int64) {
-	d.Up.Update(rate)
-	d.Down.Update(rate)
+func (d *DuplexBucket) Update(up, down int64) {
+	d.Up.Update(up)
+	d.Down.Update(down)
 }
 
 func NewRateLimitWriter(writer buf.Writer, limiter *DynamicBucket) buf.Writer {
