@@ -202,8 +202,9 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			lm = lmloaded.(*LinkManager)
 		}
 		managedWriter := &ManagedWriter{
-			writer:  uplinkWriter,
-			manager: lm,
+			writer:   uplinkWriter,
+			manager:  lm,
+			downlink: []interface{}{downlinkReader, downlinkWriter},
 		}
 		lm.AddLink(managedWriter, outboundLink.Reader)
 		inboundLink.Writer = managedWriter
@@ -406,6 +407,9 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			manager: lm,
 		}
 		outbound.Writer = managedWriter
+		// 客户端连接直接交给 DispatchLink 时，关闭/中断底层读写不一定能断开连接，
+		// 由 ManagedReader 在连接被 CloseAll 后让下一次读取报错，确保断开生效
+		outbound.Reader = NewManagedReader(outbound.Reader, managedWriter)
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
 			// outbound.Writer 是下行；上行没有可包的 Writer，改为限速读取客户端数据
