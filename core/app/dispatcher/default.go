@@ -209,8 +209,9 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 		inboundLink.Writer = managedWriter
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			inboundLink.Writer = rate.NewRateLimitWriter(inboundLink.Writer, w)
-			outboundLink.Writer = rate.NewRateLimitWriter(outboundLink.Writer, w)
+			// inboundLink.Writer 是上行(客户端→目标)，outboundLink.Writer 是下行，各用各的桶
+			inboundLink.Writer = rate.NewRateLimitWriter(inboundLink.Writer, w.Up)
+			outboundLink.Writer = rate.NewRateLimitWriter(outboundLink.Writer, w.Down)
 		}
 		var t *counter.TrafficCounter
 		if c, ok := d.Counter.Load(sessionInbound.Tag); !ok {
@@ -407,7 +408,9 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 		outbound.Writer = managedWriter
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			outbound.Writer = rate.NewRateLimitWriter(outbound.Writer, w)
+			// outbound.Writer 是下行；上行没有可包的 Writer，改为限速读取客户端数据
+			outbound.Writer = rate.NewRateLimitWriter(outbound.Writer, w.Down)
+			outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
 		}
 		var t *counter.TrafficCounter
 		if c, ok := d.Counter.Load(sessionInbound.Tag); !ok {

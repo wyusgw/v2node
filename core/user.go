@@ -74,6 +74,20 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 	return nil
 }
 
+// CloseUserLinks drops every open connection of the given users so they
+// reconnect under the current limits. Used when a user's speed limit switches
+// between limited and unlimited: connections opened while unlimited carry no
+// rate limiter (and may be using zero-copy splice), and ones opened while
+// limited keep their bucket, so neither would otherwise pick up the change.
+func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
+	for i := range users {
+		user := format.UserTag(tag, users[i].Uuid)
+		if v, ok := vc.dispatcher.LinkManagers.LoadAndDelete(user); ok {
+			v.(*dispatcher.LinkManager).CloseAll()
+		}
+	}
+}
+
 func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserTraffic, error) {
 	trafficSlice := make([]panel.UserTraffic, 0)
 	vc.users.mapLock.RLock()

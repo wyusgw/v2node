@@ -31,7 +31,7 @@ type Limiter struct {
 	UserOnlineIP  *sync.Map      // Key: TagUUID, value: {Key: Ip, value: Uid}
 	UUIDtoUID     map[string]int // Key: UUID, value: Uid
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
-	SpeedLimiter  *sync.Map      // key: TagUUID, value: *DynamicBucket
+	SpeedLimiter  *sync.Map      // key: TagUUID, value: *rate.DuplexBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
 	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
 }
@@ -118,10 +118,10 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		limit := determineSpeedLimit(panel.MbpsToBytes(l.SpeedLimit), modified[i].SpeedLimitBytes())
 		if limit > 0 {
 			if v, ok := l.SpeedLimiter.Load(format.UserTag(tag, modified[i].Uuid)); ok {
-				d := v.(*rate.DynamicBucket)
+				d := v.(*rate.DuplexBucket)
 				d.Update(limit)
 			} else {
-				d := rate.NewDynamicBucket(limit)
+				d := rate.NewDuplexBucket(limit)
 				l.SpeedLimiter.Store(format.UserTag(tag, modified[i].Uuid), d)
 			}
 		} else {
@@ -156,7 +156,7 @@ func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire ti
 	return nil
 }
 
-func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (DynamicBucket *rate.DynamicBucket, Reject bool) {
+func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bucket *rate.DuplexBucket, Reject bool) {
 	// check if ipv4 mapped ipv6
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
@@ -235,9 +235,9 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Dy
 	limit := determineSpeedLimit(nodeLimit, userLimit) // If you need the Speed limit
 	if limit > 0 {
 		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
-			return v.(*rate.DynamicBucket), false
+			return v.(*rate.DuplexBucket), false
 		} else {
-			d := rate.NewDynamicBucket(limit)
+			d := rate.NewDuplexBucket(limit)
 			l.SpeedLimiter.Store(taguuid, d)
 			return d, false
 		}
