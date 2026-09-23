@@ -29,6 +29,7 @@ import (
 	routing_session "github.com/xtls/xray-core/features/routing/session"
 	"github.com/xtls/xray-core/features/stats"
 	"github.com/xtls/xray-core/transport"
+	"github.com/xtls/xray-core/transport/internet/mieru"
 	"github.com/xtls/xray-core/transport/pipe"
 )
 
@@ -414,7 +415,12 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			sessionInbound.CanSpliceCopy = 3
 			// outbound.Writer 是下行；上行没有可包的 Writer，改为限速读取客户端数据
 			outbound.Writer = rate.NewRateLimitWriter(outbound.Writer, w.Down)
-			outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
+			// mieru 会先把客户端上传的数据收进自己几十 MB 的会话缓冲，在这里限速只能限住转发出去的速度，
+			// 客户端照样满速上传；改为在原始 TCP 连接上限速读取，让客户端自身被限住。找不到原始连接
+			// （如 UDP 底层）时退回到限速读取
+			if !(sessionInbound.Name == "mieru" && mieru.AttachIngressLimiter(sessionInbound.Source.NetAddr(), w.Up)) {
+				outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
+			}
 		}
 		var t *counter.TrafficCounter
 		if c, ok := d.Counter.Load(sessionInbound.Tag); !ok {
