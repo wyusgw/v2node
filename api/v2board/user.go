@@ -18,10 +18,27 @@ type OnlineUser struct {
 }
 
 type UserInfo struct {
-	Id          int    `json:"id" msgpack:"id"`
-	Uuid        string `json:"uuid" msgpack:"uuid"`
-	SpeedLimit  int    `json:"speed_limit" msgpack:"speed_limit"`
-	DeviceLimit int    `json:"device_limit" msgpack:"device_limit"`
+	Id         int    `json:"id" msgpack:"id"`
+	Uuid       string `json:"uuid" msgpack:"uuid"`
+	SpeedLimit int    `json:"speed_limit" msgpack:"speed_limit"`
+	// SpeedLimitBps is the exact per-user limit in bytes/s. The panel sends it
+	// alongside SpeedLimit (whole Mbps, rounded up) so limits set in KB/s or
+	// MB/s aren't rounded; older panels omit it and SpeedLimit is used instead.
+	SpeedLimitBps int64 `json:"speed_limit_bps" msgpack:"speed_limit_bps"`
+	DeviceLimit   int   `json:"device_limit" msgpack:"device_limit"`
+}
+
+// SpeedLimitBytes returns the user's speed limit in bytes/s, 0 meaning unlimited.
+func (u UserInfo) SpeedLimitBytes() int64 {
+	if u.SpeedLimitBps > 0 {
+		return u.SpeedLimitBps
+	}
+	return MbpsToBytes(u.SpeedLimit)
+}
+
+// MbpsToBytes converts a Mbps rate to bytes/s.
+func MbpsToBytes(mbps int) int64 {
+	return int64(mbps) * 1000000 / 8
 }
 
 type UserListBody struct {
