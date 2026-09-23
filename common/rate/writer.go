@@ -51,6 +51,25 @@ func (d *DynamicBucket) Update(rate int64) {
 	d.v.Store(newBucket(rate))
 }
 
+// DuplexBucket holds separate upload and download buckets for one user, so
+// each direction gets the full configured rate instead of sharing it.
+type DuplexBucket struct {
+	Up   *DynamicBucket
+	Down *DynamicBucket
+}
+
+func NewDuplexBucket(rate int64) *DuplexBucket {
+	return &DuplexBucket{
+		Up:   NewDynamicBucket(rate),
+		Down: NewDynamicBucket(rate),
+	}
+}
+
+func (d *DuplexBucket) Update(rate int64) {
+	d.Up.Update(rate)
+	d.Down.Update(rate)
+}
+
 func NewRateLimitWriter(writer buf.Writer, limiter *DynamicBucket) buf.Writer {
 	return &Writer{
 		writer:  writer,

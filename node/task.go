@@ -125,6 +125,20 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		return nil
 	}
 	deleted, added, modified := compareUserList(c.userList, newU)
+	// 限速在"不限速 ↔ 限速"之间切换时，已建立的连接拿不到新的限速器，
+	// 需要断开让客户端重连；限速值之间的调整由限速桶实时更新，不必断开
+	var speedToggled []panel.UserInfo
+	if len(modified) > 0 {
+		oldLimit := make(map[string]int64, len(c.userList))
+		for _, u := range c.userList {
+			oldLimit[u.Uuid] = u.SpeedLimitBytes()
+		}
+		for _, u := range modified {
+			if (oldLimit[u.Uuid] == 0) != (u.SpeedLimitBytes() == 0) {
+				speedToggled = append(speedToggled, u)
+			}
+		}
+	}
 	if len(deleted) > 0 {
 		// have deleted users
 		err = c.server.DelUsers(deleted, c.tag, c.info)
@@ -154,6 +168,9 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	if len(added) > 0 || len(deleted) > 0 || len(modified) > 0 {
 		// update Limiter
 		c.limiter.UpdateUser(c.tag, added, deleted, modified)
+	}
+	if len(speedToggled) > 0 {
+		c.server.CloseUserLinks(c.tag, speedToggled)
 	}
 	c.userList = newU
 	log.WithField("tag", c.tag).Infof("%d user deleted, %d user added, %d user modified", len(deleted), len(added), len(modified))
