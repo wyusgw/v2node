@@ -444,14 +444,22 @@ func buildHysteria2(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourCon
 	hysteriasetting := &coreConf.HysteriaConfig{
 		Version: 2,
 	}
-	finalmask := &coreConf.FinalMask{}
-	if !s.Ignore_Client_Bandwidth && (s.UpMbps > 0 || s.DownMbps > 0) {
-		finalmask.QuicParams = &coreConf.QuicParamsConfig{
-			Congestion: "force-brutal",
-			BrutalUp:   up,
-			BrutalDown: down,
-		}
+	finalmask := &coreConf.FinalMask{
+		QuicParams: &coreConf.QuicParamsConfig{},
 	}
+	if !s.Ignore_Client_Bandwidth && (s.UpMbps > 0 || s.DownMbps > 0) {
+		finalmask.QuicParams.Congestion = "force-brutal"
+		finalmask.QuicParams.BrutalUp = up
+		finalmask.QuicParams.BrutalDown = down
+	}
+	// Xray 的 hysteria 服务端默认初始接收窗口就是上限（单流 8MB、单连接 20MB），
+	// 限速用户可以先满速塞进这么多数据才被限住，客户端看起来上行没被限速。
+	// 改为从小窗口起步，quic-go 只在应用读得跟上时才把窗口放大到同样的上限，
+	// 不限速的用户几个 RTT 内就能涨满，限速用户则一直只能超前一个小窗口
+	finalmask.QuicParams.InitStreamReceiveWindow = 128 << 10
+	finalmask.QuicParams.MaxStreamReceiveWindow = 8 << 20
+	finalmask.QuicParams.InitConnectionReceiveWindow = 320 << 10
+	finalmask.QuicParams.MaxConnectionReceiveWindow = 20 << 20
 	if s.Obfs != "" && s.ObfsPassword != "" {
 		rawobfsJSON := json.RawMessage(fmt.Sprintf(`{"password":"%s"}`, s.ObfsPassword))
 		finalmask.Udp = []conf.Mask{

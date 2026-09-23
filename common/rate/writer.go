@@ -75,6 +75,15 @@ func (d *DuplexBucket) Update(up, down int64) {
 	d.Down.Update(down)
 }
 
+// Wait blocks until n bytes are allowed through, or returns at once when the
+// bucket is currently unlimited. It lets a DynamicBucket pace raw connection
+// reads outside the buf.Reader/Writer pipeline.
+func (d *DynamicBucket) Wait(n int64) {
+	if b := d.Get(); b != nil {
+		b.Wait(n)
+	}
+}
+
 func NewRateLimitWriter(writer buf.Writer, limiter *DynamicBucket) buf.Writer {
 	return &Writer{
 		writer:  writer,
