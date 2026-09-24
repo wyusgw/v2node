@@ -71,6 +71,14 @@ func (w *ManagedWriter) Close() error {
 	return common.Close(w.writer)
 }
 
+// Interrupt forwards a real interrupt to the underlying pipe. Without it,
+// common.Interrupt falls back to Close, which lets a failed connection's
+// buffered data be drained instead of released right away.
+func (w *ManagedWriter) Interrupt() {
+	w.manager.RemoveWriter(w)
+	common.Interrupt(w.writer)
+}
+
 type LinkManager struct {
 	links  map[*ManagedWriter]buf.Reader
 	mu     sync.RWMutex
