@@ -1,0 +1,38 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: alloc_space
+Time: 2026-09-24 15:57:07 UTC
+Showing nodes accounting for 3415.59MB, 98.05% of 3483.48MB total
+Dropped 227 nodes (cum <= 17.42MB)
+Showing top 30 nodes out of 42
+      flat  flat%   sum%        cum   cum%
+ 1974.95MB 56.69% 56.69%  1974.95MB 56.69%  crypto/internal/fips140/aes/gcm.New (inline)
+ 1312.64MB 37.68% 94.38%  1312.64MB 37.68%  crypto/internal/fips140/aes.New (inline)
+   58.50MB  1.68% 96.06%    73.12MB  2.10%  github.com/xtls/xray-core/common/buf.New
+      23MB  0.66% 96.72%       23MB  0.66%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+   22.50MB  0.65% 97.36%    60.01MB  1.72%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+      21MB   0.6% 97.97%    64.59MB  1.85%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).writeStream
+       2MB 0.057% 98.02%    26.02MB  0.75%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+    0.50MB 0.014% 98.04%  3301.64MB 94.78%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection
+    0.50MB 0.014% 98.05%       28MB   0.8%  github.com/xtls/xray-core/common/buf.(*SingleReader).ReadMultiBuffer
+         0     0% 98.05%  1312.64MB 37.68%  crypto/aes.NewCipher
+         0     0% 98.05%  1974.95MB 56.69%  crypto/cipher.NewGCM
+         0     0% 98.05%  1974.95MB 56.69%  crypto/cipher.newGCM
+         0     0% 98.05%    21.53MB  0.62%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0% 98.05%    21.53MB  0.62%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0% 98.05%    21.03MB   0.6%  github.com/spf13/cobra.(*Command).execute
+         0     0% 98.05%    21.53MB  0.62%  github.com/wyusgw/v2node/cmd.Run
+         0     0% 98.05%    21.03MB   0.6%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0% 98.05%    20.53MB  0.59%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0% 98.05%    20.53MB  0.59%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0% 98.05%  3301.64MB 94.78%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+         0     0% 98.05%    31.51MB   0.9%  github.com/xtls/xray-core/common/buf.(*BufferedReader).Read
+         0     0% 98.05%       59MB  1.69%  github.com/xtls/xray-core/common/buf.(*BufferedReader).ReadMultiBuffer
+         0     0% 98.05%   140.10MB  4.02%  github.com/xtls/xray-core/common/buf.Copy
+         0     0% 98.05%    42.02MB  1.21%  github.com/xtls/xray-core/common/buf.ReadBuffer
+         0     0% 98.05%   139.10MB  3.99%  github.com/xtls/xray-core/common/buf.copyInternal
+         0     0% 98.05%    37.51MB  1.08%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readInternal
+         0     0% 98.05%       28MB   0.8%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readSize
+         0     0% 98.05%    64.59MB  1.85%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).WriteMultiBuffer
+         0     0% 98.05%  3287.59MB 94.38%  github.com/xtls/xray-core/common/crypto.NewAesGcm
+         0     0% 98.05%   144.61MB  4.15%  github.com/xtls/xray-core/common/task.Run.func1

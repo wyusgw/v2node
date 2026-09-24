@@ -1,0 +1,39 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: cpu
+Time: 2026-09-24 15:45:03 UTC
+Duration: 37s, Total samples = 23.16s (62.59%)
+Showing nodes accounting for 15.87s, 68.52% of 23.16s total
+Dropped 411 nodes (cum <= 0.12s)
+Showing top 30 nodes out of 179
+      flat  flat%   sum%        cum   cum%
+     5.55s 23.96% 23.96%      5.55s 23.96%  internal/runtime/syscall/linux.Syscall6
+     1.32s  5.70% 29.66%      1.32s  5.70%  crypto/sha1.blockSHANI
+     0.97s  4.19% 33.85%      1.58s  6.82%  runtime.tryDeferToSpanScan
+     0.88s  3.80% 37.65%      1.96s  8.46%  runtime.mallocgcSmallNoscan
+     0.43s  1.86% 39.51%      3.22s 13.90%  github.com/xtls/xray-core/proxy/shadowsocks.(*subkeyKDF).derive
+     0.43s  1.86% 41.36%      0.43s  1.86%  runtime.spanClass.sizeclass (inline)
+     0.40s  1.73% 43.09%      0.76s  3.28%  runtime.(*unwinder).resolveInternal
+     0.40s  1.73% 44.82%      0.40s  1.73%  runtime.memmove
+     0.39s  1.68% 46.50%      0.42s  1.81%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.37s  1.60% 48.10%      1.63s  7.04%  crypto/sha1.(*digest).checkSum
+     0.34s  1.47% 49.57%      0.34s  1.47%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     0.29s  1.25% 50.82%      0.52s  2.25%  runtime.mallocgcSmallScanNoHeader
+     0.29s  1.25% 52.07%      0.75s  3.24%  runtime.scanObjectsSmall
+     0.28s  1.21% 53.28%     12.09s 52.20%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.28s  1.21% 54.49%      0.32s  1.38%  runtime.findObject
+     0.26s  1.12% 55.61%      1.96s  8.46%  crypto/sha1.(*digest).Write
+     0.26s  1.12% 56.74%      0.73s  3.15%  runtime.pcvalue
+     0.26s  1.12% 57.86%      0.68s  2.94%  runtime.scanblock
+     0.25s  1.08% 58.94%      0.25s  1.08%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.25s  1.08% 60.02%      0.25s  1.08%  runtime.memclrNoHeapPointers
+     0.24s  1.04% 61.05%      0.65s  2.81%  runtime.scanObject
+     0.23s  0.99% 62.05%      1.92s  8.29%  crypto/sha1.(*digest).Sum
+     0.23s  0.99% 63.04%      0.47s  2.03%  runtime.chansend
+     0.20s  0.86% 63.90%      0.35s  1.51%  runtime.scanObjectSmall
+     0.19s  0.82% 64.72%      0.19s  0.82%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.19s  0.82% 65.54%      2.44s 10.54%  runtime.scanSpan
+     0.18s  0.78% 66.32%      0.19s  0.82%  runtime.gopark
+     0.17s  0.73% 67.06%      7.20s 31.09%  github.com/xtls/xray-core/proxy/shadowsocks.(*trialDecrypter).try
+     0.17s  0.73% 67.79%      0.50s  2.16%  runtime.selectgo
+     0.17s  0.73% 68.52%      0.26s  1.12%  runtime.step

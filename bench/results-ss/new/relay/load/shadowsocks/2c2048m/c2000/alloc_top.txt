@@ -1,0 +1,38 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: alloc_space
+Time: 2026-09-24 15:53:43 UTC
+Showing nodes accounting for 20416.61MB, 98.69% of 20688.12MB total
+Dropped 335 nodes (cum <= 103.44MB)
+Showing top 30 nodes out of 33
+      flat  flat%   sum%        cum   cum%
+11900.21MB 57.52% 57.52% 11900.21MB 57.52%  crypto/internal/fips140/aes/gcm.New (inline)
+ 7915.86MB 38.26% 95.78%  7915.86MB 38.26%  crypto/internal/fips140/aes.New (inline)
+  252.51MB  1.22% 97.01%   329.11MB  1.59%  github.com/xtls/xray-core/common/buf.New
+     119MB  0.58% 97.58%      120MB  0.58%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+  111.51MB  0.54% 98.12%   331.82MB  1.60%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+   91.51MB  0.44% 98.56%   250.21MB  1.21%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).writeStream
+   12.50MB  0.06% 98.62%   128.68MB  0.62%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+       8MB 0.039% 98.66%   124.63MB   0.6%  github.com/xtls/xray-core/common/buf.(*SingleReader).ReadMultiBuffer
+       2MB 0.0097% 98.67% 19904.06MB 96.21%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB 0.0073% 98.68% 19897.05MB 96.18%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection
+       1MB 0.0048% 98.68% 19814.14MB 95.78%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache
+    0.50MB 0.0024% 98.69% 19874.46MB 96.07%  github.com/xtls/xray-core/proxy/shadowsocks.ReadTCPSessionWithCache
+    0.50MB 0.0024% 98.69%   647.43MB  3.13%  github.com/xtls/xray-core/common/buf.Copy
+         0     0% 98.69%  7915.86MB 38.26%  crypto/aes.NewCipher
+         0     0% 98.69% 11900.21MB 57.52%  crypto/cipher.NewGCM
+         0     0% 98.69% 11900.21MB 57.52%  crypto/cipher.newGCM
+         0     0% 98.69%   175.79MB  0.85%  github.com/xtls/xray-core/common/buf.(*BufferedReader).Read
+         0     0% 98.69%   307.16MB  1.48%  github.com/xtls/xray-core/common/buf.(*BufferedReader).ReadMultiBuffer
+         0     0% 98.69%   178.21MB  0.86%  github.com/xtls/xray-core/common/buf.ReadBuffer
+         0     0% 98.69%   646.43MB  3.12%  github.com/xtls/xray-core/common/buf.copyInternal
+         0     0% 98.69%   220.30MB  1.06%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readInternal
+         0     0% 98.69%   124.63MB   0.6%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readSize
+         0     0% 98.69%   250.21MB  1.21%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).WriteMultiBuffer
+         0     0% 98.69% 19816.08MB 95.78%  github.com/xtls/xray-core/common/crypto.NewAesGcm
+         0     0% 98.69%   678.95MB  3.28%  github.com/xtls/xray-core/common/task.Run.func1
+         0     0% 98.69% 19897.05MB 96.18%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).Process
+         0     0% 98.69%   308.16MB  1.49%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection.OnSuccess.func4
+         0     0% 98.69%   275.72MB  1.33%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection.func1
+         0     0% 98.69%   308.16MB  1.49%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection.func2
+         0     0% 98.69% 19810.07MB 95.76%  github.com/xtls/xray-core/proxy/shadowsocks.(*trialDecrypter).try

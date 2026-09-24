@@ -1,0 +1,37 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: inuse_space
+Time: 2026-09-24 15:57:07 UTC
+Showing nodes accounting for 29869.49kB, 100% of 29869.49kB total
+Showing top 30 nodes out of 110
+      flat  flat%   sum%        cum   cum%
+14448.29kB 48.37% 48.37% 14448.29kB 48.37%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 4608.35kB 15.43% 63.80%  4608.35kB 15.43%  fmt.Sprintf
+ 1537.12kB  5.15% 68.95%  1537.12kB  5.15%  crypto/internal/fips140/aes/gcm.New (inline)
+ 1184.27kB  3.96% 72.91%  1184.27kB  3.96%  runtime/pprof.StartCPUProfile
+ 1024.06kB  3.43% 76.34%  1024.06kB  3.43%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+  902.59kB  3.02% 79.36%   902.59kB  3.02%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  1.78% 81.14%   532.26kB  1.78%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  512.23kB  1.71% 82.86%   512.23kB  1.71%  runtime.mallocgc
+  512.07kB  1.71% 84.57%   512.07kB  1.71%  google.golang.org/protobuf/internal/impl.fieldInfoForScalar
+  512.05kB  1.71% 86.29%   512.05kB  1.71%  github.com/baidubce/bce-sdk-go/util/log.NewLogger.func1
+  512.05kB  1.71% 88.00%   512.05kB  1.71%  github.com/xtls/xray-core/common/task.Run
+  512.02kB  1.71% 89.71%   512.02kB  1.71%  github.com/ultradns/ultradns-go-sdk/pkg/record/pool.init
+  512.02kB  1.71% 91.43%   512.02kB  1.71%  github.com/xtls/xray-core/common/buf.NewBufferedWriter
+  512.02kB  1.71% 93.14%  2048.11kB  6.86%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  512.02kB  1.71% 94.86%   512.02kB  1.71%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+  512.02kB  1.71% 96.57%   512.02kB  1.71%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.01kB  1.71% 98.29%   512.01kB  1.71%  github.com/xtls/xray-core/proxy.readV.AddToStatCounter.func2
+     512kB  1.71%   100%      512kB  1.71%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection.func2.UpdateActivity.1
+         0     0%   100%  1537.12kB  5.15%  crypto/cipher.NewGCM
+         0     0%   100%  1537.12kB  5.15%  crypto/cipher.newGCM
+         0     0%   100%  8583.14kB 28.74%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  8583.14kB 28.74%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  8583.14kB 28.74%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%  8583.14kB 28.74%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  8583.14kB 28.74%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%  4608.35kB 15.43%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%  4096.27kB 13.71%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+         0     0%   100%   512.07kB  1.71%  github.com/wyusgw/v2node/core.(*V2Core).Start
+         0     0%   100%   512.07kB  1.71%  github.com/wyusgw/v2node/core.getCore
+         0     0%   100%  3072.22kB 10.29%  github.com/wyusgw/v2node/limiter.AddLimiter

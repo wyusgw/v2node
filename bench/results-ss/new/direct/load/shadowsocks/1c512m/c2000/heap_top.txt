@@ -1,0 +1,37 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: inuse_space
+Time: 2026-09-24 15:55:59 UTC
+Showing nodes accounting for 83.04MB, 91.21% of 91.04MB total
+Showing top 30 nodes out of 185
+      flat  flat%   sum%        cum   cum%
+   43.84MB 48.16% 48.16%    43.84MB 48.16%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    7.06MB  7.75% 55.91%     7.06MB  7.75%  runtime.mallocgc
+    3.55MB  3.90% 59.81%     4.05MB  4.45%  github.com/wyusgw/v2node/limiter.AddLimiter
+       3MB  3.30% 63.11%        3MB  3.30%  crypto/internal/fips140/aes/gcm.New
+       3MB  3.30% 66.41%        3MB  3.30%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+       2MB  2.20% 68.61%        2MB  2.20%  context.(*cancelCtx).Done
+       2MB  2.20% 70.80%        4MB  4.39%  github.com/xtls/xray-core/common/task.Run
+       2MB  2.20% 73.00%        2MB  2.20%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+    1.50MB  1.65% 74.65%        2MB  2.20%  context.(*cancelCtx).propagateCancel
+    1.50MB  1.65% 76.30%     1.50MB  1.65%  fmt.Sprintf
+    1.50MB  1.65% 77.94%        6MB  6.59%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+       1MB  1.10% 79.04%        1MB  1.10%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+       1MB  1.10% 80.14%        1MB  1.10%  net.newFD
+       1MB  1.10% 81.24%        2MB  2.20%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+       1MB  1.10% 82.34%        1MB  1.10%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.10% 83.44%        1MB  1.10%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).SetTimeout
+    0.55MB   0.6% 84.04%     0.55MB   0.6%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+    0.51MB  0.56% 84.60%     4.56MB  5.01%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    0.51MB  0.56% 85.17%     0.51MB  0.56%  golang.org/x/net/html.map.init.1
+    0.50MB  0.55% 85.72%     0.50MB  0.55%  github.com/sacloud/iaas-api-go.SetClientFactoryFunc
+    0.50MB  0.55% 86.27%     0.50MB  0.55%  regexp/syntax.(*compiler).inst
+    0.50MB  0.55% 86.82%     0.50MB  0.55%  github.com/aws/aws-sdk-go-v2/service/ssooidc/internal/endpoints.init
+    0.50MB  0.55% 87.37%     0.50MB  0.55%  github.com/aws/aws-sdk-go-v2/service/sts/internal/endpoints.init
+    0.50MB  0.55% 87.92%     0.50MB  0.55%  github.com/gabriel-vasile/mimetype.init
+    0.50MB  0.55% 88.47%     0.50MB  0.55%  google.golang.org/protobuf/internal/filedesc.newRawFile
+    0.50MB  0.55% 89.01%     0.50MB  0.55%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+    0.50MB  0.55% 89.56%    29.72MB 32.65%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+    0.50MB  0.55% 90.11%     1.50MB  1.65%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+    0.50MB  0.55% 90.66%     0.50MB  0.55%  github.com/xtls/xray-core/common/signal/done.New (inline)
+    0.50MB  0.55% 91.21%     0.50MB  0.55%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)

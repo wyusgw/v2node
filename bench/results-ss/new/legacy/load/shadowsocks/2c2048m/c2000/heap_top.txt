@@ -1,0 +1,38 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: inuse_space
+Time: 2026-09-24 15:49:12 UTC
+Showing nodes accounting for 140.02MB, 94.79% of 147.72MB total
+Dropped 73 nodes (cum <= 0.74MB)
+Showing top 30 nodes out of 128
+      flat  flat%   sum%        cum   cum%
+   75.59MB 51.17% 51.17%    75.59MB 51.17%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+   19.51MB 13.21% 64.38%    19.51MB 13.21%  crypto/internal/fips140/aes/gcm.New (inline)
+   11.01MB  7.45% 71.83%    11.01MB  7.45%  crypto/internal/fips140/aes.New (inline)
+    7.50MB  5.08% 76.91%     7.50MB  5.08%  runtime.mallocgc
+    2.50MB  1.69% 78.60%     2.50MB  1.69%  fmt.Sprintf
+       2MB  1.36% 79.96%        2MB  1.36%  internal/poll.(*FD).Writev
+       2MB  1.35% 81.31%        4MB  2.71%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+       2MB  1.35% 82.67%        2MB  1.35%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.02% 83.68%    55.20MB 37.37%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB  1.02% 84.70%     1.50MB  1.02%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+    1.50MB  1.02% 85.71%        3MB  2.03%  github.com/wyusgw/v2node/limiter.AddLimiter
+    1.50MB  1.02% 86.73%     1.50MB  1.02%  encoding/json/v2.makeString
+    1.03MB  0.69% 87.42%     1.03MB  0.69%  github.com/go-playground/validator/v10.map.init.7
+       1MB  0.68% 88.10%        1MB  0.68%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  0.68% 88.78%    25.18MB 17.05%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+       1MB  0.68% 89.45%        1MB  0.68%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+       1MB  0.68% 90.13%        1MB  0.68%  github.com/xtls/xray-core/common/buf.NewReadVReader (inline)
+       1MB  0.68% 90.81%     3.50MB  2.37%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).routedDispatch
+       1MB  0.68% 91.48%        1MB  0.68%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  0.68% 92.16%     1.50MB  1.02%  context.WithCancel
+    0.88MB   0.6% 92.76%     2.38MB  1.61%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.50MB  0.34% 93.10%    48.36MB 32.74%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+    0.50MB  0.34% 93.44%    76.09MB 51.51%  github.com/xtls/xray-core/common/buf.New
+    0.50MB  0.34% 93.77%    46.13MB 31.23%  github.com/xtls/xray-core/proxy/shadowsocks.ReadTCPSessionWithCache
+    0.50MB  0.34% 94.11%    66.97MB 45.34%  github.com/xtls/xray-core/common/buf.Copy
+    0.50MB  0.34% 94.45%     2.50MB  1.69%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    0.50MB  0.34% 94.79%     1.50MB  1.02%  github.com/xtls/xray-core/proxy/shadowsocks.(*UserCache).addSuccessUser
+         0     0% 94.79%    11.01MB  7.45%  crypto/aes.NewCipher
+         0     0% 94.79%    19.51MB 13.21%  crypto/cipher.NewGCM
+         0     0% 94.79%    19.51MB 13.21%  crypto/cipher.newGCM

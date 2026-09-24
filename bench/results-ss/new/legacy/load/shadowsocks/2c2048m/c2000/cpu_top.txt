@@ -1,0 +1,39 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: cpu
+Time: 2026-09-24 15:48:29 UTC
+Duration: 37.04s, Total samples = 71.43s (192.83%)
+Showing nodes accounting for 47.02s, 65.83% of 71.43s total
+Dropped 684 nodes (cum <= 0.36s)
+Showing top 30 nodes out of 217
+      flat  flat%   sum%        cum   cum%
+     8.81s 12.33% 12.33%      8.81s 12.33%  internal/runtime/syscall/linux.Syscall6
+     6.40s  8.96% 21.29%      6.40s  8.96%  crypto/sha1.blockSHANI
+     3.18s  4.45% 25.75%      3.18s  4.45%  runtime.spanClass.sizeclass (inline)
+     2.61s  3.65% 29.40%      2.61s  3.65%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     2.50s  3.50% 32.90%      6.46s  9.04%  runtime.tryDeferToSpanScan
+     2.09s  2.93% 35.83%      3.55s  4.97%  runtime.(*unwinder).resolveInternal
+     1.66s  2.32% 38.15%      1.66s  2.32%  runtime.memmove
+     1.44s  2.02% 40.17%     13.11s 18.35%  github.com/xtls/xray-core/proxy/shadowsocks.(*subkeyKDF).derive
+     1.34s  1.88% 42.04%     31.70s 44.38%  github.com/xtls/xray-core/proxy/shadowsocks.(*trialDecrypter).try
+     1.25s  1.75% 43.79%      1.36s  1.90%  runtime.findObject
+     1.10s  1.54% 45.33%      6.47s  9.06%  crypto/sha1.(*digest).checkSum
+     1.10s  1.54% 46.87%      1.10s  1.54%  runtime.memclrNoHeapPointers
+     1.06s  1.48% 48.36%      2.25s  3.15%  runtime.scanObjectSmall
+     1.04s  1.46% 49.81%      3.12s  4.37%  runtime.scanblock
+        1s  1.40% 51.21%      2.92s  4.09%  runtime.pcvalue
+     0.98s  1.37% 52.58%      7.85s 10.99%  crypto/sha1.(*digest).Sum
+     0.97s  1.36% 53.94%      1.25s  1.75%  runtime.step
+     0.93s  1.30% 55.24%         3s  4.20%  runtime.scanObjectsSmall
+     0.86s  1.20% 56.45%      0.92s  1.29%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.81s  1.13% 57.58%      8.48s 11.87%  crypto/sha1.(*digest).Write
+     0.72s  1.01% 58.59%      0.77s  1.08%  runtime.gcmarknewobject
+     0.63s  0.88% 59.47%      0.63s  0.88%  crypto/internal/fips140/aes/gcm.gcmAesDec
+     0.63s  0.88% 60.35%      9.52s 13.33%  runtime.scanSpan
+     0.61s  0.85% 61.21%      0.65s  0.91%  runtime.(*mspan).moveInlineMarks
+     0.59s  0.83% 62.03%      1.85s  2.59%  runtime.scanObject
+     0.56s  0.78% 62.82%      0.56s  0.78%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.55s  0.77% 63.59%      0.82s  1.15%  crypto/internal/fips140/aes.expandKeyAsm
+     0.55s  0.77% 64.36%      2.29s  3.21%  runtime.sweepone
+     0.53s  0.74% 65.10%      0.53s  0.74%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.52s  0.73% 65.83%      3.39s  4.75%  crypto/internal/fips140/aes/gcm.newGCM

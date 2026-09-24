@@ -1,0 +1,37 @@
+File: v2node
+Build ID: 4f4a6688b627fb42199e457b87f3dfa68ef33f67
+Type: inuse_space
+Time: 2026-09-24 15:45:44 UTC
+Showing nodes accounting for 38465.82kB, 98.69% of 38977.82kB total
+Showing top 30 nodes out of 139
+      flat  flat%   sum%        cum   cum%
+15996.32kB 41.04% 41.04% 15996.32kB 41.04%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2573.55kB  6.60% 47.64%  4109.73kB 10.54%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 2048.16kB  5.25% 52.90%  2048.16kB  5.25%  fmt.Sprintf
+ 1536.70kB  3.94% 56.84%  1536.70kB  3.94%  runtime.mallocgc
+ 1536.07kB  3.94% 60.78%  3072.13kB  7.88%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+ 1024.16kB  2.63% 63.41%  1024.16kB  2.63%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.12kB  2.63% 66.04%  6668.92kB 17.11%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+ 1024.11kB  2.63% 68.66%  1024.11kB  2.63%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+  902.59kB  2.32% 70.98%   902.59kB  2.32%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  1.37% 72.34%   532.26kB  1.37%  google.golang.org/protobuf/reflect/protoregistry.(*Types).register
+  525.43kB  1.35% 73.69%  1039.12kB  2.67%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+  518.65kB  1.33% 75.02%   518.65kB  1.33%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+  516.01kB  1.32% 76.35%   516.01kB  1.32%  golang.org/x/net/trace.init
+  513.69kB  1.32% 77.66%   513.69kB  1.32%  github.com/xtls/xray-core/proxy/shadowsocks.NewUserCache
+     513kB  1.32% 78.98%      513kB  1.32%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+  512.38kB  1.31% 80.29%   512.38kB  1.31%  crypto/internal/fips140/aes/gcm.New (inline)
+  512.25kB  1.31% 81.61%   512.25kB  1.31%  crypto/internal/fips140/aes.New (inline)
+  512.05kB  1.31% 82.92%   512.05kB  1.31%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+  512.05kB  1.31% 84.24%   512.05kB  1.31%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+  512.04kB  1.31% 85.55%   512.04kB  1.31%  context.withCancel (inline)
+  512.04kB  1.31% 86.86%   512.04kB  1.31%  github.com/xtls/xray-core/common/buf.NewReadVReader (inline)
+  512.03kB  1.31% 88.18%  1024.04kB  2.63%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+  512.02kB  1.31% 89.49%   512.02kB  1.31%  context.WithValue
+  512.02kB  1.31% 90.80%   512.02kB  1.31%  github.com/vishvananda/netlink.init
+  512.02kB  1.31% 92.12%  3084.68kB  7.91%  github.com/xtls/xray-core/proxy/shadowsocks.ReadTCPSessionWithCache
+  512.02kB  1.31% 93.43%   512.02kB  1.31%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+  512.02kB  1.31% 94.75%   512.02kB  1.31%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  1.31% 96.06%  1024.02kB  2.63%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+  512.02kB  1.31% 97.37%   512.02kB  1.31%  internal/poll.(*FD).Writev
+  512.01kB  1.31% 98.69%   512.01kB  1.31%  github.com/xtls/xray-core/proxy/shadowsocks.passwordToCipherKey
