@@ -1,0 +1,37 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: inuse_space
+Time: 2026-09-24 15:14:02 UTC
+Showing nodes accounting for 71.13MB, 91.63% of 77.63MB total
+Showing top 30 nodes out of 222
+      flat  flat%   sum%        cum   cum%
+   25.71MB 33.12% 33.12%    25.71MB 33.12%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+       6MB  7.73% 40.86%        6MB  7.73%  crypto/internal/fips140/aes/gcm.New (inline)
+       5MB  6.44% 47.30%        5MB  6.44%  crypto/internal/fips140/aes.New (inline)
+       4MB  5.15% 52.45%        4MB  5.15%  fmt.Sprintf
+    2.50MB  3.22% 55.68%     2.50MB  3.22%  runtime.mallocgc
+    2.50MB  3.22% 58.90%    32.03MB 41.26%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    2.50MB  3.22% 62.12%        4MB  5.15%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+       2MB  2.58% 64.69%        2MB  2.58%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+    1.50MB  1.93% 66.63%     1.50MB  1.93%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.93% 68.56%     1.50MB  1.93%  github.com/xtls/xray-core/proxy/shadowsocks.init.func2
+    1.50MB  1.93% 70.49%     2.50MB  3.22%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+    1.50MB  1.93% 72.42%     1.50MB  1.93%  crypto/sha1.New
+    1.50MB  1.93% 74.36%     1.50MB  1.93%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+    1.50MB  1.93% 76.29%     1.50MB  1.93%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.29% 77.58%        1MB  1.29%  internal/poll.(*FD).Writev
+       1MB  1.29% 78.87%        1MB  1.29%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  1.29% 80.16%        3MB  3.86%  golang.org/x/crypto/hkdf.Expand
+       1MB  1.29% 81.44%     1.50MB  1.93%  context.withCancel (inline)
+       1MB  1.29% 82.73%        1MB  1.29%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+       1MB  1.29% 84.02%        1MB  1.29%  net.sockaddrToTCP
+       1MB  1.29% 85.31%        1MB  1.29%  crypto/sha1.(*digest).Sum
+    0.88MB  1.14% 86.44%     1.38MB  1.78%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.51MB  0.66% 87.11%     0.51MB  0.66%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB  0.65% 87.76%     0.51MB  0.65%  hash/crc64.makeSlicingBy8Table
+    0.50MB  0.64% 88.40%     0.50MB  0.64%  regexp/syntax.(*compiler).inst
+    0.50MB  0.64% 89.05%     0.50MB  0.64%  regexp.onePassCopy
+    0.50MB  0.64% 89.69%     0.50MB  0.64%  google.golang.org/protobuf/internal/filedesc.newRawFile
+    0.50MB  0.64% 90.34%     0.50MB  0.64%  github.com/volcengine/volc-sdk-golang/service/dns.init
+    0.50MB  0.64% 90.98%     0.50MB  0.64%  context.(*cancelCtx).propagateCancel
+    0.50MB  0.64% 91.63%     0.50MB  0.64%  google.golang.org/protobuf/types/descriptorpb.init

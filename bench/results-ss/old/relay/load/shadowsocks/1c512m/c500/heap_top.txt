@@ -1,0 +1,37 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: inuse_space
+Time: 2026-09-24 15:19:42 UTC
+Showing nodes accounting for 34588.53kB, 100% of 34588.53kB total
+Showing top 30 nodes out of 157
+      flat  flat%   sum%        cum   cum%
+15996.32kB 46.25% 46.25% 15996.32kB 46.25%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2561.88kB  7.41% 53.65%  2561.88kB  7.41%  crypto/internal/fips140/aes/gcm.New (inline)
+ 2074.92kB  6.00% 59.65%  3611.06kB 10.44%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1612.35kB  4.66% 64.31%  1612.35kB  4.66%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+ 1576.28kB  4.56% 68.87%  4212.68kB 12.18%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1536.09kB  4.44% 73.31%  1536.09kB  4.44%  fmt.Sprintf
+ 1024.47kB  2.96% 76.27%  1024.47kB  2.96%  runtime.mallocgc
+ 1024.11kB  2.96% 79.24%  1024.11kB  2.96%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+  521.05kB  1.51% 80.74%   521.05kB  1.51%  encoding/xml.map.init.0
+  516.01kB  1.49% 82.23%   516.01kB  1.49%  golang.org/x/net/trace.init
+  512.28kB  1.48% 83.71%   512.28kB  1.48%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.25kB  1.48% 85.20%   512.25kB  1.48%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile
+  512.23kB  1.48% 86.68%   512.23kB  1.48%  net/http.http2ConfigureServer
+  512.10kB  1.48% 88.16%   512.10kB  1.48%  context.(*cancelCtx).propagateCancel
+  512.08kB  1.48% 89.64%   512.08kB  1.48%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  1.48% 91.12%   512.02kB  1.48%  context.WithValue
+  512.02kB  1.48% 92.60%   512.02kB  1.48%  github.com/vishvananda/netlink.init
+  512.02kB  1.48% 94.08%   512.02kB  1.48%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  1.48% 95.56%   512.02kB  1.48%  regexp/syntax.appendRange
+  512.01kB  1.48% 97.04%   512.01kB  1.48%  github.com/go-playground/validator/v10.lazyRegexCompile (inline)
+  512.01kB  1.48% 98.52%   512.01kB  1.48%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).getCipher
+     512kB  1.48%   100%      512kB  1.48%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+         0     0%   100%   512.10kB  1.48%  context.WithDeadline
+         0     0%   100%   512.10kB  1.48%  context.WithDeadlineCause
+         0     0%   100%  2561.88kB  7.41%  crypto/cipher.NewGCM
+         0     0%   100%  2561.88kB  7.41%  crypto/cipher.newGCM
+         0     0%   100%   521.05kB  1.51%  encoding/xml.init
+         0     0%   100%   512.02kB  1.48%  github.com/aws/aws-sdk-go-v2/service/ssooidc/internal/endpoints.init
+         0     0%   100%   512.01kB  1.48%  github.com/go-playground/validator/v10.init
+         0     0%   100%  7823.74kB 22.62%  github.com/spf13/cobra.(*Command).Execute

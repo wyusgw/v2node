@@ -1,0 +1,39 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: cpu
+Time: 2026-09-24 15:30:21 UTC
+Duration: 37s, Total samples = 15.68s (42.38%)
+Showing nodes accounting for 11.49s, 73.28% of 15.68s total
+Dropped 343 nodes (cum <= 0.08s)
+Showing top 30 nodes out of 209
+      flat  flat%   sum%        cum   cum%
+     6.85s 43.69% 43.69%      6.85s 43.69%  internal/runtime/syscall/linux.Syscall6
+     1.01s  6.44% 50.13%      1.01s  6.44%  runtime.futex
+     0.36s  2.30% 52.42%     11.52s 73.47%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.28s  1.79% 54.21%      0.28s  1.79%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.19s  1.21% 55.42%      0.66s  4.21%  runtime.chansend
+     0.17s  1.08% 56.51%      0.17s  1.08%  runtime.memclrNoHeapPointers
+     0.17s  1.08% 57.59%      0.33s  2.10%  runtime.tryDeferToSpanScan
+     0.15s  0.96% 58.55%      0.19s  1.21%  runtime.sellock
+     0.14s  0.89% 59.44%      1.70s 10.84%  github.com/xtls/xray-core/common/buf.(*BufferedReader).Read
+     0.14s  0.89% 60.33%      0.96s  6.12%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache.func1
+     0.14s  0.89% 61.22%      0.14s  0.89%  runtime.gopark
+     0.14s  0.89% 62.12%      0.14s  0.89%  runtime.memmove
+     0.13s  0.83% 62.95%      0.50s  3.19%  runtime.selectgo
+     0.12s  0.77% 63.71%      0.12s  0.77%  internal/sync.(*Mutex).Lock (inline)
+     0.12s  0.77% 64.48%      0.62s  3.95%  runtime.netpoll
+     0.12s  0.77% 65.24%      0.12s  0.77%  runtime.spanClass.sizeclass (inline)
+     0.11s   0.7% 65.94%      2.44s 15.56%  github.com/xtls/xray-core/common/buf.ReadBuffer
+     0.11s   0.7% 66.65%      1.66s 10.59%  internal/poll.(*FD).Read
+     0.10s  0.64% 67.28%      0.19s  1.21%  runtime.(*unwinder).resolveInternal
+     0.10s  0.64% 67.92%      0.10s  0.64%  runtime.step
+     0.09s  0.57% 68.49%      0.09s  0.57%  crypto/sha1.blockSHANI
+     0.09s  0.57% 69.07%      0.25s  1.59%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.09s  0.57% 69.64%      0.20s  1.28%  runtime.(*waitq).dequeue (inline)
+     0.09s  0.57% 70.22%      0.09s  0.57%  runtime.nextFreeFast (inline)
+     0.09s  0.57% 70.79%      0.21s  1.34%  runtime.scanObject
+     0.08s  0.51% 71.30%      0.08s  0.51%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.08s  0.51% 71.81%      0.08s  0.51%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.08s  0.51% 72.32%      1.05s  6.70%  internal/sync.(*HashTrieMap[go.shape.interface {},go.shape.interface {}]).iter
+     0.08s  0.51% 72.83%      1.76s 11.22%  net.(*conn).Read
+     0.07s  0.45% 73.28%      0.30s  1.91%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]

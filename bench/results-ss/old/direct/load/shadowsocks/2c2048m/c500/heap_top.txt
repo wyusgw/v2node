@@ -1,0 +1,37 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: inuse_space
+Time: 2026-09-24 15:31:02 UTC
+Showing nodes accounting for 28745.53kB, 94.93% of 30281.57kB total
+Showing top 30 nodes out of 218
+      flat  flat%   sum%        cum   cum%
+ 8772.17kB 28.97% 28.97%  8772.17kB 28.97%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2048.16kB  6.76% 35.73%  2048.16kB  6.76%  fmt.Sprintf
+ 1025.84kB  3.39% 39.12%  1025.84kB  3.39%  regexp/syntax.(*compiler).inst
+ 1024.75kB  3.38% 42.50%  1024.75kB  3.38%  crypto/internal/fips140/aes/gcm.New
+ 1024.47kB  3.38% 45.89%  1024.47kB  3.38%  runtime.mallocgc
+ 1024.11kB  3.38% 49.27%  1024.11kB  3.38%  context.(*cancelCtx).Done
+ 1024.07kB  3.38% 52.65%  1024.07kB  3.38%  github.com/xtls/xray-core/common/signal/done.New
+ 1024.04kB  3.38% 56.03%  3072.22kB 10.15%  github.com/wyusgw/v2node/limiter.AddLimiter
+  902.59kB  2.98% 59.01%  1414.61kB  4.67%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  1.76% 60.77%   532.26kB  1.76%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  532.26kB  1.76% 62.53%   532.26kB  1.76%  google.golang.org/protobuf/reflect/protoregistry.(*Types).register
+  525.43kB  1.74% 64.26%   525.43kB  1.74%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  1.74% 66.00%  2586.96kB  8.54%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  1.74% 67.73%  1559.16kB  5.15%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+  525.43kB  1.74% 69.47%   525.43kB  1.74%  golang.org/x/net/html.map.init.1
+  521.05kB  1.72% 71.19%   521.05kB  1.72%  encoding/xml.map.init.0
+  520.04kB  1.72% 72.91%   520.04kB  1.72%  hash/crc64.makeSlicingBy8Table (inline)
+  516.01kB  1.70% 74.61%   516.01kB  1.70%  golang.org/x/net/trace.init
+  514.63kB  1.70% 76.31%   514.63kB  1.70%  math/rand.newSource
+  514.38kB  1.70% 78.01%   514.38kB  1.70%  github.com/nrdcg/oci-go-sdk/common/v1065.map.init.3
+  513.69kB  1.70% 79.71%   513.69kB  1.70%  github.com/xtls/xray-core/proxy/shadowsocks.NewUserCache
+  512.88kB  1.69% 81.40%   512.88kB  1.69%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+  512.10kB  1.69% 83.09%  1024.16kB  3.38%  context.(*cancelCtx).propagateCancel
+  512.09kB  1.69% 84.78%   512.09kB  1.69%  google.golang.org/protobuf/internal/filedesc.(*File).unmarshalFull
+  512.08kB  1.69% 86.47%   512.08kB  1.69%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.05kB  1.69% 88.16%  1024.11kB  3.38%  github.com/xtls/xray-core/common/task.Run
+  512.03kB  1.69% 89.85%   512.03kB  1.69%  encoding/gob.validUserType
+  512.02kB  1.69% 91.55%   512.02kB  1.69%  encoding/json/v2.makeString
+  512.02kB  1.69% 93.24%   512.02kB  1.69%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+  512.02kB  1.69% 94.93%   512.02kB  1.69%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)

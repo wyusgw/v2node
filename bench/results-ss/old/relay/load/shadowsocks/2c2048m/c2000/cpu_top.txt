@@ -1,0 +1,39 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: cpu
+Time: 2026-09-24 15:22:25 UTC
+Duration: 37.07s, Total samples = 66.99s (180.70%)
+Showing nodes accounting for 42.64s, 63.65% of 66.99s total
+Dropped 655 nodes (cum <= 0.33s)
+Showing top 30 nodes out of 225
+      flat  flat%   sum%        cum   cum%
+    13.08s 19.53% 19.53%     13.08s 19.53%  internal/runtime/syscall/linux.Syscall6
+     3.56s  5.31% 24.84%      3.56s  5.31%  crypto/sha1.blockSHANI
+     2.81s  4.19% 29.03%      2.81s  4.19%  runtime.spanClass.sizeclass (inline)
+     1.87s  2.79% 31.83%      5.33s  7.96%  runtime.tryDeferToSpanScan
+     1.58s  2.36% 34.18%      2.49s  3.72%  runtime.(*unwinder).resolveInternal
+     1.54s  2.30% 36.48%      7.65s 11.42%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+     1.30s  1.94% 38.42%     13.90s 20.75%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache.func1
+     1.30s  1.94% 40.36%      1.30s  1.94%  runtime.memclrNoHeapPointers
+     1.11s  1.66% 42.02%      1.11s  1.66%  runtime.memmove
+     0.99s  1.48% 43.50%      0.99s  1.48%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     0.92s  1.37% 44.87%      1.07s  1.60%  runtime.gcmarknewobject
+     0.87s  1.30% 46.17%      0.87s  1.30%  runtime.nextFreeFast (inline)
+     0.84s  1.25% 47.42%     14.76s 22.03%  internal/sync.(*HashTrieMap[go.shape.interface {},go.shape.interface {}]).iter
+     0.82s  1.22% 48.65%     30.64s 45.74%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.77s  1.15% 49.80%      0.85s  1.27%  runtime.findObject
+     0.77s  1.15% 50.95%      1.80s  2.69%  runtime.scanObjectSmall
+     0.77s  1.15% 52.10%      2.58s  3.85%  runtime.scanblock
+     0.71s  1.06% 53.16%      0.71s  1.06%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.69s  1.03% 54.19%      0.69s  1.03%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.68s  1.02% 55.20%      0.68s  1.02%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.68s  1.02% 56.22%      1.82s  2.72%  runtime.pcvalue
+     0.67s  1.00% 57.22%      0.70s  1.04%  runtime.(*mspan).moveInlineMarks
+     0.64s  0.96% 58.17%      0.81s  1.21%  runtime.step
+     0.63s  0.94% 59.11%      2.38s  3.55%  runtime.scanObjectsSmall
+     0.60s   0.9% 60.01%      7.08s 10.57%  runtime.scanSpan
+     0.58s  0.87% 60.87%      6.56s  9.79%  runtime.mallocgcSmallNoscan
+     0.49s  0.73% 61.61%      1.19s  1.78%  runtime.chansend
+     0.46s  0.69% 62.29%      3.24s  4.84%  crypto/sha1.(*digest).Sum
+     0.46s  0.69% 62.98%      0.46s  0.69%  runtime.gopark
+     0.45s  0.67% 63.65%      0.49s  0.73%  internal/runtime/gc/scan.scanSpanPackedAVX512

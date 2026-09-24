@@ -1,0 +1,37 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: inuse_space
+Time: 2026-09-24 15:28:46 UTC
+Showing nodes accounting for 31323.23kB, 100% of 31323.23kB total
+Showing top 30 nodes out of 157
+      flat  flat%   sum%        cum   cum%
+13932.28kB 44.48% 44.48% 13932.28kB 44.48%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 1536.70kB  4.91% 49.39%  1536.70kB  4.91%  runtime.mallocgc
+ 1536.12kB  4.90% 54.29%  1536.12kB  4.90%  fmt.Sprintf
+ 1086.93kB  3.47% 57.76%  1086.93kB  3.47%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+ 1028.32kB  3.28% 61.04%  1028.32kB  3.28%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+ 1024.75kB  3.27% 64.31%  1024.75kB  3.27%  crypto/internal/fips140/aes/gcm.New (inline)
+ 1024.11kB  3.27% 67.58%  1024.11kB  3.27%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+  902.59kB  2.88% 70.46%   902.59kB  2.88%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  1.68% 72.14%  2636.42kB  8.42%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  1.68% 73.82%  2061.53kB  6.58%  github.com/wyusgw/v2node/limiter.AddLimiter
+  518.65kB  1.66% 75.48%   518.65kB  1.66%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+     513kB  1.64% 77.11%      513kB  1.64%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+  512.25kB  1.64% 78.75%   512.25kB  1.64%  crypto/internal/fips140/aes.New (inline)
+  512.17kB  1.64% 80.38%   512.17kB  1.64%  github.com/volcengine/volc-sdk-golang/service/dns.init
+  512.14kB  1.64% 82.02%   512.14kB  1.64%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+  512.08kB  1.63% 83.65%   512.08kB  1.63%  regexp.compile
+  512.05kB  1.63% 85.29%   512.05kB  1.63%  github.com/xtls/xray-core/common/signal/done.New (inline)
+  512.05kB  1.63% 86.92%   512.05kB  1.63%  github.com/xtls/xray-core/common/task.Run
+  512.05kB  1.63% 88.56%   512.05kB  1.63%  time.newTimer
+  512.03kB  1.63% 90.19%  1024.09kB  3.27%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+  512.02kB  1.63% 91.83%   512.02kB  1.63%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  512.02kB  1.63% 93.46%   512.02kB  1.63%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  1.63% 95.10%   512.02kB  1.63%  github.com/xtls/xray-core/proxy/shadowsocks.(*cacheList).addToFront
+  512.01kB  1.63% 96.73%   512.01kB  1.63%  github.com/xtls/xray-core/common/crypto.NewAuthenticationReader
+  512.01kB  1.63% 98.37%   512.01kB  1.63%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile
+  512.01kB  1.63%   100%  1024.06kB  3.27%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).SetTimeout
+         0     0%   100%   512.25kB  1.64%  crypto/aes.NewCipher
+         0     0%   100%  1024.75kB  3.27%  crypto/cipher.NewGCM
+         0     0%   100%  1024.75kB  3.27%  crypto/cipher.newGCM
+         0     0%   100%   512.01kB  1.63%  github.com/google/s2a-go/internal/proto/v2/common_go_proto.file_internal_proto_v2_common_common_proto_init

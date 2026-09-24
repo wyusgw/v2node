@@ -1,0 +1,39 @@
+File: v2node
+Build ID: d53c0cdcdbd00725f4453cd56d1392f670608382
+Type: cpu
+Time: 2026-09-24 15:28:05 UTC
+Duration: 37s, Total samples = 13.91s (37.59%)
+Showing nodes accounting for 10.43s, 74.98% of 13.91s total
+Dropped 280 nodes (cum <= 0.07s)
+Showing top 30 nodes out of 203
+      flat  flat%   sum%        cum   cum%
+     6.37s 45.79% 45.79%      6.37s 45.79%  internal/runtime/syscall/linux.Syscall6
+     0.43s  3.09% 48.89%     10.80s 77.64%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.27s  1.94% 50.83%      0.58s  4.17%  runtime.chansend
+     0.23s  1.65% 52.48%      0.23s  1.65%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.21s  1.51% 53.99%      0.21s  1.51%  crypto/sha1.blockSHANI
+     0.20s  1.44% 55.43%      0.20s  1.44%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.17s  1.22% 56.65%      2.26s 16.25%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.16s  1.15% 57.80%      0.16s  1.15%  internal/sync.(*Mutex).Lock (inline)
+     0.16s  1.15% 58.95%      0.32s  2.30%  runtime.tryDeferToSpanScan
+     0.15s  1.08% 60.03%      0.91s  6.54%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache.func1
+     0.15s  1.08% 61.11%      1.49s 10.71%  internal/poll.(*FD).Read
+     0.14s  1.01% 62.11%      0.15s  1.08%  runtime.gopark
+     0.14s  1.01% 63.12%      0.14s  1.01%  runtime.memclrNoHeapPointers
+     0.14s  1.01% 64.13%      0.14s  1.01%  runtime.spanClass.sizeclass (inline)
+     0.13s  0.93% 65.06%      0.30s  2.16%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+     0.13s  0.93% 66.00%      0.13s  0.93%  runtime.memmove
+     0.11s  0.79% 66.79%      0.11s  0.79%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     0.11s  0.79% 67.58%      0.20s  1.44%  runtime.(*waitq).dequeue (inline)
+     0.10s  0.72% 68.30%      0.10s  0.72%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.10s  0.72% 69.02%      0.32s  2.30%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.10s  0.72% 69.73%      0.66s  4.74%  runtime.netpoll
+     0.09s  0.65% 70.38%      0.16s  1.15%  runtime.(*unwinder).resolveInternal
+     0.09s  0.65% 71.03%      1.03s  7.40%  runtime.schedule
+     0.09s  0.65% 71.68%      0.12s  0.86%  runtime.sellock
+     0.08s  0.58% 72.25%      0.20s  1.44%  github.com/xtls/xray-core/common/crypto.(*AEADAuthenticator).Open
+     0.08s  0.58% 72.83%      0.99s  7.12%  internal/sync.(*HashTrieMap[go.shape.interface {},go.shape.interface {}]).iter
+     0.08s  0.58% 73.40%      0.09s  0.65%  runtime.findObject
+     0.08s  0.58% 73.98%      0.08s  0.58%  runtime.nextFreeFast (inline)
+     0.07s   0.5% 74.48%      0.07s   0.5%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.07s   0.5% 74.98%      0.07s   0.5%  net.(*TCPConn).Read
