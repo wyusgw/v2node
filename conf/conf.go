@@ -11,9 +11,27 @@ const DefaultNodeRetryCount = 1
 const DefaultNodeTimeout = 15
 
 type Conf struct {
-	LogConfig   LogConfig    `mapstructure:"Log"`
-	NodeConfigs []NodeConfig `mapstructure:"Nodes"`
-	PprofPort   int          `mapstructure:"PprofPort"`
+	LogConfig        LogConfig        `mapstructure:"Log"`
+	ConnectionConfig ConnectionConfig `mapstructure:"Connection"`
+	NodeConfigs      []NodeConfig     `mapstructure:"Nodes"`
+	PprofPort        int              `mapstructure:"PprofPort"`
+}
+
+// ConnectionConfig is the per-connection policy applied to every inbound.
+// Fields mean the same as xray's policy handshake, connIdle, uplinkOnly,
+// downlinkOnly (seconds) and bufferSize (KB).
+type ConnectionConfig struct {
+	Handshake    uint32 `mapstructure:"Handshake"`
+	ConnIdle     uint32 `mapstructure:"ConnIdle"`
+	UplinkOnly   uint32 `mapstructure:"UplinkOnly"`
+	DownlinkOnly uint32 `mapstructure:"DownlinkOnly"`
+	// BufferSize is how much data, in KB, each connection may buffer in
+	// the node on top of the kernel socket buffers. Every connection whose
+	// client reads slower than the target sends fills it completely, and
+	// the kernel buffers already absorb bursts, so larger values cost
+	// memory without adding throughput. Only protocols that relay through
+	// an internal pipe (vmess, trojan, shadowsocks) use it.
+	BufferSize int32 `mapstructure:"BufferSize"`
 }
 
 type LogConfig struct {
@@ -42,6 +60,13 @@ func New() *Conf {
 			Level:  "info",
 			Output: "",
 			Access: "none",
+		},
+		ConnectionConfig: ConnectionConfig{
+			Handshake:    4,
+			ConnIdle:     120,
+			UplinkOnly:   2,
+			DownlinkOnly: 4,
+			BufferSize:   8,
 		},
 	}
 }
