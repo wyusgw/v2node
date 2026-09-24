@@ -100,21 +100,22 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		delete(l.AliveList, deleted[i].Id)
 	}
 	for i := range modified {
-		if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, modified[i].Uuid)); ok {
-			u := v.(*UserLimitInfo)
+		key := format.UserTag(tag, modified[i].Uuid)
+		deviceLimitChanged := false
+		l.updateInfo(key, func(u *UserLimitInfo) {
 			u.SpeedLimit = modified[i].SpeedLimitBytes()
 			u.SpeedLimitUp = modified[i].SpeedLimitUpBytes()
-			if u.DeviceLimit != modified[i].DeviceLimit {
-				// Devices already admitted this report cycle won't be
-				// re-checked against the limit until the cycle rolls over
-				// (up to one PushInterval away). Drop this user's
-				// per-cycle tracking now so the very next connection from
-				// every device re-earns admission under the new limit
-				// immediately instead of waiting for that rollover.
-				l.clearOnlineState(format.UserTag(tag, modified[i].Uuid))
-			}
+			deviceLimitChanged = u.DeviceLimit != modified[i].DeviceLimit
 			u.DeviceLimit = modified[i].DeviceLimit
-			l.UserLimitInfo.Store(format.UserTag(tag, modified[i].Uuid), u)
+		})
+		if deviceLimitChanged {
+			// Devices already admitted this report cycle won't be
+			// re-checked against the limit until the cycle rolls over
+			// (up to one PushInterval away). Drop this user's
+			// per-cycle tracking now so the very next connection from
+			// every device re-earns admission under the new limit
+			// immediately instead of waiting for that rollover.
+			l.clearOnlineState(key)
 		}
 		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
 		up := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitUpBytes())
@@ -147,14 +148,31 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 }
 
 func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire time.Time) error {
-	if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, uuid)); ok {
-		info := v.(*UserLimitInfo)
-		info.DynamicSpeedLimit = panel.MbpsToBytes(limit)
-		info.ExpireTime = expire.Unix()
-	} else {
+	if !l.updateInfo(format.UserTag(tag, uuid), func(u *UserLimitInfo) {
+		u.DynamicSpeedLimit = panel.MbpsToBytes(limit)
+		u.ExpireTime = expire.Unix()
+	}) {
 		return errors.New("not found")
 	}
 	return nil
+}
+
+// updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
+// copy. CheckLimit reads these entries without a lock on every new
+// connection, so they are never modified in place.
+func (l *Limiter) updateInfo(key string, fn func(*UserLimitInfo)) bool {
+	for {
+		v, ok := l.UserLimitInfo.Load(key)
+		if !ok {
+			return false
+		}
+		old := v.(*UserLimitInfo)
+		u := *old
+		fn(&u)
+		if l.UserLimitInfo.CompareAndSwap(key, old, &u) {
+			return true
+		}
+	}
 }
 
 func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bucket *rate.DuplexBucket, Reject bool) {
@@ -176,8 +194,11 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 			// user" and every later connection would be rejected.
 			userLimit = u.SpeedLimit
 			userLimitUp = u.SpeedLimitUp
-			u.DynamicSpeedLimit = 0
-			u.ExpireTime = 0
+			expired := *u
+			expired.DynamicSpeedLimit = 0
+			expired.ExpireTime = 0
+			// Lose to a concurrent update rather than overwrite it.
+			l.UserLimitInfo.CompareAndSwap(taguuid, u, &expired)
 		} else {
 			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
 			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)
