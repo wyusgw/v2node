@@ -1,0 +1,39 @@
+File: v2node
+Build ID: 133be3659156a21a9d1bcf344e7ea88a95bba75c
+Type: cpu
+Time: 2026-09-24 17:02:04 UTC
+Duration: 37.08s, Total samples = 67.27s (181.40%)
+Showing nodes accounting for 46.13s, 68.57% of 67.27s total
+Dropped 702 nodes (cum <= 0.34s)
+Showing top 30 nodes out of 192
+      flat  flat%   sum%        cum   cum%
+    21.83s 32.45% 32.45%     21.83s 32.45%  internal/runtime/syscall/linux.Syscall6
+     2.86s  4.25% 36.70%      4.11s  6.11%  crypto/internal/fips140/aes.decryptBlock
+     1.83s  2.72% 39.42%     12.16s 18.08%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoder).Decode
+     1.57s  2.33% 41.76%      1.57s  2.33%  hash/crc32.simpleUpdate (inline)
+     1.27s  1.89% 43.65%     15.72s 23.37%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).Match
+     1.26s  1.87% 45.52%      1.26s  1.87%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     1.25s  1.86% 47.38%      1.25s  1.86%  crypto/internal/fips140/aes.decryptBlockAsm
+     1.18s  1.75% 49.13%      1.18s  1.75%  runtime.spanClass.sizeclass (inline)
+     1.14s  1.69% 50.83%     41.76s 62.08%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.96s  1.43% 52.25%      0.96s  1.43%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.93s  1.38% 53.63%      0.93s  1.38%  runtime.memclrNoHeapPointers
+     0.87s  1.29% 54.93%      1.73s  2.57%  runtime.chansend
+     0.77s  1.14% 56.07%      1.12s  1.66%  runtime.(*unwinder).resolveInternal
+     0.71s  1.06% 57.13%      2.19s  3.26%  runtime.tryDeferToSpanScan
+     0.64s  0.95% 58.08%      0.66s  0.98%  runtime.gopark
+     0.62s  0.92% 59.00%      7.23s 10.75%  io.ReadAtLeast
+     0.61s  0.91% 59.91%      0.61s  0.91%  runtime.memmove
+     0.57s  0.85% 60.76%      9.31s 13.84%  runtime.mallocgc
+     0.56s  0.83% 61.59%      1.12s  1.66%  runtime.mallocgcTiny
+     0.53s  0.79% 62.38%      1.21s  1.80%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.49s  0.73% 63.10%      0.52s  0.77%  runtime.findObject
+     0.46s  0.68% 63.79%      1.55s  2.30%  runtime.selectgo
+     0.46s  0.68% 64.47%      0.61s  0.91%  runtime.sellock
+     0.44s  0.65% 65.13%      1.35s  2.01%  runtime.netpoll
+     0.41s  0.61% 65.74%      1.09s  1.62%  runtime.scanObjectSmall
+     0.40s  0.59% 66.33%      0.40s  0.59%  encoding/binary.decodeFast
+     0.38s  0.56% 66.89%      0.38s  0.56%  internal/sync.(*Mutex).Lock (inline)
+     0.38s  0.56% 67.46%      0.38s  0.56%  runtime.nextFreeFast (inline)
+     0.38s  0.56% 68.02%      0.46s  0.68%  runtime.step
+     0.37s  0.55% 68.57%      0.42s  0.62%  runtime.(*mspan).writeHeapBitsSmall

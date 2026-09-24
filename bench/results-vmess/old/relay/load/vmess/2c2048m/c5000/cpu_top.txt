@@ -1,0 +1,39 @@
+File: v2node
+Build ID: 133be3659156a21a9d1bcf344e7ea88a95bba75c
+Type: cpu
+Time: 2026-09-24 17:16:09 UTC
+Duration: 37.13s, Total samples = 67.21s (181.02%)
+Showing nodes accounting for 46.30s, 68.89% of 67.21s total
+Dropped 665 nodes (cum <= 0.34s)
+Showing top 30 nodes out of 189
+      flat  flat%   sum%        cum   cum%
+    22.03s 32.78% 32.78%     22.03s 32.78%  internal/runtime/syscall/linux.Syscall6
+     2.52s  3.75% 36.53%      3.96s  5.89%  crypto/internal/fips140/aes.decryptBlock
+     1.78s  2.65% 39.18%      1.78s  2.65%  hash/crc32.simpleUpdate (inline)
+     1.51s  2.25% 41.42%     10.79s 16.05%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoder).Decode
+     1.44s  2.14% 43.56%      1.44s  2.14%  crypto/internal/fips140/aes.decryptBlockAsm
+     1.41s  2.10% 45.66%      1.41s  2.10%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     1.36s  2.02% 47.69%      1.36s  2.02%  runtime.spanClass.sizeclass (inline)
+     1.28s  1.90% 49.59%     43.31s 64.44%  github.com/xtls/xray-core/common/buf.copyInternal
+     1.05s  1.56% 51.15%     14.34s 21.34%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).Match
+     1.05s  1.56% 52.72%      1.05s  1.56%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.92s  1.37% 54.08%      1.93s  2.87%  runtime.chansend
+     0.87s  1.29% 55.38%      2.43s  3.62%  runtime.tryDeferToSpanScan
+     0.73s  1.09% 56.46%      0.73s  1.09%  runtime.memclrNoHeapPointers
+     0.72s  1.07% 57.54%      0.72s  1.07%  runtime.gopark
+     0.70s  1.04% 58.58%      1.18s  1.76%  runtime.(*unwinder).resolveInternal
+     0.61s  0.91% 59.49%      0.61s  0.91%  runtime.memmove
+     0.60s  0.89% 60.38%      9.18s 13.66%  runtime.mallocgc
+     0.57s  0.85% 61.23%      7.50s 11.16%  io.ReadAtLeast
+     0.53s  0.79% 62.01%      1.23s  1.83%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.52s  0.77% 62.79%      1.74s  2.59%  runtime.selectgo
+     0.50s  0.74% 63.53%      0.67s     1%  runtime.sellock
+     0.49s  0.73% 64.26%      1.45s  2.16%  runtime.netpoll
+     0.43s  0.64% 64.90%      0.51s  0.76%  runtime.step
+     0.41s  0.61% 65.51%      0.41s  0.61%  runtime.nextFreeFast (inline)
+     0.40s   0.6% 66.11%      0.82s  1.22%  runtime.mallocgcTiny
+     0.40s   0.6% 66.70%      0.98s  1.46%  runtime.scanObjectSmall
+     0.37s  0.55% 67.25%      0.69s  1.03%  runtime.(*waitq).dequeue (inline)
+     0.37s  0.55% 67.80%      1.08s  1.61%  runtime.pcvalue
+     0.37s  0.55% 68.35%      1.06s  1.58%  runtime.scanblock
+     0.36s  0.54% 68.89%      3.10s  4.61%  encoding/binary.Read

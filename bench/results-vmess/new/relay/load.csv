@@ -1,0 +1,5 @@
+protocol,users,cores,mem_mb,conns,target_down_mbps,down_mbps,up_mbps,cpu_pct,rss_avg_mb,rss_peak_mb,rss_anon_mb,cg_peak_mb,heap_inuse_mb,go_sys_mb,goroutines,ttfb_p50_ms,ttfb_p99_ms,dial_err,io_err,oom_kills,loadgen_cpus
+vmess,10000,1,512,2000,524.3,523.6,65.2,96,291,301,248,337,173.8,257.8,12076,37.6,302.2,0,0,0,1-3
+vmess,10000,1,512,5000,1310.7,46.5,12.6,-41,507,525,0,512,0,,,0,0,1003273,4996,1 (node died),1-3
+vmess,10000,2,2048,2000,524.3,525.0,65.2,115,291,300,246,259,149.7,253.8,12064,1.9,89.3,0,0,0,2-3
+vmess,10000,2,2048,5000,1310.7,1250.2,160.1,176,579,606,553,582,332.9,556.5,29666,699.7,1596.0,52,0,0,2-3

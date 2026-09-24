@@ -1,0 +1,39 @@
+File: v2node
+Build ID: bf065f99ce17e9eb146cf88ea5edfbd0e9a65bd1
+Type: cpu
+Time: 2026-09-24 17:06:36 UTC
+Duration: 37s, Total samples = 64.43s (174.11%)
+Showing nodes accounting for 49.39s, 76.66% of 64.43s total
+Dropped 644 nodes (cum <= 0.32s)
+Showing top 30 nodes out of 183
+      flat  flat%   sum%        cum   cum%
+    29.87s 46.36% 46.36%     29.87s 46.36%  internal/runtime/syscall/linux.Syscall6
+     1.57s  2.44% 48.80%     53.46s 82.97%  github.com/xtls/xray-core/common/buf.copyInternal
+     1.40s  2.17% 50.97%      1.40s  2.17%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     1.36s  2.11% 53.08%      1.36s  2.11%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     1.26s  1.96% 55.04%      2.74s  4.25%  runtime.chansend
+     1.04s  1.61% 56.65%      1.04s  1.61%  runtime.gopark
+     0.86s  1.33% 57.99%      0.86s  1.33%  hash/crc32.simpleUpdate
+     0.86s  1.33% 59.32%      0.86s  1.33%  runtime.memclrNoHeapPointers
+     0.80s  1.24% 60.56%      2.51s  3.90%  runtime.netpoll
+     0.77s  1.20% 61.76%      2.59s  4.02%  runtime.selectgo
+     0.75s  1.16% 62.92%     13.74s 21.33%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.73s  1.13% 64.05%      1.79s  2.78%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.66s  1.02% 65.08%         1s  1.55%  runtime.sellock
+     0.60s  0.93% 66.01%      0.60s  0.93%  crypto/sha3.(*SHAKE).init (inline)
+     0.60s  0.93% 66.94%      0.60s  0.93%  internal/sync.(*Mutex).Lock (inline)
+     0.60s  0.93% 67.87%      4.20s  6.52%  runtime.schedule
+     0.56s  0.87% 68.74%      1.97s  3.06%  github.com/xtls/xray-core/proxy/vmess/encoding.(*ShakeSizeParser).next
+     0.52s  0.81% 69.55%     10.61s 16.47%  internal/poll.(*FD).Read
+     0.48s  0.74% 70.29%      0.49s  0.76%  runtime.lock2
+     0.48s  0.74% 71.04%      0.48s  0.74%  runtime.memmove
+     0.46s  0.71% 71.75%      0.46s  0.71%  runtime.pollInfo.closing (inline)
+     0.42s  0.65% 72.40%      1.06s  1.65%  runtime.(*waitq).dequeue (inline)
+     0.38s  0.59% 72.99%      0.38s  0.59%  crypto/internal/fips140/aes.decryptBlockAsm
+     0.37s  0.57% 73.57%     12.20s 18.94%  github.com/xtls/xray-core/common/buf.ReadBuffer
+     0.37s  0.57% 74.14%      3.19s  4.95%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+     0.36s  0.56% 74.70%     10.99s 17.06%  net.(*netFD).Read
+     0.34s  0.53% 75.23%      2.01s  3.12%  github.com/xtls/xray-core/common/crypto.(*AEADAuthenticator).Seal
+     0.34s  0.53% 75.76%      0.95s  1.47%  runtime.netpollblock
+     0.29s  0.45% 76.21%      0.86s  1.33%  github.com/xtls/xray-core/common/crypto.(*AEADAuthenticator).Open
+     0.29s  0.45% 76.66%      0.34s  0.53%  runtime.(*mspan).writeHeapBitsSmall

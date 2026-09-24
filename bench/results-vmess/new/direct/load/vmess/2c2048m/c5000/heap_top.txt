@@ -1,0 +1,38 @@
+File: v2node
+Build ID: bf065f99ce17e9eb146cf88ea5edfbd0e9a65bd1
+Type: inuse_space
+Time: 2026-09-24 17:36:53 UTC
+Showing nodes accounting for 152.02MB, 88.83% of 171.14MB total
+Dropped 52 nodes (cum <= 0.86MB)
+Showing top 30 nodes out of 154
+      flat  flat%   sum%        cum   cum%
+   82.14MB 48.00% 48.00%    82.14MB 48.00%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+   16.01MB  9.35% 57.35%    16.01MB  9.35%  runtime.mallocgc
+       6MB  3.51% 60.86%        6MB  3.51%  crypto/internal/fips140/aes/gcm.New
+    4.50MB  2.63% 63.49%     4.50MB  2.63%  crypto/sha3.NewSHAKE128
+    3.50MB  2.05% 65.53%     3.50MB  2.05%  crypto/internal/fips140/aes.New (inline)
+    3.50MB  2.05% 67.58%     3.50MB  2.05%  fmt.Sprintf
+    2.50MB  1.46% 69.04%     2.50MB  1.46%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    2.50MB  1.46% 70.50%        4MB  2.34%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+       2MB  1.17% 71.67%     4.50MB  2.63%  github.com/xtls/xray-core/common/task.Run
+       2MB  1.17% 72.84%        2MB  1.17%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+       2MB  1.17% 74.01%        2MB  1.17%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+       2MB  1.17% 75.18%    23.64MB 13.81%  github.com/xtls/xray-core/proxy/vmess/inbound.(*Handler).Process
+       2MB  1.17% 76.35%        2MB  1.17%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+       2MB  1.17% 77.51%        2MB  1.17%  net.sockaddrToTCP
+    1.57MB  0.92% 78.43%     5.57MB  3.26%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+    1.53MB  0.89% 79.32%     2.03MB  1.18%  github.com/wyusgw/v2node/limiter.AddLimiter
+    1.50MB  0.88% 80.20%     1.50MB  0.88%  context.(*cancelCtx).propagateCancel
+    1.50MB  0.88% 81.08%     1.50MB  0.88%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+    1.50MB  0.88% 81.95%     1.50MB  0.88%  time.newTimer
+    1.50MB  0.88% 82.83%     1.50MB  0.88%  internal/poll.(*FD).Writev
+    1.16MB  0.68% 83.51%     1.16MB  0.68%  runtime/pprof.StartCPUProfile
+    1.08MB  0.63% 84.14%     1.08MB  0.63%  github.com/xtls/xray-core/proxy/vmess/encoding.(*SessionHistory).addIfNotExits
+    1.03MB   0.6% 84.74%     1.03MB   0.6%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+       1MB  0.58% 85.32%        1MB  0.58%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  0.58% 85.91%    14.61MB  8.53%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+       1MB  0.58% 86.49%        1MB  0.58%  net.newFD
+       1MB  0.58% 87.07%        1MB  0.58%  context.(*cancelCtx).Done
+       1MB  0.58% 87.66%        1MB  0.58%  github.com/xtls/xray-core/common/signal/done.New (inline)
+       1MB  0.58% 88.24%    26.14MB 15.28%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+       1MB  0.58% 88.83%        4MB  2.34%  github.com/xtls/xray-core/transport/pipe.New

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: 133be3659156a21a9d1bcf344e7ea88a95bba75c
+Type: inuse_space
+Time: 2026-09-24 17:15:43 UTC
+Showing nodes accounting for 76.91MB, 89.01% of 86.41MB total
+Showing top 30 nodes out of 208
+      flat  flat%   sum%        cum   cum%
+   32.25MB 37.32% 37.32%    32.25MB 37.32%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+       8MB  9.26% 46.58%        8MB  9.26%  crypto/internal/fips140/aes.New
+       5MB  5.79% 52.37%        5MB  5.79%  fmt.Sprintf
+       4MB  4.63% 57.00%        4MB  4.63%  runtime.mallocgc
+    2.50MB  2.90% 59.90%     2.50MB  2.90%  crypto/internal/fips140/aes/gcm.New
+    2.50MB  2.89% 62.79%        3MB  3.47%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    1.54MB  1.78% 64.57%     1.54MB  1.78%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+    1.51MB  1.75% 66.32%     3.01MB  3.49%  github.com/wyusgw/v2node/limiter.AddLimiter
+    1.50MB  1.74% 68.06%     1.50MB  1.74%  crypto/sha3.NewSHAKE128
+    1.50MB  1.74% 69.79%     1.50MB  1.74%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    1.50MB  1.74% 71.53%     1.50MB  1.74%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.74% 73.27%     1.50MB  1.74%  context.(*cancelCtx).Done
+    1.08MB  1.25% 74.52%     1.08MB  1.25%  github.com/xtls/xray-core/proxy/vmess/encoding.(*SessionHistory).addIfNotExits
+    1.01MB  1.17% 75.69%     1.01MB  1.17%  internal/strconv.AppendUint
+       1MB  1.16% 76.84%    10.65MB 12.32%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+       1MB  1.16% 78.00%        1MB  1.16%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+       1MB  1.16% 79.16%     3.50MB  4.05%  github.com/xtls/xray-core/common/task.Run
+       1MB  1.16% 80.32%     1.50MB  1.74%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+       1MB  1.16% 81.47%        1MB  1.16%  context.WithValue
+       1MB  1.16% 82.63%     2.50MB  2.89%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+    0.88MB  1.02% 83.65%     1.38MB  1.60%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.57MB  0.66% 84.31%     0.57MB  0.66%  github.com/xtls/xray-core/common.Interrupt
+    0.53MB  0.61% 84.92%     0.53MB  0.61%  internal/poll.runtime_pollSetDeadline
+    0.52MB   0.6% 85.52%     1.53MB  1.77%  github.com/wyusgw/v2node/api/v2board.(*Client).ReportUserTraffic
+    0.51MB  0.59% 86.11%     0.51MB  0.59%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+    0.50MB  0.58% 86.69%     0.50MB  0.58%  syscall.init.func1
+    0.50MB  0.58% 87.27%     0.50MB  0.58%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+    0.50MB  0.58% 87.85%     0.50MB  0.58%  net/http.Header.Clone
+    0.50MB  0.58% 88.43%     0.50MB  0.58%  context.(*cancelCtx).propagateCancel
+    0.50MB  0.58% 89.01%     0.50MB  0.58%  net.newFD

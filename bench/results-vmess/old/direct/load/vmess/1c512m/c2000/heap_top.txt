@@ -1,0 +1,37 @@
+File: v2node
+Build ID: 133be3659156a21a9d1bcf344e7ea88a95bba75c
+Type: inuse_space
+Time: 2026-09-24 17:22:32 UTC
+Showing nodes accounting for 72.43MB, 92.94% of 77.93MB total
+Showing top 30 nodes out of 161
+      flat  flat%   sum%        cum   cum%
+   32.77MB 42.04% 42.04%    32.77MB 42.04%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    8.06MB 10.34% 52.39%     8.06MB 10.34%  runtime.mallocgc
+       4MB  5.14% 57.52%        4MB  5.14%  crypto/internal/fips140/aes/gcm.New
+    3.50MB  4.49% 62.01%     3.50MB  4.49%  fmt.Sprintf
+    2.50MB  3.21% 65.22%     2.50MB  3.21%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+    2.50MB  3.21% 68.43%     2.50MB  3.21%  bytes.NewReader (inline)
+    1.54MB  1.98% 70.40%     7.04MB  9.03%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.50MB  1.93% 72.33%     1.50MB  1.93%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    1.50MB  1.92% 74.25%     1.50MB  1.92%  time.newTimer
+    1.50MB  1.92% 76.18%     1.50MB  1.92%  github.com/xtls/xray-core/common/protocol.NewID
+       1MB  1.28% 77.46%        1MB  1.28%  crypto/internal/fips140/aes.New (inline)
+       1MB  1.28% 78.75%     1.50MB  1.93%  context.(*cancelCtx).propagateCancel
+       1MB  1.28% 80.03%        1MB  1.28%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}]
+       1MB  1.28% 81.31%        1MB  1.28%  net.newFD
+       1MB  1.28% 82.60%        1MB  1.28%  github.com/xtls/xray-core/common/task.Run
+       1MB  1.28% 83.88%        1MB  1.28%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    0.55MB  0.71% 84.59%     0.55MB  0.71%  internal/poll.runtime_pollSetDeadline
+    0.51MB  0.65% 85.24%     0.51MB  0.65%  github.com/xtls/xray-core/common/antireplay.(*ReplayFilter[go.shape.[16]uint8]).Check
+    0.50MB  0.64% 85.88%     0.50MB  0.64%  github.com/aws/aws-sdk-go-v2/service/route53/internal/endpoints.init
+    0.50MB  0.64% 86.53%     0.50MB  0.64%  github.com/infobloxopen/infoblox-go-client/v2.init
+    0.50MB  0.64% 87.17%     0.50MB  0.64%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+    0.50MB  0.64% 87.81%     0.50MB  0.64%  github.com/quic-go/qpack.map.init.0
+    0.50MB  0.64% 88.45%    11.07MB 14.20%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    0.50MB  0.64% 89.09%    10.07MB 12.93%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+    0.50MB  0.64% 89.73%     0.50MB  0.64%  context.(*cancelCtx).Done
+    0.50MB  0.64% 90.38%     0.50MB  0.64%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+    0.50MB  0.64% 91.02%     1.50MB  1.92%  github.com/xtls/xray-core/transport/pipe.New
+    0.50MB  0.64% 91.66%     0.50MB  0.64%  github.com/xtls/xray-core/common/crypto.NewAuthenticationWriter
+    0.50MB  0.64% 92.30%        2MB  2.57%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+    0.50MB  0.64% 92.94%     0.50MB  0.64%  context.WithValue

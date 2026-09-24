@@ -1,0 +1,37 @@
+File: v2node
+Build ID: bf065f99ce17e9eb146cf88ea5edfbd0e9a65bd1
+Type: inuse_space
+Time: 2026-09-24 17:06:09 UTC
+Showing nodes accounting for 69.08MB, 91.40% of 75.58MB total
+Showing top 30 nodes out of 194
+      flat  flat%   sum%        cum   cum%
+   28.72MB 38.01% 38.01%    28.72MB 38.01%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+   10.51MB 13.90% 51.91%    10.51MB 13.90%  crypto/internal/fips140/aes.New (inline)
+       3MB  3.97% 55.88%        3MB  3.97%  runtime.mallocgc
+       2MB  2.65% 58.52%        2MB  2.65%  crypto/sha3.NewSHAKE128
+       2MB  2.65% 61.17%        2MB  2.65%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+       2MB  2.65% 63.82%        2MB  2.65%  fmt.Sprintf
+       2MB  2.65% 66.46%     2.50MB  3.31%  github.com/xtls/xray-core/transport/pipe.New
+    1.72MB  2.28% 68.74%     1.72MB  2.28%  runtime/pprof.StartCPUProfile
+    1.50MB  1.98% 70.73%     1.50MB  1.98%  context.(*cancelCtx).Done
+    1.50MB  1.98% 72.71%        2MB  2.65%  github.com/wyusgw/v2node/limiter.AddLimiter
+    1.03MB  1.36% 74.07%    11.53MB 15.26%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+       1MB  1.32% 75.39%        1MB  1.32%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  1.32% 76.72%        1MB  1.32%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.32% 78.04%        1MB  1.32%  net.newFD
+       1MB  1.32% 79.36%        1MB  1.32%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+       1MB  1.32% 80.69%        1MB  1.32%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+       1MB  1.32% 82.01%     1.50MB  1.98%  context.withCancel
+       1MB  1.32% 83.33%        1MB  1.32%  context.WithValue
+    0.54MB  0.72% 84.05%    12.58MB 16.65%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+    0.51MB  0.68% 84.73%     0.51MB  0.68%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB  0.68% 85.41%     0.51MB  0.68%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+    0.51MB  0.67% 86.08%     0.51MB  0.67%  github.com/xtls/xray-core/common/antireplay.(*ReplayFilter[go.shape.[16]uint8]).Check
+    0.51MB  0.67% 86.76%     0.51MB  0.67%  hash/crc64.makeSlicingBy8Table (inline)
+    0.50MB  0.67% 87.42%     0.50MB  0.67%  github.com/go-playground/validator/v10.map.init.5
+    0.50MB  0.66% 88.09%     0.50MB  0.66%  github.com/xtls/xray-core/app/policy.init
+    0.50MB  0.66% 88.75%     0.50MB  0.66%  google.golang.org/grpc/reflection/grpc_reflection_v1.init
+    0.50MB  0.66% 89.41%     0.50MB  0.66%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB  0.66% 90.08%     0.50MB  0.66%  google.golang.org/genproto/googleapis/api/annotations.init
+    0.50MB  0.66% 90.74%     0.50MB  0.66%  time.goFunc
+    0.50MB  0.66% 91.40%     0.50MB  0.66%  github.com/pquerna/otp/hotp.init

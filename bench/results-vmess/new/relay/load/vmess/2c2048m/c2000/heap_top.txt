@@ -1,0 +1,37 @@
+File: v2node
+Build ID: bf065f99ce17e9eb146cf88ea5edfbd0e9a65bd1
+Type: inuse_space
+Time: 2026-09-24 17:20:15 UTC
+Showing nodes accounting for 74.32MB, 93.70% of 79.32MB total
+Showing top 30 nodes out of 168
+      flat  flat%   sum%        cum   cum%
+   31.24MB 39.39% 39.39%    31.24MB 39.39%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    9.50MB 11.98% 51.37%     9.50MB 11.98%  crypto/internal/fips140/aes.New (inline)
+       4MB  5.05% 56.42%        4MB  5.05%  crypto/internal/fips140/aes/gcm.New
+    3.50MB  4.41% 60.84%     3.50MB  4.41%  runtime.mallocgc
+    2.03MB  2.56% 63.39%     2.03MB  2.56%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+       2MB  2.52% 65.91%        4MB  5.04%  github.com/xtls/xray-core/transport/pipe.New
+    1.50MB  1.89% 67.81%     1.50MB  1.89%  time.newTimer
+    1.50MB  1.89% 69.70%     1.50MB  1.89%  fmt.Sprintf
+    1.50MB  1.89% 71.59%     1.50MB  1.89%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+    1.50MB  1.89% 73.48%     1.50MB  1.89%  encoding/json/v2.makeString
+    1.08MB  1.36% 74.84%     1.08MB  1.36%  github.com/xtls/xray-core/proxy/vmess/encoding.(*SessionHistory).addIfNotExits
+    1.03MB  1.29% 76.13%    12.53MB 15.80%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+    1.01MB  1.28% 77.41%     2.51MB  3.17%  github.com/wyusgw/v2node/limiter.AddLimiter
+       1MB  1.26% 78.67%        1MB  1.26%  crypto/sha3.NewSHAKE128
+       1MB  1.26% 79.93%        1MB  1.26%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.26% 81.20%    10.58MB 13.34%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+       1MB  1.26% 82.46%        1MB  1.26%  context.WithValue
+       1MB  1.26% 83.72%    11.50MB 14.50%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem (inline)
+       1MB  1.26% 84.98%        1MB  1.26%  github.com/xtls/xray-core/common/protocol.NewID
+       1MB  1.26% 86.24%        1MB  1.26%  syscall.anyToSockaddr
+       1MB  1.26% 87.50%    10.50MB 13.24%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoder (inline)
+    0.88MB  1.11% 88.61%     2.38MB  3.00%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.51MB  0.65% 89.26%     0.51MB  0.65%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB  0.65% 89.90%     0.51MB  0.65%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+    0.50MB  0.64% 90.54%     0.50MB  0.64%  runtime/pprof.(*profMap).lookup
+    0.50MB  0.63% 91.17%     0.50MB  0.63%  github.com/aws/aws-sdk-go-v2/internal/endpoints/awsrulesfn.init
+    0.50MB  0.63% 91.80%     0.50MB  0.63%  regexp/syntax.(*compiler).inst
+    0.50MB  0.63% 92.43%     0.50MB  0.63%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    0.50MB  0.63% 93.07%     0.50MB  0.63%  context.(*cancelCtx).propagateCancel
+    0.50MB  0.63% 93.70%     0.50MB  0.63%  github.com/sacloud/iaas-api-go/types.init

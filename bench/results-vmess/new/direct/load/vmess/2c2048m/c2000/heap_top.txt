@@ -1,0 +1,37 @@
+File: v2node
+Build ID: bf065f99ce17e9eb146cf88ea5edfbd0e9a65bd1
+Type: inuse_space
+Time: 2026-09-24 17:35:44 UTC
+Showing nodes accounting for 75.41MB, 84.82% of 88.91MB total
+Showing top 30 nodes out of 204
+      flat  flat%   sum%        cum   cum%
+   33.26MB 37.41% 37.41%    33.26MB 37.41%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    6.50MB  7.31% 44.72%     6.50MB  7.31%  runtime.mallocgc
+       6MB  6.75% 51.47%        6MB  6.75%  crypto/internal/fips140/aes.New (inline)
+    3.50MB  3.94% 55.41%     3.50MB  3.94%  fmt.Sprintf
+    2.50MB  2.81% 58.22%     2.50MB  2.81%  crypto/internal/fips140/aes/gcm.New
+       2MB  2.25% 60.47%    14.56MB 16.38%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB  1.69% 62.16%     1.50MB  1.69%  crypto/sha3.NewSHAKE128
+    1.50MB  1.69% 63.85%     1.50MB  1.69%  context.(*cancelCtx).Done
+    1.16MB  1.30% 65.15%     1.16MB  1.30%  runtime/pprof.StartCPUProfile
+    1.03MB  1.15% 66.30%     1.03MB  1.15%  github.com/go-playground/validator/v10.map.init.7
+    1.02MB  1.14% 67.44%     1.02MB  1.14%  github.com/xtls/xray-core/common/antireplay.(*ReplayFilter[go.shape.[16]uint8]).Check
+       1MB  1.13% 68.57%        1MB  1.13%  google.golang.org/protobuf/internal/filedesc.newRawFile
+       1MB  1.12% 69.69%        2MB  2.25%  context.(*cancelCtx).propagateCancel
+       1MB  1.12% 70.82%        2MB  2.25%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+       1MB  1.12% 71.94%        1MB  1.12%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+       1MB  1.12% 73.07%     2.50MB  2.81%  github.com/xtls/xray-core/common/task.Run
+       1MB  1.12% 74.19%        1MB  1.12%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+       1MB  1.12% 75.32%        1MB  1.12%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+       1MB  1.12% 76.44%     2.50MB  2.81%  github.com/xtls/xray-core/transport/pipe.New
+       1MB  1.12% 77.57%        1MB  1.12%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+       1MB  1.12% 78.69%        1MB  1.12%  net.sockaddrToTCP
+       1MB  1.12% 79.82%     2.50MB  2.81%  context.WithCancel
+    0.88MB  0.99% 80.81%     1.38MB  1.55%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.54MB  0.61% 81.42%     0.54MB  0.61%  github.com/xtls/xray-core/proxy/vmess/encoding.(*SessionHistory).addIfNotExits
+    0.51MB  0.58% 81.99%    10.52MB 11.83%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    0.50MB  0.57% 82.56%     0.50MB  0.57%  github.com/xtls/xray-core/proxy/vmess/aead.(*sourceHints).put
+    0.50MB  0.57% 83.12%     0.50MB  0.57%  github.com/xtls/xray-core/app/stats/command.init
+    0.50MB  0.56% 83.69%     0.50MB  0.56%  golang.org/x/text/internal/language.map.init.1
+    0.50MB  0.56% 84.25%     0.50MB  0.56%  regexp.onePassCopy
+    0.50MB  0.56% 84.82%     0.50MB  0.56%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull

@@ -1,0 +1,38 @@
+File: v2node
+Build ID: 133be3659156a21a9d1bcf344e7ea88a95bba75c
+Type: alloc_space
+Time: 2026-09-24 17:02:46 UTC
+Showing nodes accounting for 7390.74MB, 95.16% of 7766.43MB total
+Dropped 324 nodes (cum <= 38.83MB)
+Showing top 30 nodes out of 65
+      flat  flat%   sum%        cum   cum%
+ 3546.66MB 45.67% 45.67%  3546.66MB 45.67%  bytes.NewReader (inline)
+ 1187.02MB 15.28% 60.95%  5911.20MB 76.11%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoder).Decode
+ 1182.02MB 15.22% 76.17%  1182.02MB 15.22%  encoding/binary.Read
+  368.02MB  4.74% 80.91%   631.06MB  8.13%  github.com/xtls/xray-core/common/buf.New
+  263.56MB  3.39% 84.30%   263.56MB  3.39%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+     182MB  2.34% 86.65%   184.55MB  2.38%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+  144.52MB  1.86% 88.51%   449.81MB  5.79%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+  105.01MB  1.35% 89.86%   428.34MB  5.52%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).writeStream
+   85.01MB  1.09% 90.95%   125.51MB  1.62%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+   73.55MB  0.95% 91.90%    73.55MB  0.95%  crypto/internal/fips140/aes/gcm.New (inline)
+   66.84MB  0.86% 92.76%    66.84MB  0.86%  math/rand.newSource (inline)
+   47.02MB  0.61% 93.37%    47.02MB  0.61%  crypto/internal/fips140/aes.New (inline)
+   40.51MB  0.52% 93.89%    40.51MB  0.52%  github.com/xtls/xray-core/common/errors.doLog
+   27.50MB  0.35% 94.24%   122.51MB  1.58%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+   15.50MB   0.2% 94.44%   222.42MB  2.86%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+      11MB  0.14% 94.58%    93.81MB  1.21%  github.com/xtls/xray-core/common/buf.(*ReadVReader).readMulti
+    8.50MB  0.11% 94.69%   167.01MB  2.15%  github.com/xtls/xray-core/proxy/vmess/aead.KDF
+    7.50MB 0.097% 94.79%  6236.49MB 80.30%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+       7MB  0.09% 94.88%    66.51MB  0.86%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    6.50MB 0.084% 94.96%    74.27MB  0.96%  github.com/xtls/xray-core/common/buf.(*allocStrategy).Alloc (inline)
+       6MB 0.077% 95.04%  6220.49MB 80.09%  github.com/xtls/xray-core/proxy/vmess/inbound.(*Handler).Process
+    2.50MB 0.032% 95.07%    74.51MB  0.96%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).routedDispatch
+       2MB 0.026% 95.10%  6145.48MB 79.13%  github.com/xtls/xray-core/proxy/vmess/encoding.(*ServerSession).DecodeRequestHeader
+    1.50MB 0.019% 95.12%  1124.50MB 14.48%  github.com/xtls/xray-core/common/buf.Copy
+    1.50MB 0.019% 95.14%     1118MB 14.40%  github.com/xtls/xray-core/common/buf.copyInternal
+       1MB 0.013% 95.15%   116.53MB  1.50%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).Dispatch.func1
+    0.50MB 0.0064% 95.16%   145.04MB  1.87%  github.com/xtls/xray-core/proxy/vmess/aead.OpenVMessAEADHeader
+    0.50MB 0.0064% 95.16%    67.34MB  0.87%  github.com/xtls/xray-core/common/drain.NewBehaviorSeedLimitedDrainer
+         0     0% 95.16%    47.02MB  0.61%  crypto/aes.NewCipher
+         0     0% 95.16%    73.55MB  0.95%  crypto/cipher.NewGCM
