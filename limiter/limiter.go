@@ -171,14 +171,13 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 		deviceLimit = u.DeviceLimit
 		uid = u.UID
 		if u.ExpireTime < time.Now().Unix() && u.ExpireTime != 0 {
-			if u.SpeedLimit != 0 || u.SpeedLimitUp != 0 {
-				userLimit = u.SpeedLimit
-				userLimitUp = u.SpeedLimitUp
-				u.DynamicSpeedLimit = 0
-				u.ExpireTime = 0
-			} else {
-				l.UserLimitInfo.Delete(taguuid)
-			}
+			// The dynamic limit has expired: fall back to the user's own
+			// limits. The entry must stay - a missing entry means "unknown
+			// user" and every later connection would be rejected.
+			userLimit = u.SpeedLimit
+			userLimitUp = u.SpeedLimitUp
+			u.DynamicSpeedLimit = 0
+			u.ExpireTime = 0
 		} else {
 			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
 			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)

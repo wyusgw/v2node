@@ -148,6 +148,19 @@ func (*DefaultDispatcher) Start() error {
 // Close implements common.Closable.
 func (*DefaultDispatcher) Close() error { return nil }
 
+// getLinkManager returns email's LinkManager, creating it atomically so two
+// concurrent first connections can't each store their own and orphan one
+// (whose links CloseAll would then never reach).
+func (d *DefaultDispatcher) getLinkManager(email string) *LinkManager {
+	if v, ok := d.LinkManagers.Load(email); ok {
+		return v.(*LinkManager)
+	}
+	v, _ := d.LinkManagers.LoadOrStore(email, &LinkManager{
+		links: make(map[*ManagedWriter]buf.Reader),
+	})
+	return v.(*LinkManager)
+}
+
 func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *transport.Link, *limiter.Limiter, *behaviorTracker, error) {
 	opt := pipe.OptionsFromContext(ctx)
 	uplinkReader, uplinkWriter := pipe.New(opt...)
@@ -193,15 +206,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			common.Interrupt(inboundLink.Reader)
 			return nil, nil, nil, nil, errors.New("Limited ", user.Email, " by conn or ip")
 		}
-		var lm *LinkManager
-		if lmloaded, ok := d.LinkManagers.Load(user.Email); !ok {
-			lm = &LinkManager{
-				links: make(map[*ManagedWriter]buf.Reader),
-			}
-			d.LinkManagers.Store(user.Email, lm)
-		} else {
-			lm = lmloaded.(*LinkManager)
-		}
+		lm := d.getLinkManager(user.Email)
 		managedWriter := &ManagedWriter{
 			writer:   uplinkWriter,
 			manager:  lm,
@@ -394,15 +399,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			common.Interrupt(outbound.Reader)
 			return errors.New("Limited ", user.Email, " by conn or ip")
 		}
-		var lm *LinkManager
-		if lmloaded, ok := d.LinkManagers.Load(user.Email); !ok {
-			lm = &LinkManager{
-				links: make(map[*ManagedWriter]buf.Reader),
-			}
-			d.LinkManagers.Store(user.Email, lm)
-		} else {
-			lm = lmloaded.(*LinkManager)
-		}
+		lm := d.getLinkManager(user.Email)
 		managedWriter := &ManagedWriter{
 			writer:  outbound.Writer,
 			manager: lm,
