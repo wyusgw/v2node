@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:36:59 UTC
+Showing nodes accounting for 109.63MB, 93.54% of 117.21MB total
+Dropped 46 nodes (cum <= 0.59MB)
+Showing top 30 nodes out of 116
+      flat  flat%   sum%        cum   cum%
+   72.59MB 61.93% 61.93%    72.59MB 61.93%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+       5MB  4.27% 66.20%        5MB  4.27%  runtime.mallocgc
+    3.50MB  2.99% 69.18%     3.50MB  2.99%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute (inline)
+       3MB  2.56% 71.75%    57.83MB 49.34%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       3MB  2.56% 74.31%        3MB  2.56%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    2.50MB  2.13% 76.44%    62.33MB 53.18%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB  1.28% 77.72%     1.50MB  1.28%  context.withCancel (inline)
+    1.50MB  1.28% 79.00%     1.50MB  1.28%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+    1.50MB  1.28% 80.28%     1.50MB  1.28%  context.WithValue
+    1.50MB  1.28% 81.56%     2.50MB  2.13%  github.com/wyusgw/v2node/limiter.AddLimiter
+    1.50MB  1.28% 82.84%     1.50MB  1.28%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.28% 84.12%     1.50MB  1.28%  net.sockaddrToTCP
+    1.16MB  0.99% 85.11%     1.16MB  0.99%  runtime/pprof.StartCPUProfile
+       1MB  0.85% 85.96%        1MB  0.85%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+       1MB  0.85% 86.81%     1.50MB  1.28%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       1MB  0.85% 87.67%        1MB  0.85%  fmt.Sprintf
+       1MB  0.85% 88.52%    16.53MB 14.11%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+       1MB  0.85% 89.37%     2.50MB  2.13%  github.com/xtls/xray-core/common/task.Run
+       1MB  0.85% 90.23%        1MB  0.85%  encoding/json/v2.makeString
+       1MB  0.85% 91.08%        1MB  0.85%  syscall.anyToSockaddr
+       1MB  0.85% 91.93%        6MB  5.12%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    0.88MB  0.75% 92.68%     1.88MB  1.61%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.50MB  0.43% 93.11%        2MB  1.71%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    0.50MB  0.43% 93.54%        1MB  0.85%  github.com/wyusgw/v2node/common/counter.(*TrafficCounter).GetCounter
+         0     0% 93.54%     1.50MB  1.28%  context.WithCancel
+         0     0% 93.54%        1MB  0.85%  encoding/json/v2.Unmarshal
+         0     0% 93.54%        1MB  0.85%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0% 93.54%        1MB  0.85%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0% 93.54%        1MB  0.85%  encoding/json/v2.unmarshalDecode
+         0     0% 93.54%     8.88MB  7.58%  github.com/spf13/cobra.(*Command).Execute

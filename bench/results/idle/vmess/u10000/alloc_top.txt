@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:27:11 UTC
+Showing nodes accounting for 45270.25kB, 98.88% of 45782.27kB total
+Showing top 30 nodes out of 119
+      flat  flat%   sum%        cum   cum%
+ 7680.94kB 16.78% 16.78%  7680.94kB 16.78%  crypto/internal/fips140/sha256.New (inline)
+ 5122.50kB 11.19% 27.97%  5122.50kB 11.19%  crypto/internal/fips140/aes.New (inline)
+ 4096.28kB  8.95% 36.91% 11777.22kB 25.72%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+ 2600.35kB  5.68% 42.59%  6184.56kB 13.51%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 2560.27kB  5.59% 48.19%  2560.27kB  5.59%  time.newTimer
+ 2093.57kB  4.57% 52.76%  2605.59kB  5.69%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+ 2048.18kB  4.47% 57.23%  4608.45kB 10.07%  context.WithDeadlineCause
+ 2048.16kB  4.47% 61.71%  2048.16kB  4.47%  fmt.Sprintf
+ 1576.28kB  3.44% 65.15% 33390.43kB 72.93%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1536.09kB  3.36% 68.50%  1536.09kB  3.36%  github.com/xtls/xray-core/infra/conf.(*VMessAccount).Build
+ 1536.02kB  3.36% 71.86%  3584.18kB  7.83%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+ 1024.11kB  2.24% 74.10%  1024.11kB  2.24%  crypto/internal/fips140/sha256.(*Digest).MarshalBinary
+ 1024.08kB  2.24% 76.33%  1024.08kB  2.24%  reflect.unsafe_New
+ 1024.05kB  2.24% 78.57%  1024.05kB  2.24%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+ 1024.05kB  2.24% 80.81%  1024.05kB  2.24%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.03kB  2.24% 83.04%  1024.03kB  2.24%  crypto/internal/fips140/sha256.(*Digest).Sum
+  553.04kB  1.21% 84.25%  4649.29kB 10.16%  github.com/wyusgw/v2node/core.buildVmessUsers
+  536.37kB  1.17% 85.42% 19484.23kB 42.56%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+  528.17kB  1.15% 86.58%   528.17kB  1.15%  regexp.(*bitState).reset
+  512.44kB  1.12% 87.70%   512.44kB  1.12%  go4.org/netipx.(*IPSetBuilder).AddRange
+  512.34kB  1.12% 88.81%   512.34kB  1.12%  regexp/syntax.(*compiler).inst
+  512.28kB  1.12% 89.93%   512.28kB  1.12%  gvisor.dev/gvisor/pkg/state.init.func1
+  512.23kB  1.12% 91.05%   512.23kB  1.12%  google.golang.org/protobuf/internal/filedesc.newRawFile
+  512.19kB  1.12% 92.17%   512.19kB  1.12%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+  512.08kB  1.12% 93.29%   512.08kB  1.12%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.04kB  1.12% 94.41%  4096.25kB  8.95%  github.com/wyusgw/v2node/core.buildVmessUser
+  512.04kB  1.12% 95.53%  1536.09kB  3.36%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+  512.03kB  1.12% 96.64%   512.03kB  1.12%  regexp/syntax.appendRange
+  512.02kB  1.12% 97.76%   512.02kB  1.12%  encoding/json/v2.makeString
+  512.02kB  1.12% 98.88%  2048.12kB  4.47%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser

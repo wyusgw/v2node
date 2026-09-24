@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 12:02:27 UTC
+Duration: 22.31s, Total samples = 42.67s (191.24%)
+Showing nodes accounting for 27.52s, 64.49% of 42.67s total
+Dropped 542 nodes (cum <= 0.21s)
+Showing top 30 nodes out of 215
+      flat  flat%   sum%        cum   cum%
+     4.24s  9.94%  9.94%      4.24s  9.94%  crypto/sha1.blockSHANI
+     2.45s  5.74% 15.68%      2.45s  5.74%  internal/runtime/syscall/linux.Syscall6
+     1.93s  4.52% 20.20%      9.54s 22.36%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+     1.67s  3.91% 24.12%      1.67s  3.91%  runtime.spanClass.sizeclass (inline)
+     1.54s  3.61% 27.72%      2.10s  4.92%  runtime.gcmarknewobject
+     1.37s  3.21% 30.94%      3.49s  8.18%  runtime.tryDeferToSpanScan
+     1.29s  3.02% 33.96%      2.11s  4.94%  runtime.(*unwinder).resolveInternal
+     1.14s  2.67% 36.63%      1.14s  2.67%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     1.01s  2.37% 39.00%      1.01s  2.37%  runtime.memclrNoHeapPointers
+     0.80s  1.87% 40.87%      0.80s  1.87%  runtime.nextFreeFast (inline)
+     0.72s  1.69% 42.56%      7.74s 18.14%  runtime.mallocgcSmallNoscan
+     0.69s  1.62% 44.18%      0.69s  1.62%  runtime.memmove
+     0.66s  1.55% 45.72%      1.77s  4.15%  runtime.pcvalue
+     0.63s  1.48% 47.20%      0.67s  1.57%  runtime.findObject
+     0.61s  1.43% 48.63%      1.65s  3.87%  runtime.scanblock
+     0.60s  1.41% 50.04%      0.60s  1.41%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.59s  1.38% 51.42%      0.69s  1.62%  runtime.step
+     0.54s  1.27% 52.68%      0.54s  1.27%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.53s  1.24% 53.93%     17.83s 41.79%  runtime.mallocgc
+     0.51s  1.20% 55.12%      3.75s  8.79%  crypto/sha1.(*digest).Sum
+     0.47s  1.10% 56.22%      0.48s  1.12%  runtime.(*mspan).moveInlineMarks
+     0.45s  1.05% 57.28%      1.19s  2.79%  runtime.scanObjectSmall
+     0.44s  1.03% 58.31%      1.49s  3.49%  runtime.scanObjectsSmall
+     0.41s  0.96% 59.27%      2.66s  6.23%  crypto/sha1.(*digest).checkSum
+     0.40s  0.94% 60.21%      0.40s  0.94%  runtime.(*mspan).base (inline)
+     0.39s  0.91% 61.12%      0.53s  1.24%  runtime.(*spanSet).push
+     0.39s  0.91% 62.03%      0.39s  0.91%  runtime.(*sweepLocker).tryAcquire
+     0.37s  0.87% 62.90%      1.60s  3.75%  runtime.(*sweepLocked).sweep
+     0.34s   0.8% 63.70%      5.15s 12.07%  crypto/sha1.(*digest).Write
+     0.34s   0.8% 64.49%      4.99s 11.69%  runtime.scanSpan

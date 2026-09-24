@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:27:32 UTC
+Showing nodes accounting for 69.65MB, 100% of 69.65MB total
+Showing top 30 nodes out of 86
+      flat  flat%   sum%        cum   cum%
+   26.01MB 37.35% 37.35%    26.01MB 37.35%  crypto/internal/fips140/aes.New (inline)
+      13MB 18.67% 56.01%       13MB 18.67%  fmt.Sprintf
+    8.03MB 11.52% 67.54%    19.03MB 27.32%  github.com/wyusgw/v2node/limiter.AddLimiter
+       4MB  5.74% 73.28%        4MB  5.74%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    3.25MB  4.67% 77.95%     5.25MB  7.54%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       2MB  2.87% 80.82%        2MB  2.87%  encoding/json/v2.makeString
+    1.51MB  2.17% 83.00%    28.53MB 40.95%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+    1.50MB  2.15% 85.15%     1.50MB  2.15%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  2.15% 87.30%     1.50MB  2.15%  github.com/xtls/xray-core/common/protocol.NewID
+    1.03MB  1.47% 88.78%    41.84MB 60.08%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.03MB  1.47% 90.25%     1.03MB  1.47%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+       1MB  1.44% 91.69%        1MB  1.44%  regexp/syntax.(*compiler).inst (inline)
+       1MB  1.44% 93.13%    27.01MB 38.78%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem (inline)
+       1MB  1.44% 94.56%     2.50MB  3.59%  github.com/xtls/xray-core/proxy/vmess.(*Account).AsAccount
+    0.77MB  1.10% 95.66%    29.29MB 42.05%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+    0.52MB  0.75% 96.41%     0.52MB  0.75%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+    0.50MB  0.72% 97.13%     0.50MB  0.72%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+    0.50MB  0.72% 97.85%     0.50MB  0.72%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB  0.72% 98.56%     0.50MB  0.72%  github.com/miekg/dns.map.init.1
+    0.50MB  0.72% 99.28%        1MB  1.44%  google.golang.org/protobuf/internal/impl.(*MessageInfo).makeKnownFieldsFunc
+    0.50MB  0.72%   100%        3MB  4.31%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+         0     0%   100%     0.50MB  0.72%  cloud.google.com/go/auth/credentials/internal/externalaccount.init
+         0     0%   100%    26.01MB 37.35%  crypto/aes.NewCipher
+         0     0%   100%        2MB  2.87%  encoding/json/v2.Unmarshal
+         0     0%   100%        2MB  2.87%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%        2MB  2.87%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%        2MB  2.87%  encoding/json/v2.unmarshalDecode
+         0     0%   100%     0.50MB  0.72%  github.com/kolo/xmlrpc.init
+         0     0%   100%     0.50MB  0.72%  github.com/miekg/dns.init
+         0     0%   100%    66.63MB 95.66%  github.com/spf13/cobra.(*Command).Execute

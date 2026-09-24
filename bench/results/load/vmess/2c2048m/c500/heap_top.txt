@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:44:09 UTC
+Showing nodes accounting for 33772.17kB, 100% of 33772.17kB total
+Showing top 30 nodes out of 127
+      flat  flat%   sum%        cum   cum%
+ 7752.31kB 22.95% 22.95%  7752.31kB 22.95%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 5122.50kB 15.17% 38.12%  5122.50kB 15.17%  crypto/internal/fips140/aes.New (inline)
+ 2561.17kB  7.58% 45.71%  2561.17kB  7.58%  runtime.mallocgc
+ 2048.16kB  6.06% 51.77%  2048.16kB  6.06%  fmt.Sprintf
+ 1536.07kB  4.55% 56.32%  1536.07kB  4.55%  encoding/json/v2.makeString
+ 1025.19kB  3.04% 59.35%  1025.19kB  3.04%  github.com/aws/aws-sdk-go-v2/service/sts/internal/endpoints.init
+ 1024.16kB  3.03% 62.39%  1024.16kB  3.03%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.06kB  3.03% 65.42%  2048.18kB  6.06%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1024.05kB  3.03% 68.45%  1024.05kB  3.03%  bytes.NewReader
+ 1024.05kB  3.03% 71.48%  1024.05kB  3.03%  context.WithValue
+ 1024.05kB  3.03% 74.52%  1024.05kB  3.03%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  902.59kB  2.67% 77.19%  2438.66kB  7.22%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  1.56% 78.74%   525.43kB  1.56%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+  521.05kB  1.54% 80.29%   521.05kB  1.54%  github.com/xtls/xray-core/common/antireplay.(*ReplayFilter[go.shape.[16]uint8]).Check
+  512.56kB  1.52% 81.81%   512.56kB  1.52%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+  512.19kB  1.52% 83.32%   512.19kB  1.52%  github.com/gabriel-vasile/mimetype/internal/magic.init
+  512.14kB  1.52% 84.84%   512.14kB  1.52%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+  512.10kB  1.52% 86.35%   512.10kB  1.52%  github.com/ultradns/ultradns-go-sdk/pkg/record/pool.init
+  512.05kB  1.52% 87.87%   512.05kB  1.52%  context.(*cancelCtx).Done
+  512.05kB  1.52% 89.39%   512.05kB  1.52%  github.com/baidubce/bce-sdk-go/util/log.NewLogger.func1
+  512.05kB  1.52% 90.90%   512.05kB  1.52%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+  512.05kB  1.52% 92.42%   512.05kB  1.52%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+  512.05kB  1.52% 93.94%   512.05kB  1.52%  time.newTimer
+  512.03kB  1.52% 95.45%   512.03kB  1.52%  github.com/xtls/xray-core/common/buf.NewWriter
+  512.02kB  1.52% 96.97%   512.02kB  1.52%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+  512.02kB  1.52% 98.48%   512.02kB  1.52%  golang.org/x/crypto/sha3.NewShake128
+  512.01kB  1.52%   100%  5634.51kB 16.68%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem
+         0     0%   100%  5122.50kB 15.17%  crypto/aes.NewCipher
+         0     0%   100%  1536.07kB  4.55%  encoding/json/v2.Unmarshal
+         0     0%   100%  1536.07kB  4.55%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4

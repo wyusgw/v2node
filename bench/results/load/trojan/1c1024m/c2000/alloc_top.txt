@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:51:20 UTC
+Showing nodes accounting for 195.60MB, 89.82% of 217.77MB total
+Dropped 144 nodes (cum <= 1.09MB)
+Showing top 30 nodes out of 132
+      flat  flat%   sum%        cum   cum%
+   47.87MB 21.98% 21.98%    47.87MB 21.98%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+      38MB 17.45% 39.43%    85.87MB 39.43%  github.com/xtls/xray-core/common/buf.New
+      37MB 16.99% 56.43%    37.50MB 17.22%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+   14.50MB  6.66% 63.08%    14.50MB  6.66%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+       8MB  3.67% 66.76%        8MB  3.67%  github.com/xtls/xray-core/common/errors.doLog
+    6.56MB  3.01% 69.77%     6.56MB  3.01%  runtime.mallocgc
+    3.98MB  1.83% 71.60%     4.48MB  2.06%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    3.50MB  1.61% 73.21%     3.50MB  1.61%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       3MB  1.38% 74.58%        3MB  1.38%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    2.50MB  1.15% 75.73%     2.50MB  1.15%  time.newTimer
+    2.50MB  1.15% 76.88%     2.50MB  1.15%  fmt.Sprintf
+    2.50MB  1.15% 78.03%    75.85MB 34.83%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+       2MB  0.92% 78.95%        2MB  0.92%  context.(*cancelCtx).propagateCancel
+       2MB  0.92% 79.87%        2MB  0.92%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+       2MB  0.92% 80.78%    12.03MB  5.52%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+       2MB  0.92% 81.70%    21.02MB  9.65%  github.com/xtls/xray-core/proxy/trojan.(*Server).Process
+       2MB  0.92% 82.62%     4.50MB  2.07%  context.WithDeadlineCause
+       2MB  0.92% 83.54%        4MB  1.84%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+       2MB  0.92% 84.46%    48.14MB 22.11%  github.com/xtls/xray-core/proxy/trojan.(*ConnReader).ReadMultiBuffer
+    1.50MB  0.69% 85.15%     1.50MB  0.69%  github.com/xtls/xray-core/common/errors.New
+    1.50MB  0.69% 85.84%     1.50MB  0.69%  context.(*cancelCtx).Done
+    1.50MB  0.69% 86.52%        3MB  1.38%  github.com/xtls/xray-core/common/task.Run
+    1.50MB  0.69% 87.21%        2MB  0.92%  github.com/xtls/xray-core/transport/pipe.New
+    1.16MB  0.53% 87.74%     1.16MB  0.53%  runtime/pprof.StartCPUProfile
+       1MB  0.46% 88.20%     2.50MB  1.15%  context.withCancel (inline)
+       1MB  0.46% 88.66%     3.50MB  1.61%  github.com/wyusgw/v2node/core.buildTrojanUser
+       1MB  0.46% 89.12%        2MB  0.92%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+    0.52MB  0.24% 89.36%     1.61MB  0.74%  github.com/wyusgw/v2node/node.(*Controller).reportUserTrafficTask
+    0.50MB  0.23% 89.59%        9MB  4.13%  github.com/xtls/xray-core/proxy/trojan.(*Server).handleConnection
+    0.50MB  0.23% 89.82%     5.53MB  2.54%  github.com/xtls/xray-core/common/retry.(*retryer).On

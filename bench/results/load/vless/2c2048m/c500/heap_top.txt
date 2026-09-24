@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:35:32 UTC
+Showing nodes accounting for 30360.17kB, 100% of 30360.17kB total
+Showing top 30 nodes out of 158
+      flat  flat%   sum%        cum   cum%
+ 7740.16kB 25.49% 25.49%  7740.16kB 25.49%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 3072.23kB 10.12% 35.61%  3072.23kB 10.12%  fmt.Sprintf
+ 2048.22kB  6.75% 42.36%  2560.23kB  8.43%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 2048.09kB  6.75% 49.11%  2048.09kB  6.75%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1536.23kB  5.06% 54.17%  1536.23kB  5.06%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1050.86kB  3.46% 57.63%  8219.50kB 27.07%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1024.14kB  3.37% 61.00%  1024.14kB  3.37%  google.golang.org/protobuf/internal/impl.fieldInfoForMessage
+ 1024.11kB  3.37% 64.37%  1024.11kB  3.37%  context.(*cancelCtx).Done
+ 1024.05kB  3.37% 67.75%  3088.09kB 10.17%  github.com/xtls/xray-core/common/buf.New
+ 1024.05kB  3.37% 71.12%  3584.28kB 11.81%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  532.26kB  1.75% 72.87%   532.26kB  1.75%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  525.43kB  1.73% 74.60%   525.43kB  1.73%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  1.73% 76.33%  3597.63kB 11.85%  github.com/wyusgw/v2node/limiter.AddLimiter
+  521.05kB  1.72% 78.05%   521.05kB  1.72%  github.com/wyusgw/v2node/node.(*Controller).reportUserTrafficTask
+  518.65kB  1.71% 79.76%   518.65kB  1.71%  github.com/go-playground/validator/v10.map.init.3
+  512.69kB  1.69% 81.45%   512.69kB  1.69%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+  512.14kB  1.69% 83.13%   512.14kB  1.69%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+  512.08kB  1.69% 84.82%   512.08kB  1.69%  google.golang.org/protobuf/internal/impl.fieldInfoForOneof
+  512.08kB  1.69% 86.51%   512.08kB  1.69%  regexp.compile
+  512.05kB  1.69% 88.19%   512.05kB  1.69%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+  512.05kB  1.69% 89.88%   512.05kB  1.69%  runtime.mallocgc
+  512.04kB  1.69% 91.57%   512.04kB  1.69%  internal/bytealg.MakeNoZero
+  512.02kB  1.69% 93.25%   512.02kB  1.69%  context.WithValue
+  512.02kB  1.69% 94.94%   512.02kB  1.69%  encoding/json/v2.makePointerArshaler (inline)
+  512.02kB  1.69% 96.63%   512.02kB  1.69%  encoding/json/v2.makeString
+  512.02kB  1.69% 98.31%   512.02kB  1.69%  github.com/xtls/xray-core/common/protocol.NewID
+  512.01kB  1.69%   100%   512.01kB  1.69%  github.com/xtls/xray-core/common/errors.doLog
+         0     0%   100%   512.02kB  1.69%  encoding/json.Unmarshal
+         0     0%   100%  1024.05kB  3.37%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.02kB  1.69%  encoding/json/v2.lookupArshaler

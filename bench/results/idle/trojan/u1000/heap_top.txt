@@ -1,0 +1,31 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:28:13 UTC
+Showing nodes accounting for 3637.79kB, 100% of 3637.79kB total
+      flat  flat%   sum%        cum   cum%
+ 1050.86kB 28.89% 28.89%  1050.86kB 28.89%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB 14.44% 43.33%  1549.50kB 42.59%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB 14.44% 57.77%   525.43kB 14.44%  golang.org/x/net/html.map.init.1
+  512.04kB 14.08% 71.85%   512.04kB 14.08%  fmt.Sprintf
+  512.03kB 14.08% 85.93%   512.03kB 14.08%  github.com/xtls/xray-core/proxy/trojan.hexSha224
+  512.01kB 14.07%   100%   512.01kB 14.07%  github.com/wyusgw/v2node/limiter.AddLimiter
+         0     0%   100%  1050.86kB 28.89%  github.com/go-playground/validator/v10.init
+         0     0%   100%  2061.51kB 56.67%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  2061.51kB 56.67%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  2061.51kB 56.67%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%  2061.51kB 56.67%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  2061.51kB 56.67%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%   512.04kB 14.08%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%   512.04kB 14.08%  github.com/wyusgw/v2node/core.buildTrojanUser
+         0     0%   100%   512.04kB 14.08%  github.com/wyusgw/v2node/core.buildTrojanUsers (inline)
+         0     0%   100%  2061.51kB 56.67%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100%  2061.51kB 56.67%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0%   100%   512.03kB 14.08%  github.com/xtls/xray-core/common/protocol.(*User).GetTypedAccount
+         0     0%   100%   512.03kB 14.08%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+         0     0%   100%   512.03kB 14.08%  github.com/xtls/xray-core/proxy/trojan.(*Account).AsAccount
+         0     0%   100%   525.43kB 14.44%  golang.org/x/net/html.init
+         0     0%   100%  2061.51kB 56.67%  main.main
+         0     0%   100%  1576.28kB 43.33%  runtime.doInit (inline)
+         0     0%   100%  1576.28kB 43.33%  runtime.doInit1
+         0     0%   100%  3637.79kB   100%  runtime.main

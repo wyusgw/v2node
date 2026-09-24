@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:54:56 UTC
+Showing nodes accounting for 81.50MB, 94.22% of 86.50MB total
+Showing top 30 nodes out of 193
+      flat  flat%   sum%        cum   cum%
+      36MB 41.62% 41.62%    37.50MB 43.36%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+    9.57MB 11.07% 52.69%     9.57MB 11.07%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    4.17MB  4.82% 57.51%     5.17MB  5.97%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    3.50MB  4.05% 61.56%     4.50MB  5.20%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+    2.50MB  2.89% 64.45%     2.50MB  2.89%  runtime.mallocgc
+    2.50MB  2.89% 67.34%    12.07MB 13.96%  github.com/xtls/xray-core/common/buf.New
+    2.50MB  2.89% 70.23%     2.50MB  2.89%  fmt.Sprintf
+    2.05MB  2.37% 72.60%    47.56MB 54.98%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       2MB  2.31% 74.92%     4.50MB  5.20%  github.com/wyusgw/v2node/core.buildTrojanUser
+    1.50MB  1.73% 76.65%     1.50MB  1.73%  context.(*cancelCtx).propagateCancel
+    1.50MB  1.73% 78.38%     1.50MB  1.73%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.73% 80.12%     1.50MB  1.73%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+    1.16MB  1.34% 81.46%     1.16MB  1.34%  runtime/pprof.StartCPUProfile
+       1MB  1.16% 82.61%        1MB  1.16%  regexp/syntax.(*compiler).inst
+       1MB  1.16% 83.77%     1.50MB  1.73%  context.WithDeadlineCause
+       1MB  1.16% 84.93%        1MB  1.16%  encoding/json/v2.makeString
+       1MB  1.16% 86.08%        1MB  1.16%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.16% 87.24%     3.50MB  4.05%  github.com/wyusgw/v2node/limiter.AddLimiter
+    0.52MB   0.6% 87.83%     0.52MB   0.6%  regexp.(*bitState).reset
+    0.51MB  0.59% 88.43%     0.51MB  0.59%  github.com/go-playground/validator/v10.map.init.7
+    0.50MB  0.58% 89.01%     0.50MB  0.58%  encoding/json/jsontext.stateMachine.MayAppendDelim
+    0.50MB  0.58% 89.59%     0.50MB  0.58%  bufio.NewWriterSize
+    0.50MB  0.58% 90.17%     0.50MB  0.58%  hash/crc32.archInitCastagnoli
+    0.50MB  0.58% 90.75%     0.50MB  0.58%  strings.(*Builder).WriteByte
+    0.50MB  0.58% 91.33%     0.50MB  0.58%  github.com/xtls/xray-core/common/errors.New
+    0.50MB  0.58% 91.91%     5.50MB  6.36%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    0.50MB  0.58% 92.48%     2.50MB  2.89%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    0.50MB  0.58% 93.06%     1.50MB  1.73%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).Dispatch
+    0.50MB  0.58% 93.64%     0.50MB  0.58%  context.(*cancelCtx).Done
+    0.50MB  0.58% 94.22%     0.50MB  0.58%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)

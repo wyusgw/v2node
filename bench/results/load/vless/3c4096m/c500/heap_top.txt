@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:37:42 UTC
+Showing nodes accounting for 29878.11kB, 100% of 29878.11kB total
+Showing top 30 nodes out of 137
+      flat  flat%   sum%        cum   cum%
+ 9288.19kB 31.09% 31.09%  9288.19kB 31.09%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2560.39kB  8.57% 39.66%  2560.39kB  8.57%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 2560.12kB  8.57% 48.22%  2560.12kB  8.57%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1536.12kB  5.14% 53.37%  1536.12kB  5.14%  fmt.Sprintf
+ 1184.27kB  3.96% 57.33%  1184.27kB  3.96%  runtime/pprof.StartCPUProfile
+ 1037.44kB  3.47% 60.80%  3597.73kB 12.04%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1025.62kB  3.43% 64.23%  1025.62kB  3.43%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+ 1024.05kB  3.43% 67.66%  1536.10kB  5.14%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  902.59kB  3.02% 70.68%  1414.61kB  4.73%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  1.78% 72.46%   532.26kB  1.78%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  525.43kB  1.76% 74.22%  6157.86kB 20.61%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  1.76% 75.98%   525.43kB  1.76%  golang.org/x/net/html.map.init.1
+  516.01kB  1.73% 77.71%   516.01kB  1.73%  google.golang.org/protobuf/internal/strs.(*Builder).grow (inline)
+  514.38kB  1.72% 79.43%   514.38kB  1.72%  github.com/nrdcg/oci-go-sdk/common/v1065.map.init.1
+     513kB  1.72% 81.15%      513kB  1.72%  runtime.mallocgc
+  512.19kB  1.71% 82.86%  1540.28kB  5.16%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.14kB  1.71% 84.58%   512.14kB  1.71%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+  512.14kB  1.71% 86.29%   512.14kB  1.71%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute (inline)
+  512.09kB  1.71% 88.00%   512.09kB  1.71%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+  512.05kB  1.71% 89.72%   512.05kB  1.71%  github.com/baidubce/bce-sdk-go/util/log.NewLogger.func1
+  512.05kB  1.71% 91.43%   512.05kB  1.71%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+  512.05kB  1.71% 93.15%   512.05kB  1.71%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+  512.05kB  1.71% 94.86%  7208.37kB 24.13%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+  512.02kB  1.71% 96.57%   512.02kB  1.71%  context.WithValue
+  512.02kB  1.71% 98.29%   512.02kB  1.71%  encoding/json/v2.makeString
+  512.01kB  1.71%   100%   512.01kB  1.71%  github.com/xtls/xray-core/proxy.readV.AddToStatCounter.func2
+         0     0%   100%   512.02kB  1.71%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.02kB  1.71%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%   512.02kB  1.71%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%   512.02kB  1.71%  encoding/json/v2.unmarshalDecode

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:31:57 UTC
+Showing nodes accounting for 59.94MB, 98.36% of 60.94MB total
+Showing top 30 nodes out of 175
+      flat  flat%   sum%        cum   cum%
+   34.27MB 56.23% 56.23%    34.27MB 56.23%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+       3MB  4.92% 61.16%        3MB  4.92%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  3.28% 64.44%        2MB  3.28%  runtime.mallocgc
+       2MB  3.28% 67.72%        2MB  3.28%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+    1.72MB  2.83% 70.55%     1.72MB  2.83%  runtime/pprof.StartCPUProfile
+    1.50MB  2.46% 73.01%     1.50MB  2.46%  fmt.Sprintf
+    1.03MB  1.68% 74.69%     7.03MB 11.53%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       1MB  1.64% 76.34%        1MB  1.64%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+       1MB  1.64% 77.98%     1.50MB  2.46%  github.com/wyusgw/v2node/limiter.AddLimiter
+       1MB  1.64% 79.62%        1MB  1.64%  encoding/json/v2.makeString
+       1MB  1.64% 81.26%    22.12MB 36.30%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       1MB  1.64% 82.90%        1MB  1.64%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    0.88MB  1.45% 84.35%     1.88MB  3.09%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.52MB  0.85% 85.20%     0.52MB  0.85%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+    0.52MB  0.85% 86.05%     0.52MB  0.85%  regexp.(*bitState).reset
+    0.50MB  0.82% 86.87%     0.50MB  0.82%  encoding/gob.init
+    0.50MB  0.82% 87.69%     0.50MB  0.82%  encoding/json/v2.makeStructFields
+    0.50MB  0.82% 88.51%     0.50MB  0.82%  context.(*cancelCtx).propagateCancel
+    0.50MB  0.82% 89.33%     0.50MB  0.82%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+    0.50MB  0.82% 90.15%        1MB  1.64%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+    0.50MB  0.82% 90.97%     0.50MB  0.82%  context.withCancel (inline)
+    0.50MB  0.82% 91.79%     0.50MB  0.82%  github.com/xtls/xray-core/common/buf.NewReadVReader (inline)
+    0.50MB  0.82% 92.61%     0.50MB  0.82%  github.com/xtls/xray-core/common/buf.NewWriter
+    0.50MB  0.82% 93.44%     1.50MB  2.46%  google.golang.org/protobuf/internal/impl.(*MessageInfo).makeKnownFieldsFunc
+    0.50MB  0.82% 94.26%        5MB  8.21%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+    0.50MB  0.82% 95.08%        2MB  3.28%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).routedDispatch
+    0.50MB  0.82% 95.90%     0.50MB  0.82%  github.com/xtls/xray-core/common/buf.NewBufferedWriter (inline)
+    0.50MB  0.82% 96.72%     0.50MB  0.82%  github.com/xtls/xray-core/common/protocol.NewID
+    0.50MB  0.82% 97.54%     0.50MB  0.82%  syscall.anyToSockaddr
+    0.50MB  0.82% 98.36%    19.65MB 32.24%  github.com/xtls/xray-core/common/buf.Copy

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:31:14 UTC
+Showing nodes accounting for 48.82MB, 93.31% of 52.32MB total
+Showing top 30 nodes out of 170
+      flat  flat%   sum%        cum   cum%
+    6.05MB 11.56% 11.56%     6.05MB 11.56%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    5.54MB 10.59% 22.15%    12.56MB 24.00%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+    4.50MB  8.60% 30.76%     4.50MB  8.60%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    4.50MB  8.60% 39.36%     6.50MB 12.43%  context.WithDeadlineCause
+    3.05MB  5.83% 45.19%     6.05MB 11.57%  github.com/wyusgw/v2node/limiter.AddLimiter
+       2MB  3.82% 49.01%        2MB  3.82%  time.newTimer
+       2MB  3.82% 52.84%     6.54MB 12.49%  github.com/xtls/xray-core/common/buf.New
+    1.97MB  3.77% 56.61%     2.97MB  5.68%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    1.50MB  2.87% 59.48%     1.50MB  2.87%  github.com/xtls/xray-core/common/errors.doLog
+    1.50MB  2.87% 62.34%     1.50MB  2.87%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  2.87% 65.21%     1.50MB  2.87%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+    1.50MB  2.87% 68.08%     2.50MB  4.78%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+    1.16MB  2.21% 70.29%     1.16MB  2.21%  runtime/pprof.StartCPUProfile
+    1.03MB  1.96% 72.25%    14.53MB 27.77%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       1MB  1.91% 74.16%        1MB  1.91%  runtime.mallocgc
+       1MB  1.91% 76.07%        1MB  1.91%  reflect.unsafe_New
+       1MB  1.91% 77.98%        1MB  1.91%  fmt.Sprintf
+       1MB  1.91% 79.90%     2.50MB  4.78%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+       1MB  1.91% 81.81%        1MB  1.91%  encoding/json/v2.makeString
+       1MB  1.91% 83.72%     1.50MB  2.87%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+    0.51MB  0.98% 84.70%     0.51MB  0.98%  github.com/go-playground/validator/v10.map.init.7
+    0.50MB  0.96% 85.66%     0.50MB  0.96%  encoding/asn1.MarshalWithParams
+    0.50MB  0.96% 86.62%     0.50MB  0.96%  google.golang.org/protobuf/internal/impl.(*MessageInfo).makeStructInfo
+    0.50MB  0.96% 87.57%     0.50MB  0.96%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+    0.50MB  0.96% 88.53%     0.50MB  0.96%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+    0.50MB  0.96% 89.49%     0.50MB  0.96%  github.com/xtls/xray-core/transport/internet/finalmask/xdns.computeMaxEncodedPayloadForType
+    0.50MB  0.96% 90.44%     0.50MB  0.96%  go4.org/netipx.(*IPSetBuilder).AddRange
+    0.50MB  0.96% 91.40%     0.50MB  0.96%  gvisor.dev/gvisor/pkg/state.init.func1
+    0.50MB  0.96% 92.35%        3MB  5.73%  github.com/wyusgw/v2node/core.buildVlessUser
+    0.50MB  0.96% 93.31%    13.06MB 24.95%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback

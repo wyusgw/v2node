@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:33:23 UTC
+Showing nodes accounting for 47.59MB, 91.36% of 52.09MB total
+Showing top 30 nodes out of 193
+      flat  flat%   sum%        cum   cum%
+    7.05MB 13.54% 13.54%     7.05MB 13.54%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    6.04MB 11.59% 25.14%    13.57MB 26.06%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+    3.50MB  6.72% 31.86%     3.50MB  6.72%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    2.74MB  5.26% 37.12%     2.74MB  5.26%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    2.54MB  4.87% 41.99%     4.54MB  8.71%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  4.80% 46.79%     2.50MB  4.80%  reflect.unsafe_New
+    2.50MB  4.80% 51.59%        3MB  5.76%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       2MB  3.84% 55.43%        2MB  3.84%  fmt.Sprintf
+       2MB  3.84% 59.27%     4.52MB  8.68%  github.com/xtls/xray-core/common/buf.New
+       2MB  3.84% 63.11%        2MB  3.84%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+    1.50MB  2.88% 65.99%     1.50MB  2.88%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+    1.16MB  2.22% 68.21%     1.16MB  2.22%  runtime/pprof.StartCPUProfile
+       1MB  1.92% 70.13%     3.50MB  6.72%  github.com/wyusgw/v2node/core.buildVlessUser
+       1MB  1.92% 72.05%     1.50MB  2.88%  context.WithDeadlineCause
+       1MB  1.92% 73.97%        2MB  3.84%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+       1MB  1.92% 75.89%        1MB  1.92%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+       1MB  1.92% 77.81%        1MB  1.92%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}]
+       1MB  1.92% 79.73%        3MB  5.76%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+    0.54MB  1.04% 80.77%     4.04MB  7.76%  github.com/wyusgw/v2node/core.buildVlessUsers
+    0.51MB  0.98% 81.75%     0.51MB  0.98%  google.golang.org/protobuf/reflect/protoregistry.(*Types).register
+    0.50MB  0.97% 82.71%     0.50MB  0.97%  bytes.Clone
+    0.50MB  0.96% 83.68%     0.50MB  0.96%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls (inline)
+    0.50MB  0.96% 84.64%        1MB  1.92%  github.com/shopspring/decimal.NewFromString
+    0.50MB  0.96% 85.60%     0.50MB  0.96%  encoding/json/v2.makeStructFields
+    0.50MB  0.96% 86.56%     0.50MB  0.96%  google.golang.org/protobuf/types/descriptorpb.init
+    0.50MB  0.96% 87.52%     0.50MB  0.96%  math/big.nat.make (inline)
+    0.50MB  0.96% 88.48%        1MB  1.92%  google.golang.org/protobuf/internal/filedesc.newRawFile
+    0.50MB  0.96% 89.44%     0.50MB  0.96%  regexp/syntax.(*compiler).inst
+    0.50MB  0.96% 90.40%     0.50MB  0.96%  gvisor.dev/gvisor/pkg/state.init.func1
+    0.50MB  0.96% 91.36%     0.50MB  0.96%  strings.(*Builder).WriteByte

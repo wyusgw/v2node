@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:54:13 UTC
+Showing nodes accounting for 418.57MB, 89.24% of 469.02MB total
+Dropped 150 nodes (cum <= 2.35MB)
+Showing top 30 nodes out of 134
+      flat  flat%   sum%        cum   cum%
+  122.46MB 26.11% 26.11%   122.46MB 26.11%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+      94MB 20.04% 46.15%   215.95MB 46.04%  github.com/xtls/xray-core/common/buf.New
+      50MB 10.66% 56.81%       50MB 10.66%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+      39MB  8.32% 65.13%       40MB  8.53%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+      19MB  4.05% 69.18%       19MB  4.05%  github.com/xtls/xray-core/common/errors.doLog
+   13.78MB  2.94% 72.12%    13.78MB  2.94%  runtime.mallocgc
+       7MB  1.49% 73.61%   165.75MB 35.34%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+    5.50MB  1.17% 74.78%     5.50MB  1.17%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+    5.04MB  1.07% 75.86%     5.04MB  1.07%  time.newTimer
+       5MB  1.07% 76.93%        5MB  1.07%  context.(*cancelCtx).propagateCancel
+    4.50MB  0.96% 77.89%     4.50MB  0.96%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    4.50MB  0.96% 78.84%     4.50MB  0.96%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    4.50MB  0.96% 79.80%   155.54MB 33.16%  github.com/xtls/xray-core/proxy/trojan.(*ConnReader).ReadMultiBuffer
+       4MB  0.85% 80.66%        4MB  0.85%  fmt.Sprintf
+    3.50MB  0.75% 81.40%    36.50MB  7.78%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    3.50MB  0.75% 82.15%     6.50MB  1.39%  github.com/xtls/xray-core/common/task.Run
+    3.50MB  0.75% 82.90%     3.50MB  0.75%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       3MB  0.64% 83.54%    62.16MB 13.25%  github.com/xtls/xray-core/proxy/trojan.(*Server).Process
+    2.59MB  0.55% 84.09%     3.09MB  0.66%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    2.53MB  0.54% 84.63%     5.03MB  1.07%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  0.53% 85.16%     2.50MB  0.53%  github.com/xtls/xray-core/common/errors.New
+    2.50MB  0.53% 85.69%     2.50MB  0.53%  net.newFD (inline)
+    2.50MB  0.53% 86.23%     2.50MB  0.53%  context.(*cancelCtx).Done
+    2.50MB  0.53% 86.76%     6.04MB  1.29%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+    2.50MB  0.53% 87.29%     5.50MB  1.17%  github.com/xtls/xray-core/transport/pipe.New
+    2.50MB  0.53% 87.83%     5.50MB  1.17%  context.WithDeadlineCause
+    2.07MB  0.44% 88.27%     3.57MB  0.76%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+    1.54MB  0.33% 88.60%     5.21MB  1.11%  github.com/wyusgw/v2node/node.(*Controller).reportUserTrafficTask
+    1.54MB  0.33% 88.92%    41.04MB  8.75%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.50MB  0.32% 89.24%    11.50MB  2.45%  net.(*Dialer).DialContext

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:26:30 UTC
+Showing nodes accounting for 99.09MB, 100% of 99.09MB total
+Showing top 30 nodes out of 89
+      flat  flat%   sum%        cum   cum%
+   23.50MB 23.72% 23.72%    23.50MB 23.72%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+   22.50MB 22.71% 46.43%    22.50MB 22.71%  fmt.Sprintf
+      11MB 11.10% 57.53%       11MB 11.10%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+      10MB 10.09% 67.62%       13MB 13.12%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+    7.59MB  7.66% 75.29%    24.59MB 24.82%  github.com/wyusgw/v2node/limiter.AddLimiter
+    6.40MB  6.46% 81.74%     8.90MB  8.98%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    3.50MB  3.53% 85.28%    16.50MB 16.65%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+       3MB  3.03% 88.30%        3MB  3.03%  github.com/xtls/xray-core/common/protocol.NewID
+    2.57MB  2.59% 90.89%    61.57MB 62.14%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    2.50MB  2.52% 93.42%     2.50MB  2.52%  encoding/json/v2.makeString
+    2.50MB  2.52% 95.94%    26.50MB 26.75%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+    0.52MB  0.52% 96.46%     0.52MB  0.52%  google.golang.org/protobuf/reflect/protoregistry.(*Types).register
+    0.50MB  0.51% 96.97%     0.50MB  0.51%  github.com/nrdcg/oci-go-sdk/common/v1065.map.init.3
+    0.50MB  0.51% 97.48%     0.50MB  0.51%  encoding/json/v2.makeStructFields
+    0.50MB  0.51% 97.98%     0.50MB  0.51%  regexp/syntax.(*compiler).inst (inline)
+    0.50MB  0.51% 98.49%     0.50MB  0.51%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB   0.5% 98.99%     0.50MB   0.5%  google.golang.org/protobuf/internal/filedesc.newRawFile
+    0.50MB   0.5% 99.50%     0.50MB   0.5%  github.com/xtls/xray-core/proxy/tun.init
+    0.50MB   0.5%   100%     0.50MB   0.5%  golang.org/x/crypto/ssh.init.3
+         0     0%   100%     0.50MB  0.51%  encoding/json.Unmarshal (inline)
+         0     0%   100%        3MB  3.03%  encoding/json/v2.Unmarshal
+         0     0%   100%     2.50MB  2.52%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%     0.50MB  0.51%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%        3MB  3.03%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%        3MB  3.03%  encoding/json/v2.unmarshalDecode
+         0     0%   100%     0.50MB  0.51%  github.com/aziontech/azionapi-go-sdk/idns.init
+         0     0%   100%     0.52MB  0.52%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.file_internal_proto_v2_s2a_s2a_proto_init
+         0     0%   100%     0.52MB  0.52%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.init.0
+         0     0%   100%     0.50MB  0.51%  github.com/nrdcg/oci-go-sdk/common/v1065.init
+         0     0%   100%    96.06MB 96.95%  github.com/spf13/cobra.(*Command).Execute

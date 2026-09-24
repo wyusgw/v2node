@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 12:01:43 UTC
+Duration: 23.59s, Total samples = 42.66s (180.83%)
+Showing nodes accounting for 27.26s, 63.90% of 42.66s total
+Dropped 557 nodes (cum <= 0.21s)
+Showing top 30 nodes out of 218
+      flat  flat%   sum%        cum   cum%
+     4.14s  9.70%  9.70%      4.14s  9.70%  crypto/sha1.blockSHANI
+     2.17s  5.09% 14.79%      2.17s  5.09%  internal/runtime/syscall/linux.Syscall6
+     1.75s  4.10% 18.89%      9.61s 22.53%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+     1.69s  3.96% 22.86%      3.64s  8.53%  runtime.tryDeferToSpanScan
+     1.61s  3.77% 26.63%      2.14s  5.02%  runtime.gcmarknewobject
+     1.46s  3.42% 30.05%      1.46s  3.42%  runtime.spanClass.sizeclass (inline)
+     1.26s  2.95% 33.01%      1.26s  2.95%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     1.01s  2.37% 35.37%      1.68s  3.94%  runtime.(*unwinder).resolveInternal
+        1s  2.34% 37.72%         1s  2.34%  runtime.memclrNoHeapPointers
+     0.89s  2.09% 39.80%      0.89s  2.09%  runtime.memmove
+     0.85s  1.99% 41.80%      0.85s  1.99%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.69s  1.62% 43.41%      0.69s  1.62%  runtime.nextFreeFast (inline)
+     0.61s  1.43% 44.84%      8.70s 20.39%  runtime.mallocgcSmallNoscan
+     0.59s  1.38% 46.23%      4.13s  9.68%  crypto/sha1.(*digest).Sum
+     0.59s  1.38% 47.61%      1.61s  3.77%  runtime.scanObjectsSmall
+     0.56s  1.31% 48.92%      0.56s  1.31%  runtime.(*sweepLocker).tryAcquire
+     0.55s  1.29% 50.21%      0.65s  1.52%  runtime.findObject
+     0.54s  1.27% 51.48%      1.54s  3.61%  runtime.scanblock
+     0.53s  1.24% 52.72%      0.68s  1.59%  runtime.(*spanSet).push
+     0.51s  1.20% 53.91%      0.54s  1.27%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.49s  1.15% 55.06%      0.60s  1.41%  runtime.step
+     0.48s  1.13% 56.19%      8.52s 19.97%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache.func1
+     0.46s  1.08% 57.27%      2.80s  6.56%  crypto/sha1.(*digest).checkSum
+     0.46s  1.08% 58.35%      0.50s  1.17%  runtime.(*mspan).moveInlineMarks
+     0.45s  1.05% 59.40%      0.45s  1.05%  runtime.(*mspan).base (inline)
+     0.43s  1.01% 60.41%      2.16s  5.06%  runtime.sweepone
+     0.39s  0.91% 61.32%      4.99s 11.70%  runtime.scanSpan
+     0.38s  0.89% 62.21%     17.95s 42.08%  runtime.mallocgc
+     0.38s  0.89% 63.10%      1.33s  3.12%  runtime.pcvalue
+     0.34s   0.8% 63.90%         1s  2.34%  runtime.scanObjectSmall

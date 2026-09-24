@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:57:07 UTC
+Showing nodes accounting for 39471.04kB, 93.91% of 42031.12kB total
+Showing top 30 nodes out of 188
+      flat  flat%   sum%        cum   cum%
+13932.28kB 33.15% 33.15% 13932.28kB 33.15%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2560.20kB  6.09% 39.24%  2560.20kB  6.09%  fmt.Sprintf
+ 2560.19kB  6.09% 45.33%  3072.24kB  7.31%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+ 2049.50kB  4.88% 50.21%  2049.50kB  4.88%  crypto/internal/fips140/aes/gcm.New
+ 2048.94kB  4.87% 55.08%  2048.94kB  4.87%  runtime.mallocgc
+ 2048.09kB  4.87% 59.95%  2048.09kB  4.87%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+ 1536.75kB  3.66% 63.61%  1536.75kB  3.66%  crypto/internal/fips140/aes.New
+ 1024.05kB  2.44% 66.05%  1024.05kB  2.44%  encoding/json/v2.makeString
+  902.59kB  2.15% 68.19%  1926.63kB  4.58%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  1.25% 69.44%   525.43kB  1.25%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  1.25% 70.69%  5133.69kB 12.21%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  1.25% 71.94%  2061.58kB  4.90%  github.com/wyusgw/v2node/limiter.AddLimiter
+  525.43kB  1.25% 73.19%   525.43kB  1.25%  golang.org/x/net/html.map.init.1
+  513.31kB  1.22% 74.42%   513.31kB  1.22%  github.com/xtls/xray-core/transport/internet/headers/http.init
+  512.28kB  1.22% 75.63%   512.28kB  1.22%  gopkg.in/yaml%2ev3.init.1
+  512.19kB  1.22% 76.85%   512.19kB  1.22%  github.com/xtls/xray-core/transport/internet/finalmask/mkcp/header.init
+  512.14kB  1.22% 78.07%   512.14kB  1.22%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+  512.14kB  1.22% 79.29%   512.14kB  1.22%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+  512.10kB  1.22% 80.51%   512.10kB  1.22%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+  512.08kB  1.22% 81.73%   512.08kB  1.22%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.07kB  1.22% 82.94%   512.07kB  1.22%  google.golang.org/protobuf/internal/filedesc.(*Fields).lazyInit.func1
+  512.06kB  1.22% 84.16%   512.06kB  1.22%  github.com/xtls/xray-core/proxy/shadowsocks.init.func2
+  512.05kB  1.22% 85.38%   512.05kB  1.22%  context.(*cancelCtx).Done
+  512.05kB  1.22% 86.60%   512.05kB  1.22%  crypto/sha1.New
+  512.05kB  1.22% 87.82%   512.05kB  1.22%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+  512.05kB  1.22% 89.04%  1536.16kB  3.65%  golang.org/x/crypto/hkdf.Expand
+  512.05kB  1.22% 90.25%   512.05kB  1.22%  time.newTimer
+  512.04kB  1.22% 91.47%   512.04kB  1.22%  context.withCancel
+  512.04kB  1.22% 92.69%   512.04kB  1.22%  github.com/xtls/xray-core/common/buf.NewReadVReader
+  512.03kB  1.22% 93.91%   512.03kB  1.22%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount

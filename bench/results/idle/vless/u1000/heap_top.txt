@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:25:28 UTC
+Showing nodes accounting for 4112.41kB, 100% of 4112.41kB total
+Showing top 30 nodes out of 50
+      flat  flat%   sum%        cum   cum%
+  525.43kB 12.78% 12.78%   525.43kB 12.78%  github.com/go-playground/validator/v10.map.init.7
+     514kB 12.50% 25.28%      514kB 12.50%  encoding/asn1.MarshalWithParams
+  512.62kB 12.47% 37.74%   512.62kB 12.47%  github.com/aws/aws-sdk-go-v2/service/route53/internal/endpoints.init
+  512.19kB 12.45% 50.20%   512.19kB 12.45%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.07kB 12.45% 62.65%   512.07kB 12.45%  google.golang.org/protobuf/internal/impl.fieldInfoForMessage
+  512.04kB 12.45% 75.10%   512.04kB 12.45%  fmt.Sprintf
+  512.03kB 12.45% 87.55%   512.03kB 12.45%  github.com/wyusgw/v2node/limiter.AddLimiter
+  512.02kB 12.45%   100%   512.02kB 12.45%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+         0     0%   100%      514kB 12.50%  crypto/x509.CreateCertificate
+         0     0%   100%      514kB 12.50%  encoding/asn1.Marshal (inline)
+         0     0%   100%   525.43kB 12.78%  github.com/go-playground/validator/v10.init
+         0     0%   100%  2560.35kB 62.26%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  2560.35kB 62.26%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  2560.35kB 62.26%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%  2560.35kB 62.26%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  2560.35kB 62.26%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%   512.04kB 12.45%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%  1024.06kB 24.90%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+         0     0%   100%  1024.26kB 24.91%  github.com/wyusgw/v2node/core.(*V2Core).Start
+         0     0%   100%   512.07kB 12.45%  github.com/wyusgw/v2node/core.GetCustomConfig
+         0     0%   100%   512.07kB 12.45%  github.com/wyusgw/v2node/core.buildDefaultOutbound
+         0     0%   100%  1024.26kB 24.91%  github.com/wyusgw/v2node/core.getCore
+         0     0%   100%  1536.09kB 37.35%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100%  1536.09kB 37.35%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0%   100%      514kB 12.50%  github.com/xtls/reality.init.1
+         0     0%   100%  1024.26kB 24.91%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+         0     0%   100%   512.07kB 12.45%  github.com/xtls/xray-core/infra/conf.(*OutboundDetourConfig).Build
+         0     0%   100%   512.02kB 12.45%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+         0     0%   100%   512.02kB 12.45%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).AddUser
+         0     0%   100%   512.19kB 12.45%  google.golang.org/protobuf/internal/filedesc.(*File).lazyInit (inline)

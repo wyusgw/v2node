@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:30:38 UTC
+Showing nodes accounting for 194.68MB, 98.48% of 197.68MB total
+Dropped 50 nodes (cum <= 0.99MB)
+Showing top 30 nodes out of 61
+      flat  flat%   sum%        cum   cum%
+   39.29MB 19.87% 19.87%    44.29MB 22.40%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+      18MB  9.11% 28.98%       18MB  9.11%  time.newTimer
+      17MB  8.60% 37.58%       35MB 17.71%  context.WithDeadlineCause
+      15MB  7.59% 45.17%    16.50MB  8.35%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+      14MB  7.08% 52.25%       14MB  7.08%  fmt.Sprintf
+   13.50MB  6.83% 59.08%       29MB 14.67%  github.com/wyusgw/v2node/core.buildSSUser
+   13.16MB  6.66% 65.74%    30.66MB 15.51%  github.com/wyusgw/v2node/limiter.AddLimiter
+   10.26MB  5.19% 70.93%   119.23MB 60.32%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    9.49MB  4.80% 75.73%     9.49MB  4.80%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+       7MB  3.54% 79.27%       21MB 10.62%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+       6MB  3.04% 82.30%        6MB  3.04%  reflect.unsafe_New
+    5.50MB  2.78% 85.09%     5.50MB  2.78%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       5MB  2.53% 87.62%        5MB  2.53%  encoding/json/v2.makeString
+    4.50MB  2.28% 89.89%        9MB  4.55%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+    4.50MB  2.28% 92.17%       29MB 14.67%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    4.50MB  2.28% 94.45%     4.50MB  2.28%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+       3MB  1.52% 95.96%        3MB  1.52%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  1.01% 96.97%        2MB  1.01%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+       1MB  0.51% 97.48%        1MB  0.51%  regexp/syntax.(*compiler).inst (inline)
+       1MB  0.51% 97.99%        1MB  0.51%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).getCipher
+    0.98MB  0.49% 98.48%    29.98MB 15.17%  github.com/wyusgw/v2node/core.buildSSUsers
+         0     0% 98.48%       35MB 17.71%  context.WithDeadline (inline)
+         0     0% 98.48%       35MB 17.71%  context.WithTimeout
+         0     0% 98.48%        5MB  2.53%  encoding/json/v2.Unmarshal
+         0     0% 98.48%        5MB  2.53%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0% 98.48%        5MB  2.53%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0% 98.48%        5MB  2.53%  encoding/json/v2.unmarshalDecode
+         0     0% 98.48%        1MB  0.51%  github.com/aws/aws-sdk-go-v2/service/lightsail/internal/endpoints.init
+         0     0% 98.48%   194.68MB 98.48%  github.com/spf13/cobra.(*Command).Execute
+         0     0% 98.48%   194.68MB 98.48%  github.com/spf13/cobra.(*Command).ExecuteC

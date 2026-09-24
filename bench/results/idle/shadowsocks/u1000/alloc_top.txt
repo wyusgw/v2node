@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:29:35 UTC
+Showing nodes accounting for 7225.18kB, 100% of 7225.18kB total
+Showing top 30 nodes out of 91
+      flat  flat%   sum%        cum   cum%
+  525.43kB  7.27%  7.27%   525.43kB  7.27%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  7.27% 14.54%  1549.51kB 21.45%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  7.27% 21.82%   525.43kB  7.27%  golang.org/x/net/html.map.init.1
+  521.05kB  7.21% 29.03%   521.05kB  7.21%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  519.03kB  7.18% 36.21%   519.03kB  7.18%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+  512.28kB  7.09% 43.30%   512.28kB  7.09%  gvisor.dev/gvisor/pkg/state.init.func1
+  512.23kB  7.09% 50.39%   512.23kB  7.09%  google.golang.org/protobuf/internal/filedesc.newRawFile
+  512.10kB  7.09% 57.48%   512.10kB  7.09%  github.com/youmark/pkcs8.RegisterKDF
+  512.06kB  7.09% 64.57%   512.06kB  7.09%  strings.(*Builder).WriteByte
+  512.05kB  7.09% 71.65%   512.05kB  7.09%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+  512.04kB  7.09% 78.74%   512.04kB  7.09%  fmt.Sprintf
+  512.03kB  7.09% 85.83%   512.03kB  7.09%  reflect.(*rtype).ptrTo
+  512.01kB  7.09% 92.91%   512.01kB  7.09%  google.golang.org/protobuf/internal/impl.(*MessageInfo).makeCoderMethods
+  512.01kB  7.09%   100%   512.01kB  7.09%  regexp.makeOnePass.func1
+         0     0%   100%   512.05kB  7.09%  crypto/hmac.New
+         0     0%   100%   512.03kB  7.09%  encoding/json.Marshal (inline)
+         0     0%   100%   512.03kB  7.09%  encoding/json/v2.Marshal
+         0     0%   100%   512.03kB  7.09%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%   512.03kB  7.09%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func6
+         0     0%   100%   512.03kB  7.09%  encoding/json/v2.makeStructFields
+         0     0%   100%   512.03kB  7.09%  encoding/json/v2.marshalEncode
+         0     0%   100%   512.01kB  7.09%  github.com/aws/aws-sdk-go-v2/service/route53/internal/endpoints.init
+         0     0%   100%   512.23kB  7.09%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.file_appctl_proto_base_proto_init
+         0     0%   100%   512.23kB  7.09%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.init.0
+         0     0%   100%   525.43kB  7.27%  github.com/go-playground/validator/v10.init
+         0     0%   100%  2573.55kB 35.62%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  2573.55kB 35.62%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  2573.55kB 35.62%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%  2573.55kB 35.62%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  2573.55kB 35.62%  github.com/wyusgw/v2node/cmd.serverHandle

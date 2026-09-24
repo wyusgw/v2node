@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:39:51 UTC
+Showing nodes accounting for 35357.79kB, 100% of 35357.79kB total
+Showing top 30 nodes out of 173
+      flat  flat%   sum%        cum   cum%
+ 7740.15kB 21.89% 21.89%  7740.15kB 21.89%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 4610.25kB 13.04% 34.93%  4610.25kB 13.04%  crypto/internal/fips140/aes.New (inline)
+ 3073.41kB  8.69% 43.62%  3073.41kB  8.69%  runtime.mallocgc
+ 1562.89kB  4.42% 48.04%  2586.95kB  7.32%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1537.12kB  4.35% 52.39%  1537.12kB  4.35%  crypto/internal/fips140/aes/gcm.New
+ 1536.12kB  4.34% 56.73%  1536.12kB  4.34%  fmt.Sprintf
+ 1536.07kB  4.34% 61.08%  1536.07kB  4.34%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+ 1050.86kB  2.97% 64.05%  9258.69kB 26.19%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1024.16kB  2.90% 66.95%  1024.16kB  2.90%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}]
+ 1024.05kB  2.90% 69.84%  1024.05kB  2.90%  encoding/json/v2.makeString
+  902.59kB  2.55% 72.40%  1926.63kB  5.45%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  1.49% 73.88%  5647.69kB 15.97%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+  521.05kB  1.47% 75.36%   521.05kB  1.47%  gvisor.dev/gvisor/pkg/state.Register
+  516.64kB  1.46% 76.82%   516.64kB  1.46%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+     515kB  1.46% 78.27%      515kB  1.46%  google.golang.org/genproto/googleapis/rpc/errdetails.init
+  513.12kB  1.45% 79.72%   513.12kB  1.45%  github.com/xtls/xray-core/common/log.NewLogger
+  512.28kB  1.45% 81.17%   512.28kB  1.45%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.14kB  1.45% 82.62%   512.14kB  1.45%  crypto/sha3.NewSHAKE128
+  512.10kB  1.45% 84.07%   512.10kB  1.45%  context.(*cancelCtx).propagateCancel
+  512.05kB  1.45% 85.52%   512.05kB  1.45%  context.(*cancelCtx).Done
+  512.05kB  1.45% 86.97%   512.05kB  1.45%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+  512.05kB  1.45% 88.41%  1536.16kB  4.34%  github.com/xtls/xray-core/common/task.Run
+  512.05kB  1.45% 89.86%   512.05kB  1.45%  github.com/xtls/xray-core/transport/pipe.New
+  512.04kB  1.45% 91.31%   512.04kB  1.45%  encoding/gob.buildTypeInfo
+  512.03kB  1.45% 92.76%   512.03kB  1.45%  github.com/xtls/xray-core/common/buf.NewWriter
+  512.02kB  1.45% 94.21%   512.02kB  1.45%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  1.45% 95.66%   512.02kB  1.45%  net.sockaddrToTCP
+  512.01kB  1.45% 97.10%  5122.26kB 14.49%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem (inline)
+  512.01kB  1.45% 98.55%  1024.29kB  2.90%  google.golang.org/protobuf/internal/filedesc.(*File).unmarshalFull
+  512.01kB  1.45%   100%   512.01kB  1.45%  github.com/wyusgw/v2node/common/counter.(*TrafficCounter).GetCounter

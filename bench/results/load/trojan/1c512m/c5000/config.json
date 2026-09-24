@@ -1,0 +1,2 @@
+{"Log":{"Level":"error","Access":"none"},"PprofPort":16060,
+ "Nodes":[{"ApiHost":"http://127.0.0.1:18080","NodeID":1,"ApiKey":"bench","Timeout":30}]}

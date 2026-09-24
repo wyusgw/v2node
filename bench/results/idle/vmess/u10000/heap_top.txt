@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:27:11 UTC
+Showing nodes accounting for 14783.61kB, 100% of 14783.61kB total
+Showing top 30 nodes out of 44
+      flat  flat%   sum%        cum   cum%
+ 5122.50kB 34.65% 34.65%  5122.50kB 34.65%  crypto/internal/fips140/aes.New (inline)
+ 2074.92kB 14.04% 48.69%  4635.12kB 31.35%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 2048.16kB 13.85% 62.54%  2048.16kB 13.85%  fmt.Sprintf
+ 1050.86kB  7.11% 69.65%  7709.46kB 52.15%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1024.05kB  6.93% 76.57%  1024.05kB  6.93%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  902.59kB  6.11% 82.68%  1414.61kB  9.57%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  512.23kB  3.46% 86.14%   512.23kB  3.46%  google.golang.org/protobuf/internal/filedesc.newRawFile
+  512.19kB  3.46% 89.61%   512.19kB  3.46%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+  512.08kB  3.46% 93.07%   512.08kB  3.46%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.02kB  3.46% 96.54%   512.02kB  3.46%  encoding/json/v2.makeString
+  512.02kB  3.46%   100%   512.02kB  3.46%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+         0     0%   100%  5122.50kB 34.65%  crypto/aes.NewCipher
+         0     0%   100%   512.02kB  3.46%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.02kB  3.46%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%   512.02kB  3.46%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%   512.02kB  3.46%  encoding/json/v2.unmarshalDecode
+         0     0%   100% 13759.19kB 93.07%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100% 13759.19kB 93.07%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100% 13759.19kB 93.07%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100% 13759.19kB 93.07%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100% 13759.19kB 93.07%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%  2048.16kB 13.85%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%   512.04kB  3.46%  github.com/wyusgw/v2node/core.buildVmessUser
+         0     0%   100%   512.04kB  3.46%  github.com/wyusgw/v2node/core.buildVmessUsers
+         0     0%   100% 13759.19kB 93.07%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100% 13759.19kB 93.07%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0%   100%  5122.50kB 34.65%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+         0     0%   100%  5122.50kB 34.65%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+         0     0%   100%  5122.50kB 34.65%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoder (inline)
+         0     0%   100%  5122.50kB 34.65%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem (inline)

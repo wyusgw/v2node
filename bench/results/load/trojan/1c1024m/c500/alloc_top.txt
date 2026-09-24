@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:50:37 UTC
+Showing nodes accounting for 112.17MB, 91.75% of 122.25MB total
+Dropped 127 nodes (cum <= 0.61MB)
+Showing top 30 nodes out of 128
+      flat  flat%   sum%        cum   cum%
+   36.50MB 29.86% 29.86%       38MB 31.09%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+   15.12MB 12.37% 42.22%    15.12MB 12.37%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+      14MB 11.45% 53.68%    29.12MB 23.82%  github.com/xtls/xray-core/common/buf.New
+    6.50MB  5.32% 58.99%     6.50MB  5.32%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+    3.82MB  3.13% 62.12%     5.32MB  4.35%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    3.50MB  2.86% 64.98%     3.50MB  2.86%  github.com/xtls/xray-core/common/errors.doLog
+    3.50MB  2.86% 67.85%     3.50MB  2.86%  fmt.Sprintf
+    3.03MB  2.48% 70.32%     4.53MB  3.70%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  2.05% 72.37%     2.50MB  2.05%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    2.50MB  2.05% 74.41%     2.50MB  2.05%  github.com/xtls/xray-core/proxy/trojan.hexSha224
+       2MB  1.64% 76.05%        2MB  1.64%  runtime.mallocgc
+    1.54MB  1.26% 77.31%    49.04MB 40.12%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.50MB  1.23% 78.54%     1.50MB  1.23%  github.com/xtls/xray-core/common/errors.New
+    1.50MB  1.23% 79.76%     2.50MB  2.05%  context.WithDeadlineCause
+    1.50MB  1.23% 80.99%        2MB  1.64%  github.com/xtls/xray-core/common/task.Run
+    1.50MB  1.23% 82.22%     1.50MB  1.23%  encoding/json/v2.makeString
+    1.50MB  1.23% 83.44%     1.50MB  1.23%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.23% 84.67%    22.61MB 18.49%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+    1.16MB  0.95% 85.62%     1.16MB  0.95%  runtime/pprof.StartCPUProfile
+       1MB  0.82% 86.44%        1MB  0.82%  strings.(*Builder).WriteByte (inline)
+       1MB  0.82% 87.25%     2.01MB  1.65%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+       1MB  0.82% 88.07%        3MB  2.45%  github.com/wyusgw/v2node/core.buildTrojanUser
+       1MB  0.82% 88.89%        5MB  4.09%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    0.50MB  0.41% 89.30%     8.01MB  6.55%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    0.50MB  0.41% 89.71%     7.51MB  6.14%  github.com/xtls/xray-core/proxy/trojan.(*Server).Process
+    0.50MB  0.41% 90.12%        1MB  0.82%  github.com/wyusgw/v2node/limiter.(*Limiter).CheckLimit
+    0.50MB  0.41% 90.53%        3MB  2.45%  github.com/xtls/xray-core/proxy/trojan.(*Account).AsAccount
+    0.50MB  0.41% 90.93%     1.01MB  0.83%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+    0.50MB  0.41% 91.34%     1.50MB  1.23%  github.com/xtls/xray-core/transport/internet/finalmask/xdns.Name.String
+    0.50MB  0.41% 91.75%    21.55MB 17.63%  github.com/xtls/xray-core/proxy/trojan.(*ConnReader).ReadMultiBuffer

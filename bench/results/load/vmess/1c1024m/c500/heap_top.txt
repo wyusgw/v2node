@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:42:00 UTC
+Showing nodes accounting for 29240.69kB, 100% of 29240.69kB total
+Showing top 30 nodes out of 120
+      flat  flat%   sum%        cum   cum%
+ 5160.10kB 17.65% 17.65%  5160.10kB 17.65%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 3073.50kB 10.51% 28.16%  3073.50kB 10.51%  crypto/internal/fips140/aes.New (inline)
+ 2049.70kB  7.01% 35.17%  2049.70kB  7.01%  runtime.mallocgc
+ 1576.28kB  5.39% 40.56%  1576.28kB  5.39%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+ 1536.12kB  5.25% 45.81%  2048.17kB  7.00%  context.withCancel (inline)
+ 1536.07kB  5.25% 51.07%  1536.07kB  5.25%  encoding/json/v2.makeString
+ 1050.86kB  3.59% 54.66%  7807.39kB 26.70%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1024.75kB  3.50% 58.16%  1024.75kB  3.50%  crypto/internal/fips140/aes/gcm.New
+ 1024.05kB  3.50% 61.67%  1024.05kB  3.50%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  902.59kB  3.09% 64.75%  2438.66kB  8.34%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  557.26kB  1.91% 66.66%  4156.19kB 14.21%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+  525.43kB  1.80% 68.45%  3598.93kB 12.31%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+  516.64kB  1.77% 70.22%   516.64kB  1.77%  github.com/go-playground/validator/v10.map.init.10
+  513.50kB  1.76% 71.98%   513.50kB  1.76%  regexp/syntax.(*compiler).inst
+  512.62kB  1.75% 73.73%   512.62kB  1.75%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+  512.44kB  1.75% 75.48%   512.44kB  1.75%  math/big.nat.make
+  512.10kB  1.75% 77.23%   512.10kB  1.75%  github.com/enfein/mieru/v3/pkg/metrics/metricspb.init
+  512.10kB  1.75% 78.99%   512.10kB  1.75%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+  512.08kB  1.75% 80.74%  4608.51kB 15.76%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+  512.08kB  1.75% 82.49%   512.08kB  1.75%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.05kB  1.75% 84.24%   512.05kB  1.75%  context.(*cancelCtx).Done
+  512.05kB  1.75% 85.99%   512.05kB  1.75%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+  512.05kB  1.75% 87.74%  1024.11kB  3.50%  github.com/xtls/xray-core/transport/pipe.New
+  512.05kB  1.75% 89.49%   512.05kB  1.75%  time.newTimer
+  512.05kB  1.75% 91.24%   512.05kB  1.75%  github.com/xtls/xray-core/common/crypto.NewAuthenticationReader
+  512.05kB  1.75% 93.00%  3584.39kB 12.26%  github.com/xtls/xray-core/proxy/vmess/inbound.(*Handler).Process
+  512.04kB  1.75% 94.75%   512.04kB  1.75%  fmt.Sprintf
+  512.03kB  1.75% 96.50%  2048.16kB  7.00%  github.com/wyusgw/v2node/limiter.AddLimiter
+  512.02kB  1.75% 98.25%   512.02kB  1.75%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+  512.02kB  1.75%   100%   512.02kB  1.75%  github.com/xtls/xray-core/proxy/vmess/encoding.GenerateChunkNonce

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:34:06 UTC
+Showing nodes accounting for 47349.64kB, 100% of 47349.64kB total
+Showing top 30 nodes out of 143
+      flat  flat%   sum%        cum   cum%
+20136.56kB 42.53% 42.53% 20136.56kB 42.53%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 2561.17kB  5.41% 47.94%  2561.17kB  5.41%  runtime.mallocgc
+ 2560.20kB  5.41% 53.34%  2560.20kB  5.41%  fmt.Sprintf
+ 2048.31kB  4.33% 57.67%  2048.31kB  4.33%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 2048.22kB  4.33% 62.00%  2048.22kB  4.33%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 1184.27kB  2.50% 64.50%  1184.27kB  2.50%  runtime/pprof.StartCPUProfile
+ 1037.46kB  2.19% 66.69%  2061.62kB  4.35%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1024.20kB  2.16% 68.85%  1024.20kB  2.16%  context.(*cancelCtx).propagateCancel
+ 1024.12kB  2.16% 71.01%  1024.12kB  2.16%  net.newFD (inline)
+ 1024.11kB  2.16% 73.18%  1024.11kB  2.16%  time.newTimer
+ 1024.08kB  2.16% 75.34%  1024.08kB  2.16%  context.withCancel (inline)
+ 1024.06kB  2.16% 77.50%  1024.06kB  2.16%  github.com/xtls/xray-core/common/buf.NewWriter
+ 1024.05kB  2.16% 79.66%  1024.05kB  2.16%  context.WithValue
+ 1024.05kB  2.16% 81.83%  1024.05kB  2.16%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.02kB  2.16% 83.99%  2560.14kB  5.41%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+  902.59kB  1.91% 85.90%   902.59kB  1.91%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  1.12% 87.02%   532.26kB  1.12%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  513.50kB  1.08% 88.10%   513.50kB  1.08%  regexp/syntax.(*compiler).inst
+  512.14kB  1.08% 89.19%   512.14kB  1.08%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute (inline)
+  512.05kB  1.08% 90.27%   512.05kB  1.08%  context.(*cancelCtx).Done
+  512.05kB  1.08% 91.35%  1536.16kB  3.24%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+  512.05kB  1.08% 92.43% 18509.36kB 39.09%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+  512.02kB  1.08% 93.51%  7185.02kB 15.17%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+  512.02kB  1.08% 94.59%  4608.55kB  9.73%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).routedDispatch
+  512.02kB  1.08% 95.67%   512.02kB  1.08%  net.sockaddrToTCP
+  512.02kB  1.08% 96.76%   512.02kB  1.08%  syscall.anyToSockaddr
+  512.01kB  1.08% 97.84%  1024.04kB  2.16%  github.com/xtls/xray-core/common/session.ContextWithOutbounds (inline)
+  512.01kB  1.08% 98.92%   512.01kB  1.08%  github.com/xtls/xray-core/common/net.IPAddress
+  512.01kB  1.08%   100%   512.01kB  1.08%  github.com/xtls/xray-core/proxy.readV.AddToStatCounter.func2
+         0     0%   100%  1024.08kB  2.16%  context.WithCancel

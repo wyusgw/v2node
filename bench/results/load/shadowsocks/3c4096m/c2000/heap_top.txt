@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 12:04:20 UTC
+Showing nodes accounting for 181.24MB, 94.28% of 192.24MB total
+Dropped 115 nodes (cum <= 0.96MB)
+Showing top 30 nodes out of 141
+      flat  flat%   sum%        cum   cum%
+   98.78MB 51.38% 51.38%    98.78MB 51.38%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+   18.01MB  9.37% 60.75%    18.01MB  9.37%  crypto/internal/fips140/aes/gcm.New (inline)
+      13MB  6.76% 67.52%       13MB  6.76%  crypto/sha1.New
+   12.01MB  6.25% 73.76%    12.01MB  6.25%  crypto/internal/fips140/aes.New (inline)
+       8MB  4.16% 77.92%       21MB 10.92%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+    5.50MB  2.86% 80.78%     5.50MB  2.86%  runtime.mallocgc
+    2.50MB  1.30% 82.09%     2.50MB  1.30%  internal/poll.(*FD).Writev
+    2.50MB  1.30% 83.39%     2.50MB  1.30%  github.com/xtls/xray-core/proxy/shadowsocks.init.func2
+       2MB  1.04% 84.43%        2MB  1.04%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  0.78% 85.21%        4MB  2.08%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+    1.50MB  0.78% 85.99%     1.50MB  0.78%  net.newFD (inline)
+    1.50MB  0.78% 86.77%     1.50MB  0.78%  fmt.Sprintf
+    1.50MB  0.78% 87.55%     1.50MB  0.78%  context.WithValue
+    1.03MB  0.53% 88.08%     5.05MB  2.63%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.03MB  0.53% 88.62%     1.03MB  0.53%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+       1MB  0.52% 89.14%        1MB  0.52%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  0.52% 89.66%    21.66MB 11.27%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+       1MB  0.52% 90.18%    11.50MB  5.98%  golang.org/x/crypto/hkdf.Expand
+       1MB  0.52% 90.70%        1MB  0.52%  context.withCancel (inline)
+       1MB  0.52% 91.22%     1.50MB  0.78%  github.com/xtls/xray-core/transport/pipe.New
+       1MB  0.52% 91.74%        1MB  0.52%  crypto/sha1.(*digest).Sum
+    0.88MB  0.46% 92.20%     1.38MB  0.72%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.50MB  0.26% 92.46%    82.15MB 42.73%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    0.50MB  0.26% 92.72%    16.62MB  8.65%  github.com/xtls/xray-core/common/crypto.(*AuthenticationWriter).writeStream
+    0.50MB  0.26% 92.98%    98.76MB 51.37%  github.com/xtls/xray-core/common/buf.New
+    0.50MB  0.26% 93.24%     1.51MB  0.78%  github.com/xtls/xray-core/common/buf.NewBufferedWriter
+    0.50MB  0.26% 93.50%     1.50MB  0.78%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    0.50MB  0.26% 93.76%    79.65MB 41.43%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection
+    0.50MB  0.26% 94.02%        3MB  1.56%  github.com/xtls/xray-core/proxy/freedom.(*Handler).Process
+    0.50MB  0.26% 94.28%        1MB  0.52%  github.com/wyusgw/v2node/common/counter.(*TrafficCounter).GetCounter

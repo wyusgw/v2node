@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 12:01:00 UTC
+Duration: 22s, Total samples = 17.98s (81.72%)
+Showing nodes accounting for 11.32s, 62.96% of 17.98s total
+Dropped 395 nodes (cum <= 0.09s)
+Showing top 30 nodes out of 201
+      flat  flat%   sum%        cum   cum%
+     3.48s 19.35% 19.35%      3.48s 19.35%  internal/runtime/syscall/linux.Syscall6
+     1.17s  6.51% 25.86%      1.17s  6.51%  crypto/sha1.blockSHANI
+     0.85s  4.73% 30.59%      1.54s  8.57%  runtime.tryDeferToSpanScan
+     0.49s  2.73% 33.31%      2.04s 11.35%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+     0.46s  2.56% 35.87%      0.46s  2.56%  runtime.spanClass.sizeclass (inline)
+     0.34s  1.89% 37.76%      0.58s  3.23%  runtime.(*unwinder).resolveInternal
+     0.34s  1.89% 39.66%      0.34s  1.89%  runtime.memmove
+     0.31s  1.72% 41.38%      0.74s  4.12%  runtime.scanObject
+     0.30s  1.67% 43.05%      0.30s  1.67%  crypto/internal/fips140/aes/gcm.gcmAesInit
+     0.29s  1.61% 44.66%      0.29s  1.61%  runtime.nextFreeFast (inline)
+     0.27s  1.50% 46.16%      0.27s  1.50%  runtime.memclrNoHeapPointers
+     0.25s  1.39% 47.55%      0.68s  3.78%  runtime.pcvalue
+     0.25s  1.39% 48.94%      0.63s  3.50%  runtime.scanblock
+     0.24s  1.33% 50.28%      0.24s  1.33%  runtime.futex
+     0.19s  1.06% 51.33%      0.65s  3.62%  runtime.scanObjectsSmall
+     0.18s  1.00% 52.34%      0.31s  1.72%  runtime.gcmarknewobject
+     0.17s  0.95% 53.28%      0.18s  1.00%  internal/runtime/gc/scan.scanSpanPackedAVX512
+     0.16s  0.89% 54.17%      0.18s  1.00%  runtime.findObject
+     0.15s  0.83% 55.01%      0.15s  0.83%  crypto/internal/fips140/aes/gcm.gcmAesDec
+     0.15s  0.83% 55.84%      1.09s  6.06%  crypto/sha1.(*digest).Sum
+     0.15s  0.83% 56.67%      0.22s  1.22%  runtime.step
+     0.14s  0.78% 57.45%      0.14s  0.78%  crypto/internal/fips140/aes.encryptBlockAsm
+     0.13s  0.72% 58.18%      1.57s  8.73%  crypto/sha1.(*digest).Write
+     0.13s  0.72% 58.90%      0.80s  4.45%  crypto/sha1.(*digest).checkSum
+     0.13s  0.72% 59.62%      0.13s  0.72%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.13s  0.72% 60.34%      0.35s  1.95%  runtime.chansend
+     0.13s  0.72% 61.07%      1.28s  7.12%  runtime.mallocgcSmallNoscan
+     0.12s  0.67% 61.74%         1s  5.56%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).GetWithCache.func1
+     0.11s  0.61% 62.35%      7.48s 41.60%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.11s  0.61% 62.96%      4.76s 26.47%  runtime.mallocgc

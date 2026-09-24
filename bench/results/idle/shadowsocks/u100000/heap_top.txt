@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:30:38 UTC
+Showing nodes accounting for 71.27MB, 100% of 71.27MB total
+Showing top 30 nodes out of 82
+      flat  flat%   sum%        cum   cum%
+      14MB 19.64% 19.64%       14MB 19.64%  fmt.Sprintf
+   11.11MB 15.58% 35.23%    25.61MB 35.93%  github.com/wyusgw/v2node/limiter.AddLimiter
+       7MB  9.82% 45.05%     8.50MB 11.93%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+    6.40MB  8.98% 54.02%    11.40MB 15.99%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    5.64MB  7.92% 61.94%    32.77MB 45.97%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    5.50MB  7.72% 69.66%     5.50MB  7.72%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       5MB  7.02% 76.68%        5MB  7.02%  encoding/json/v2.makeString
+    4.50MB  6.31% 82.99%       15MB 21.05%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    4.12MB  5.78% 88.77%     4.12MB  5.78%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+       3MB  4.21% 92.98%        3MB  4.21%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  2.81% 95.79%        2MB  2.81%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+       1MB  1.40% 97.19%        1MB  1.40%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).getCipher
+    0.50MB   0.7% 97.89%     0.50MB   0.7%  regexp/syntax.(*compiler).inst (inline)
+    0.50MB   0.7% 98.60%     0.50MB   0.7%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB   0.7% 99.30%     0.50MB   0.7%  github.com/xtls/xray-core/proxy/shadowsocks.passwordToCipherKey
+    0.50MB   0.7%   100%     0.50MB   0.7%  internal/abi.NewName
+         0     0%   100%     0.50MB   0.7%  encoding/json.Marshal (inline)
+         0     0%   100%     0.50MB   0.7%  encoding/json/v2.Marshal
+         0     0%   100%        5MB  7.02%  encoding/json/v2.Unmarshal
+         0     0%   100%        5MB  7.02%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%     0.50MB   0.7%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%     0.50MB   0.7%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func6
+         0     0%   100%        5MB  7.02%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%     0.50MB   0.7%  encoding/json/v2.makeStructFields
+         0     0%   100%     0.50MB   0.7%  encoding/json/v2.marshalEncode
+         0     0%   100%        5MB  7.02%  encoding/json/v2.unmarshalDecode
+         0     0%   100%     0.50MB   0.7%  github.com/aws/aws-sdk-go-v2/service/lightsail/internal/endpoints.init
+         0     0%   100%    70.27MB 98.59%  github.com/spf13/cobra.(*Command).Execute
+         0     0%   100%    70.27MB 98.59%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%    70.27MB 98.59%  github.com/spf13/cobra.(*Command).execute

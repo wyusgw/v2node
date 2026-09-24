@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:28:54 UTC
+Showing nodes accounting for 57.34MB, 100% of 57.34MB total
+Showing top 30 nodes out of 76
+      flat  flat%   sum%        cum   cum%
+   13.50MB 23.55% 23.55%    13.50MB 23.55%  fmt.Sprintf
+       8MB 13.95% 37.50%        8MB 13.95%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       7MB 12.21% 49.71%        7MB 12.21%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    4.50MB  7.85% 57.56%     4.50MB  7.85%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+    3.55MB  6.20% 63.75%    10.55MB 18.40%  github.com/wyusgw/v2node/limiter.AddLimiter
+    3.50MB  6.10% 69.86%     3.50MB  6.10%  encoding/json/v2.makeString
+    3.25MB  5.68% 75.53%     6.76MB 11.78%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       3MB  5.23% 80.76%        3MB  5.23%  github.com/xtls/xray-core/proxy/trojan.hexSha224
+       3MB  5.23% 86.00%     8.50MB 14.82%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+       3MB  5.23% 91.23%    18.50MB 32.27%  github.com/xtls/xray-core/proxy/trojan.(*Validator).Add
+    1.50MB  2.62% 93.84%     4.50MB  7.85%  github.com/xtls/xray-core/proxy/trojan.(*Account).AsAccount
+    1.03MB  1.79% 95.63%    38.53MB 67.19%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       1MB  1.74% 97.38%        1MB  1.74%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+    0.50MB  0.88% 98.26%     0.50MB  0.88%  math/rand.newSource (inline)
+    0.50MB  0.87% 99.13%     0.50MB  0.87%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB  0.87%   100%     0.50MB  0.87%  regexp.compile
+         0     0%   100%     3.50MB  6.10%  encoding/json/v2.Unmarshal
+         0     0%   100%     3.50MB  6.10%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%     3.50MB  6.10%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%     3.50MB  6.10%  encoding/json/v2.unmarshalDecode
+         0     0%   100%     0.50MB  0.88%  github.com/scaleway/scaleway-sdk-go/namegenerator.init.0
+         0     0%   100%    56.34MB 98.25%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%    56.34MB 98.25%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%    56.34MB 98.25%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%    56.34MB 98.25%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%    56.34MB 98.25%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%    13.50MB 23.55%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%     0.50MB  0.87%  github.com/wyusgw/v2node/core.(*V2Core).Start
+         0     0%   100%     0.50MB  0.87%  github.com/wyusgw/v2node/core.GetCustomConfig
+         0     0%   100%     0.50MB  0.87%  github.com/wyusgw/v2node/core.buildDefaultOutbound

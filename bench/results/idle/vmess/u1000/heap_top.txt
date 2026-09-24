@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:26:51 UTC
+Showing nodes accounting for 2574.43kB, 100% of 2574.43kB total
+Showing top 30 nodes out of 59
+      flat  flat%   sum%        cum   cum%
+  525.43kB 20.41% 20.41%   525.43kB 20.41%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+  512.62kB 19.91% 40.32%   512.62kB 19.91%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+  512.25kB 19.90% 60.22%   512.25kB 19.90%  crypto/internal/fips140/aes.New (inline)
+  512.10kB 19.89% 80.11%   512.10kB 19.89%  encoding/json/v2.makeStructFields
+  512.02kB 19.89%   100%   512.02kB 19.89%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+         0     0%   100%   512.25kB 19.90%  crypto/aes.NewCipher
+         0     0%   100%   512.02kB 19.89%  encoding/gob.Register
+         0     0%   100%   512.02kB 19.89%  encoding/gob.RegisterName
+         0     0%   100%   512.02kB 19.89%  encoding/gob.init.1
+         0     0%   100%   512.02kB 19.89%  encoding/gob.registerBasics
+         0     0%   100%   512.02kB 19.89%  encoding/gob.userType
+         0     0%   100%   512.02kB 19.89%  encoding/gob.validUserType
+         0     0%   100%   512.10kB 19.89%  encoding/json.Unmarshal (inline)
+         0     0%   100%   512.10kB 19.89%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.10kB 19.89%  encoding/json/v2.makeDefaultArshaler.makePointerArshaler.func10
+         0     0%   100%   512.10kB 19.89%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%   512.10kB 19.89%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%   512.10kB 19.89%  encoding/json/v2.unmarshalDecode
+         0     0%   100%  1549.78kB 60.20%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  1549.78kB 60.20%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  1549.78kB 60.20%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%   512.10kB 19.89%  github.com/wyusgw/v2node/api/v2board.(*Client).GetNodeInfo
+         0     0%   100%  1549.78kB 60.20%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  1549.78kB 60.20%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%  1037.68kB 40.31%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+         0     0%   100%  1037.68kB 40.31%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100%  1037.68kB 40.31%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0%   100%   512.10kB 19.89%  github.com/wyusgw/v2node/node.New
+         0     0%   100%   512.25kB 19.90%  github.com/xtls/xray-core/proxy/vmess.(*TimedUserValidator).Add
+         0     0%   100%   512.25kB 19.90%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser

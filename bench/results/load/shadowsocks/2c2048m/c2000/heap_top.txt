@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 12:02:10 UTC
+Showing nodes accounting for 60.14MB, 89.57% of 67.14MB total
+Showing top 30 nodes out of 221
+      flat  flat%   sum%        cum   cum%
+   21.67MB 32.27% 32.27%    21.67MB 32.27%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    6.05MB  9.01% 41.28%     6.05MB  9.01%  runtime.mallocgc
+       4MB  5.96% 47.24%        4MB  5.96%  crypto/internal/fips140/aes/gcm.New (inline)
+    2.51MB  3.74% 50.99%     4.51MB  6.72%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  3.72% 54.71%     2.50MB  3.72%  fmt.Sprintf
+       2MB  2.98% 57.69%        2MB  2.98%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  2.98% 60.67%    22.55MB 33.59%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB  2.24% 62.90%     1.50MB  2.24%  crypto/internal/fips140/aes.New (inline)
+    1.50MB  2.23% 65.14%     1.50MB  2.23%  runtime/pprof.writeHeapInternal
+    1.50MB  2.23% 67.37%     2.50MB  3.72%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+       1MB  1.49% 68.86%        1MB  1.49%  internal/poll.(*FD).Writev
+       1MB  1.49% 70.35%        2MB  2.98%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+       1MB  1.49% 71.84%        1MB  1.49%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  1.49% 73.33%        1MB  1.49%  context.(*cancelCtx).propagateCancel
+       1MB  1.49% 74.82%        1MB  1.49%  crypto/sha1.New
+       1MB  1.49% 76.31%        3MB  4.47%  golang.org/x/crypto/hkdf.Expand
+       1MB  1.49% 77.80%        1MB  1.49%  github.com/xtls/xray-core/transport/pipe.New
+       1MB  1.49% 79.29%        1MB  1.49%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       1MB  1.49% 80.78%        1MB  1.49%  github.com/xtls/xray-core/proxy/shadowsocks.(*userCacheShard).putMultiUser
+    0.88MB  1.31% 82.09%     0.88MB  1.31%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.51MB  0.76% 82.86%     3.01MB  4.49%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    0.50MB  0.75% 83.61%     0.50MB  0.75%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+    0.50MB  0.75% 84.36%     0.50MB  0.75%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+    0.50MB  0.75% 85.10%     0.50MB  0.75%  github.com/miekg/dns.init
+    0.50MB  0.75% 85.85%     0.50MB  0.75%  google.golang.org/protobuf/internal/filedesc.(*Fields).lazyInit.func1
+    0.50MB  0.75% 86.59%     0.50MB  0.75%  golang.org/x/net/ipv4.map.init.1
+    0.50MB  0.74% 87.34%     0.50MB  0.74%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+    0.50MB  0.74% 88.08%     0.50MB  0.74%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+    0.50MB  0.74% 88.83%     0.50MB  0.74%  regexp.compile
+    0.50MB  0.74% 89.57%     0.50MB  0.74%  github.com/xtls/xray-core/common/buf.(*posixReader).Init

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:53:30 UTC
+Showing nodes accounting for 82.55MB, 94.83% of 87.05MB total
+Showing top 30 nodes out of 179
+      flat  flat%   sum%        cum   cum%
+   50.39MB 57.89% 57.89%    50.39MB 57.89%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+       5MB  5.75% 63.63%        5MB  5.75%  runtime.mallocgc
+    2.50MB  2.87% 66.51%     2.50MB  2.87%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+    2.50MB  2.87% 69.38%     2.50MB  2.87%  fmt.Sprintf
+       2MB  2.30% 71.67%        2MB  2.30%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBufferTimeout
+       2MB  2.30% 73.97%        2MB  2.30%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.72% 75.70%     1.50MB  1.72%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.72% 77.42%    11.04MB 12.68%  github.com/xtls/xray-core/proxy/trojan.(*Server).Process
+    1.16MB  1.33% 78.75%     1.16MB  1.33%  runtime/pprof.StartCPUProfile
+    1.01MB  1.16% 79.91%     3.51MB  4.04%  github.com/wyusgw/v2node/limiter.AddLimiter
+       1MB  1.15% 81.06%        1MB  1.15%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+       1MB  1.15% 82.21%        1MB  1.15%  context.(*cancelCtx).Done
+       1MB  1.15% 83.36%        1MB  1.15%  github.com/xtls/xray-core/proxy/trojan.hexString
+       1MB  1.15% 84.51%        2MB  2.30%  github.com/xtls/xray-core/common/task.Run
+       1MB  1.15% 85.66%     2.50MB  2.87%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLink
+    0.88MB  1.01% 86.67%     1.38MB  1.59%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.57MB  0.65% 87.32%     0.57MB  0.65%  github.com/xtls/xray-core/common/errors.Cause
+    0.51MB  0.59% 87.91%     0.51MB  0.59%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB  0.59% 88.50%     0.51MB  0.59%  golang.org/x/net/html.map.init.1
+    0.50MB  0.58% 89.08%     0.50MB  0.58%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+    0.50MB  0.58% 89.66%     0.50MB  0.58%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+    0.50MB  0.58% 90.23%     0.50MB  0.58%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB  0.58% 90.81%     0.50MB  0.58%  regexp/syntax.(*compiler).inst
+    0.50MB  0.57% 91.38%     0.50MB  0.57%  google.golang.org/protobuf/internal/filedesc.(*Fields).lazyInit.func1
+    0.50MB  0.57% 91.96%     0.50MB  0.57%  github.com/xtls/xray-core/common/net.init
+    0.50MB  0.57% 92.53%     0.50MB  0.57%  net.newFD
+    0.50MB  0.57% 93.11%     0.50MB  0.57%  github.com/xtls/xray-core/common/signal.NewNotifier (inline)
+    0.50MB  0.57% 93.68%     0.50MB  0.57%  github.com/xtls/xray-core/common/signal/semaphore.New (inline)
+    0.50MB  0.57% 94.26%        1MB  1.15%  github.com/xtls/xray-core/transport/pipe.New
+    0.50MB  0.57% 94.83%     0.50MB  0.57%  github.com/gabriel-vasile/mimetype.newMIME

@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:26:09 UTC
+Showing nodes accounting for 46414.73kB, 100% of 46414.73kB total
+Showing top 30 nodes out of 45
+      flat  flat%   sum%        cum   cum%
+ 8704.66kB 18.75% 18.75%  8704.66kB 18.75%  fmt.Sprintf
+ 6657.02kB 14.34% 33.10%  6657.02kB 14.34%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 6656.71kB 14.34% 47.44%  7680.74kB 16.55%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 6656.30kB 14.34% 61.78%  6656.30kB 14.34%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 5685.93kB 12.25% 74.03% 13366.70kB 28.80%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 3333.01kB  7.18% 81.21%  4357.06kB  9.39%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+ 3072.14kB  6.62% 87.83% 10752.88kB 23.17%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+ 1536.02kB  3.31% 91.14% 10240.80kB 22.06%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+ 1024.05kB  2.21% 93.35%  1024.05kB  2.21%  encoding/json/v2.makeString
+ 1024.03kB  2.21% 95.55%  1024.03kB  2.21%  github.com/xtls/xray-core/common/protocol.NewID
+  525.43kB  1.13% 96.68% 27151.54kB 58.50%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  513.69kB  1.11% 97.79%   513.69kB  1.11%  github.com/miekg/dns.reverseInt16 (inline)
+  513.50kB  1.11% 98.90%   513.50kB  1.11%  github.com/xtls/xray-core/transport/internet/finalmask/header/custom.init
+  512.23kB  1.10%   100%   512.23kB  1.10%  google.golang.org/protobuf/internal/filedesc.newRawFile
+         0     0%   100%  1024.05kB  2.21%  encoding/json/v2.Unmarshal
+         0     0%   100%  1024.05kB  2.21%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%  1024.05kB  2.21%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%  1024.05kB  2.21%  encoding/json/v2.unmarshalDecode
+         0     0%   100%   513.69kB  1.11%  github.com/miekg/dns.init
+         0     0%   100% 44875.31kB 96.68%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100% 44875.31kB 96.68%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100% 44875.31kB 96.68%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100% 44875.31kB 96.68%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100% 44875.31kB 96.68%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%  8704.66kB 18.75%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%  3584.27kB  7.72%  github.com/wyusgw/v2node/core.buildVlessUser
+         0     0%   100%  3584.27kB  7.72%  github.com/wyusgw/v2node/core.buildVlessUsers
+         0     0%   100% 44875.31kB 96.68%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100% 44875.31kB 96.68%  github.com/wyusgw/v2node/node.(*Node).Start
+         0     0%   100%  7680.74kB 16.55%  github.com/xtls/xray-core/common/protocol.(*User).GetTypedAccount

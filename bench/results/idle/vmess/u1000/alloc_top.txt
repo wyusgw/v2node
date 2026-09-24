@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:26:51 UTC
+Showing nodes accounting for 8730.23kB, 100% of 8730.23kB total
+Showing top 30 nodes out of 94
+      flat  flat%   sum%        cum   cum%
+ 1536.09kB 17.60% 17.60%  2048.16kB 23.46%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+  525.43kB  6.02% 23.61%   525.43kB  6.02%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+  516.01kB  5.91% 29.52%   516.01kB  5.91%  bytes.growSlice
+  516.01kB  5.91% 35.43%   516.01kB  5.91%  github.com/xtls/xray-core/transport/internet/finalmask/xdns.ipAnswersForPayload
+  515.19kB  5.90% 41.34%   515.19kB  5.90%  github.com/wyusgw/v2node/limiter.AddLimiter
+  512.62kB  5.87% 47.21%   512.62kB  5.87%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+  512.28kB  5.87% 53.08%   512.28kB  5.87%  gvisor.dev/gvisor/pkg/state.init.func1
+  512.25kB  5.87% 58.94%   512.25kB  5.87%  crypto/internal/fips140/aes.New (inline)
+  512.10kB  5.87% 64.81%   512.10kB  5.87%  encoding/json/v2.makeStructFields
+  512.06kB  5.87% 70.67%   512.06kB  5.87%  crypto/internal/fips140/sha256.New (inline)
+  512.06kB  5.87% 76.54%   512.06kB  5.87%  strings.(*Builder).WriteByte
+  512.05kB  5.87% 82.41%   512.05kB  5.87%  regexp/syntax.(*Regexp).Simplify
+  512.03kB  5.87% 88.27%   512.03kB  5.87%  runtime/debug.ParseBuildInfo
+  512.02kB  5.86% 94.14%   512.02kB  5.86%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  512.01kB  5.86%   100%   512.01kB  5.86%  github.com/wyusgw/v2node/common/format.UserTag
+         0     0%   100%   516.01kB  5.91%  bytes.(*Buffer).WriteByte
+         0     0%   100%   516.01kB  5.91%  bytes.(*Buffer).grow
+         0     0%   100%   512.25kB  5.87%  crypto/aes.NewCipher
+         0     0%   100%  2048.16kB 23.46%  crypto/hmac.New
+         0     0%   100%   512.06kB  5.87%  crypto/hmac.New.UnwrapNew[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }].func1
+         0     0%   100%   512.06kB  5.87%  crypto/sha256.New
+         0     0%   100%   512.02kB  5.86%  encoding/gob.Register
+         0     0%   100%   512.02kB  5.86%  encoding/gob.RegisterName
+         0     0%   100%   512.02kB  5.86%  encoding/gob.init.1
+         0     0%   100%   512.02kB  5.86%  encoding/gob.registerBasics
+         0     0%   100%   512.02kB  5.86%  encoding/gob.userType
+         0     0%   100%   512.02kB  5.86%  encoding/gob.validUserType
+         0     0%   100%   512.10kB  5.87%  encoding/json.Unmarshal
+         0     0%   100%   512.10kB  5.87%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.10kB  5.87%  encoding/json/v2.makeDefaultArshaler.makePointerArshaler.func10

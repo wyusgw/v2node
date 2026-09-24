@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:33:23 UTC
+Showing nodes accounting for 25852.08kB, 100% of 25852.08kB total
+Showing top 30 nodes out of 124
+      flat  flat%   sum%        cum   cum%
+ 7224.14kB 27.94% 27.94%  7224.14kB 27.94%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 3584.55kB 13.87% 41.81%  3584.55kB 13.87%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 2560.27kB  9.90% 51.71%  3072.29kB 11.88%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 2074.92kB  8.03% 59.74%  3099.07kB 11.99%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 2048.16kB  7.92% 67.66%  2048.16kB  7.92%  fmt.Sprintf
+ 1184.27kB  4.58% 72.24%  1184.27kB  4.58%  runtime/pprof.StartCPUProfile
+ 1024.06kB  3.96% 76.20%  7716.35kB 29.85%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+ 1024.05kB  3.96% 80.17%  1024.05kB  3.96%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}]
+  517.02kB  2.00% 82.17%   517.02kB  2.00%  bytes.Clone (inline)
+  513.50kB  1.99% 84.15%   513.50kB  1.99%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls (inline)
+  512.44kB  1.98% 86.13%   512.44kB  1.98%  encoding/json/v2.makeStructFields
+  512.34kB  1.98% 88.12%   512.34kB  1.98%  google.golang.org/protobuf/types/descriptorpb.init
+  512.23kB  1.98% 90.10%  1025.74kB  3.97%  google.golang.org/protobuf/internal/filedesc.newRawFile
+  512.06kB  1.98% 92.08%   512.06kB  1.98%  net.newFD
+  512.02kB  1.98% 94.06%   512.02kB  1.98%  context.(*cancelCtx).propagateCancel
+  512.02kB  1.98% 96.04%   512.02kB  1.98%  github.com/xtls/xray-core/common/protocol.NewID
+  512.02kB  1.98% 98.02%   512.02kB  1.98%  syscall.anyToSockaddr
+  512.01kB  1.98%   100%  1029.02kB  3.98%  github.com/wyusgw/v2node/node.(*Controller).reportUserTrafficTask
+         0     0%   100%   512.02kB  1.98%  context.WithDeadline (inline)
+         0     0%   100%   512.02kB  1.98%  context.WithDeadlineCause
+         0     0%   100%   517.02kB  2.00%  encoding/json.Marshal
+         0     0%   100%   512.44kB  1.98%  encoding/json.Unmarshal
+         0     0%   100%   517.02kB  2.00%  encoding/json/v2.Marshal
+         0     0%   100%   512.44kB  1.98%  encoding/json/v2.Unmarshal
+         0     0%   100%   512.44kB  1.98%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%   512.44kB  1.98%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%   512.44kB  1.98%  encoding/json/v2.unmarshalDecode
+         0     0%   100%   517.02kB  2.00%  github.com/go-resty/resty/v2.(*Client).execute
+         0     0%   100%   517.02kB  2.00%  github.com/go-resty/resty/v2.(*Client).executeBefore
+         0     0%   100%   517.02kB  2.00%  github.com/go-resty/resty/v2.(*Request).Execute

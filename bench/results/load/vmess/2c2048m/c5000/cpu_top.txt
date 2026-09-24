@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 11:45:09 UTC
+Duration: 22.01s, Total samples = 40.01s (181.76%)
+Showing nodes accounting for 27.33s, 68.31% of 40.01s total
+Dropped 592 nodes (cum <= 0.20s)
+Showing top 30 nodes out of 193
+      flat  flat%   sum%        cum   cum%
+    13.76s 34.39% 34.39%     13.76s 34.39%  internal/runtime/syscall/linux.Syscall6
+     1.77s  4.42% 38.82%      2.49s  6.22%  crypto/internal/fips140/aes.decryptBlock
+     0.99s  2.47% 41.29%      0.99s  2.47%  hash/crc32.simpleUpdate (inline)
+     0.87s  2.17% 43.46%      6.64s 16.60%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoder).Decode
+     0.81s  2.02% 45.49%      0.81s  2.02%  crypto/internal/fips140/aes/gcm.gcmAesEnc
+     0.72s  1.80% 47.29%      0.72s  1.80%  crypto/internal/fips140/aes.decryptBlockAsm
+     0.70s  1.75% 49.04%     25.76s 64.38%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.66s  1.65% 50.69%      8.90s 22.24%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).Match
+     0.65s  1.62% 52.31%      0.65s  1.62%  runtime.spanClass.sizeclass (inline)
+     0.54s  1.35% 53.66%      0.54s  1.35%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.47s  1.17% 54.84%      0.47s  1.17%  runtime.memclrNoHeapPointers
+     0.44s  1.10% 55.94%      0.94s  2.35%  runtime.chansend
+     0.38s  0.95% 56.89%      1.23s  3.07%  runtime.tryDeferToSpanScan
+     0.36s   0.9% 57.79%      0.57s  1.42%  runtime.(*unwinder).resolveInternal
+     0.36s   0.9% 58.69%      0.37s  0.92%  runtime.gopark
+     0.34s  0.85% 59.54%      0.69s  1.72%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.34s  0.85% 60.38%      0.34s  0.85%  runtime.memmove
+     0.33s  0.82% 61.21%      0.34s  0.85%  encoding/binary.decodeFast
+     0.32s   0.8% 62.01%      4.46s 11.15%  io.ReadAtLeast
+     0.29s  0.72% 62.73%      0.29s  0.72%  runtime.nextFreeFast (inline)
+     0.28s   0.7% 63.43%      0.59s  1.47%  runtime.mallocgcTiny
+     0.25s  0.62% 64.06%      4.97s 12.42%  runtime.mallocgc
+     0.22s  0.55% 64.61%      2.18s  5.45%  encoding/binary.Read
+     0.22s  0.55% 65.16%      0.31s  0.77%  internal/runtime/maps.(*Iter).Next
+     0.22s  0.55% 65.71%      0.23s  0.57%  runtime.findObject
+     0.22s  0.55% 66.26%      0.78s  1.95%  runtime.selectgo
+     0.21s  0.52% 66.78%      0.21s  0.52%  internal/sync.(*Mutex).Lock (inline)
+     0.21s  0.52% 67.31%      1.28s  3.20%  runtime.schedule
+     0.20s   0.5% 67.81%      0.66s  1.65%  github.com/xtls/xray-core/proxy/vmess/encoding.(*ShakeSizeParser).next
+     0.20s   0.5% 68.31%      0.56s  1.40%  runtime.pcvalue

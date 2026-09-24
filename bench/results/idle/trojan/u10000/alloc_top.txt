@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:28:34 UTC
+Showing nodes accounting for 59.10MB, 100% of 59.10MB total
+Showing top 30 nodes out of 93
+      flat  flat%   sum%        cum   cum%
+   36.50MB 61.76% 61.76%    36.50MB 61.76%  github.com/xtls/xray-core/proxy/trojan.hexString (inline)
+    3.50MB  5.92% 67.68%     3.50MB  5.92%  fmt.Sprintf
+    2.54MB  4.31% 71.99%     3.54MB  6.00%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    2.04MB  3.45% 75.44%     4.04MB  6.83%  github.com/wyusgw/v2node/limiter.AddLimiter
+       2MB  3.38% 78.82%     2.50MB  4.23%  context.WithDeadlineCause
+    1.50MB  2.54% 81.36%        5MB  8.46%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+       1MB  1.69% 83.05%        1MB  1.69%  encoding/json/v2.makeString
+       1MB  1.69% 84.74%        2MB  3.38%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+    0.51MB  0.87% 85.61%    46.52MB 78.70%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    0.50MB  0.85% 86.46%     0.50MB  0.85%  github.com/xtls/xray-core/transport/internet/finalmask/xdns.ipAnswersForPayload
+    0.50MB  0.85% 87.31%     0.50MB  0.85%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+    0.50MB  0.85% 88.15%     0.50MB  0.85%  regexp.onePassCopy
+    0.50MB  0.85% 89.00%     0.50MB  0.85%  gvisor.dev/gvisor/pkg/state.init.func1
+    0.50MB  0.85% 89.85%        1MB  1.69%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+    0.50MB  0.85% 90.69%     0.50MB  0.85%  strings.(*Builder).WriteByte
+    0.50MB  0.85% 91.54%     0.50MB  0.85%  github.com/xtls/xray-core/transport/internet.init
+    0.50MB  0.85% 92.39%     0.50MB  0.85%  google.golang.org/protobuf/internal/impl.fieldInfoForList
+    0.50MB  0.85% 93.23%     0.50MB  0.85%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    0.50MB  0.85% 94.08%     0.50MB  0.85%  google.golang.org/protobuf/internal/impl.getterForDirectScalar
+    0.50MB  0.85% 94.92%     0.50MB  0.85%  time.newTimer
+    0.50MB  0.85% 95.77%        3MB  5.08%  github.com/wyusgw/v2node/core.buildTrojanUser
+    0.50MB  0.85% 96.62%        1MB  1.69%  github.com/xtls/xray-core/proxy/trojan.hexSha224
+    0.50MB  0.85% 97.46%     1.50MB  2.54%  github.com/xtls/xray-core/proxy/trojan.(*Account).AsAccount
+    0.50MB  0.85% 98.31%     0.50MB  0.85%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    0.50MB  0.85% 99.15%     0.50MB  0.85%  crypto/internal/fips140/sha256.(*Digest).Sum
+    0.50MB  0.85%   100%     0.50MB  0.85%  regexp/syntax.appendRange
+         0     0%   100%     2.50MB  4.23%  context.WithDeadline (inline)
+         0     0%   100%     2.50MB  4.23%  context.WithTimeout
+         0     0%   100%        1MB  1.69%  encoding/json/v2.Unmarshal
+         0     0%   100%        1MB  1.69%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4

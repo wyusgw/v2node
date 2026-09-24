@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:26:09 UTC
+Showing nodes accounting for 111.21MB, 96.52% of 115.22MB total
+Dropped 33 nodes (cum <= 0.58MB)
+Showing top 30 nodes out of 65
+      flat  flat%   sum%        cum   cum%
+   15.82MB 13.73% 13.73%    16.82MB 14.60%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    9.50MB  8.25% 21.98%       21MB 18.23%  github.com/wyusgw/v2node/core.buildVlessUser
+    8.50MB  7.38% 29.36%     8.50MB  7.38%  fmt.Sprintf
+       8MB  6.94% 36.30%    14.50MB 12.59%  context.WithDeadlineCause
+    7.61MB  6.60% 42.90%    17.11MB 14.85%  github.com/wyusgw/v2node/limiter.AddLimiter
+       7MB  6.08% 48.98%        7MB  6.08%  reflect.unsafe_New
+    6.50MB  5.64% 54.62%     6.50MB  5.64%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    6.50MB  5.64% 60.26%       13MB 11.28%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+    6.50MB  5.64% 65.90%     6.50MB  5.64%  time.newTimer
+    6.50MB  5.64% 71.55%     6.50MB  5.64%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    5.50MB  4.77% 76.32%     5.50MB  4.77%  github.com/xtls/xray-core/common/uuid.ParseString
+       4MB  3.47% 79.79%        6MB  5.21%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+       4MB  3.47% 83.26%    12.50MB 10.85%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+       3MB  2.60% 85.87%       26MB 22.57%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+       3MB  2.60% 88.47%        3MB  2.60%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+    2.05MB  1.78% 90.25%    76.27MB 66.20%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       2MB  1.74% 91.99%        2MB  1.74%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+    1.50MB  1.30% 93.29%       10MB  8.68%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+       1MB  0.87% 94.16%        1MB  0.87%  bytes.growSlice
+       1MB  0.87% 95.03%        1MB  0.87%  encoding/json/v2.makeString
+       1MB  0.87% 95.90%        1MB  0.87%  github.com/xtls/xray-core/common/protocol.NewID
+    0.72MB  0.62% 96.52%    21.72MB 18.85%  github.com/wyusgw/v2node/core.buildVlessUsers
+         0     0% 96.52%        1MB  0.87%  bytes.(*Buffer).grow
+         0     0% 96.52%    14.50MB 12.59%  context.WithDeadline (inline)
+         0     0% 96.52%    14.50MB 12.59%  context.WithTimeout
+         0     0% 96.52%        1MB  0.87%  encoding/json/v2.Unmarshal
+         0     0% 96.52%        1MB  0.87%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0% 96.52%        1MB  0.87%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0% 96.52%        1MB  0.87%  encoding/json/v2.unmarshalDecode
+         0     0% 96.52%   110.20MB 95.65%  github.com/spf13/cobra.(*Command).Execute

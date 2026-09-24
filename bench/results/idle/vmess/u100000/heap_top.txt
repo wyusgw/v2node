@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:27:53 UTC
+Showing nodes accounting for 125.70MB, 98.41% of 127.73MB total
+Dropped 32 nodes (cum <= 0.64MB)
+Showing top 30 nodes out of 43
+      flat  flat%   sum%        cum   cum%
+   38.52MB 30.16% 30.16%    38.52MB 30.16%  crypto/internal/fips140/aes.New (inline)
+   27.50MB 21.53% 51.69%    27.50MB 21.53%  fmt.Sprintf
+   10.05MB  7.87% 59.56%    27.05MB 21.18%  github.com/wyusgw/v2node/limiter.AddLimiter
+    8.50MB  6.66% 66.22%     8.50MB  6.66%  encoding/json/v2.makeString
+       7MB  5.48% 71.70%        7MB  5.48%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    6.40MB  5.01% 76.71%    14.90MB 11.66%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       5MB  3.91% 80.62%        5MB  3.91%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    4.50MB  3.52% 84.14%    44.02MB 34.46%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoderItem (inline)
+    4.10MB  3.21% 87.36%     4.10MB  3.21%  github.com/xtls/xray-core/proxy/vmess/inbound.(*userByEmail).addNoLock
+    3.50MB  2.74% 90.10%     3.50MB  2.74%  github.com/xtls/xray-core/common/protocol.NewID
+    3.08MB  2.41% 92.51%    83.74MB 65.57%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+       3MB  2.35% 94.86%     7.50MB  5.87%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    2.54MB  1.99% 96.85%    46.56MB 36.45%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+       1MB  0.78% 97.63%     4.50MB  3.52%  github.com/xtls/xray-core/proxy/vmess.(*Account).AsAccount
+       1MB  0.78% 98.41%    39.52MB 30.94%  github.com/xtls/xray-core/proxy/vmess/aead.NewAuthIDDecoder (inline)
+         0     0% 98.41%    38.52MB 30.16%  crypto/aes.NewCipher
+         0     0% 98.41%     8.50MB  6.66%  encoding/json/v2.Unmarshal
+         0     0% 98.41%     8.50MB  6.66%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0% 98.41%     8.50MB  6.66%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0% 98.41%     8.50MB  6.66%  encoding/json/v2.unmarshalDecode
+         0     0% 98.41%   126.21MB 98.81%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0% 98.41%   126.21MB 98.81%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0% 98.41%   126.21MB 98.81%  github.com/spf13/cobra.(*Command).execute
+         0     0% 98.41%   126.21MB 98.81%  github.com/wyusgw/v2node/cmd.Run
+         0     0% 98.41%   126.21MB 98.81%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0% 98.41%    27.50MB 21.53%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0% 98.41%       13MB 10.18%  github.com/wyusgw/v2node/core.buildVmessUser
+         0     0% 98.41%       13MB 10.18%  github.com/wyusgw/v2node/core.buildVmessUsers
+         0     0% 98.41%   125.70MB 98.41%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0% 98.41%   125.70MB 98.41%  github.com/wyusgw/v2node/node.(*Node).Start

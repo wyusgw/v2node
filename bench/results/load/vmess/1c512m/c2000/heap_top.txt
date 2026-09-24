@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:40:35 UTC
+Showing nodes accounting for 83.98MB, 89.84% of 93.48MB total
+Showing top 30 nodes out of 190
+      flat  flat%   sum%        cum   cum%
+   35.29MB 37.75% 37.75%    35.29MB 37.75%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    9.50MB 10.17% 47.92%     9.50MB 10.17%  crypto/internal/fips140/aes.New (inline)
+       5MB  5.35% 53.27%        5MB  5.35%  runtime.mallocgc
+       3MB  3.21% 56.48%        3MB  3.21%  crypto/internal/fips140/aes/gcm.New
+    2.51MB  2.69% 59.17%     4.51MB  4.83%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  2.67% 61.84%     3.50MB  3.74%  github.com/xtls/xray-core/common/task.Run
+       2MB  2.14% 63.98%        2MB  2.14%  crypto/sha3.NewSHAKE128
+    1.54MB  1.65% 65.63%     1.54MB  1.65%  github.com/go-playground/validator/v10.map.init.7
+    1.50MB  1.60% 67.23%     1.50MB  1.60%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.60% 68.84%     1.50MB  1.60%  context.(*cancelCtx).propagateCancel
+    1.50MB  1.60% 70.44%     1.50MB  1.60%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+    1.50MB  1.60% 72.05%     1.50MB  1.60%  fmt.Sprintf
+    1.50MB  1.60% 73.65%        3MB  3.21%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+    1.50MB  1.60% 75.26%     2.50MB  2.67%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    1.08MB  1.16% 76.41%     1.08MB  1.16%  github.com/xtls/xray-core/proxy/vmess/encoding.(*SessionHistory).addIfNotExits
+    1.03MB  1.10% 77.51%    10.53MB 11.27%  github.com/xtls/xray-core/proxy/vmess/aead.(*AuthIDDecoderHolder).AddUser
+       1MB  1.07% 78.58%        1MB  1.07%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+       1MB  1.07% 79.65%        1MB  1.07%  github.com/xtls/xray-core/common/session.(*Content).SetAttribute
+       1MB  1.07% 80.72%        1MB  1.07%  time.newTimer
+       1MB  1.07% 81.79%        1MB  1.07%  github.com/xtls/xray-core/common/buf.NewReadVReader
+       1MB  1.07% 82.86%        1MB  1.07%  github.com/xtls/xray-core/common/crypto.NewAuthenticationWriter
+       1MB  1.07% 83.93%        2MB  2.14%  github.com/xtls/xray-core/transport/pipe.New
+       1MB  1.07% 85.00%        1MB  1.07%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLinkManager
+       1MB  1.07% 86.07%        1MB  1.07%  net.sockaddrToTCP
+       1MB  1.07% 87.14%        1MB  1.07%  github.com/xtls/xray-core/common/protocol.NewID
+    0.51MB  0.55% 87.69%     0.51MB  0.55%  golang.org/x/net/html.map.init.1
+    0.50MB  0.54% 88.23%     0.50MB  0.54%  github.com/aws/aws-sdk-go-v2/service/ssooidc/internal/endpoints.init
+    0.50MB  0.54% 88.77%     0.50MB  0.54%  github.com/xtls/xray-core/app/router.init
+    0.50MB  0.54% 89.30%     0.50MB  0.54%  google.golang.org/protobuf/internal/filedesc.newRawFile
+    0.50MB  0.53% 89.84%     0.50MB  0.53%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink

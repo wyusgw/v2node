@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:30:17 UTC
+Showing nodes accounting for 101.15MB, 97.57% of 103.67MB total
+Dropped 49 nodes (cum <= 0.52MB)
+Showing top 30 nodes out of 55
+      flat  flat%   sum%        cum   cum%
+   16.29MB 15.71% 15.71%    17.79MB 17.16%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+      16MB 15.43% 31.15%       16MB 15.43%  fmt.Sprintf
+    8.50MB  8.20% 39.35%       23MB 22.19%  github.com/wyusgw/v2node/core.buildSSUser
+       7MB  6.75% 46.10%        7MB  6.75%  time.newTimer
+       6MB  5.79% 51.89%       13MB 12.54%  context.WithDeadlineCause
+    5.94MB  5.73% 57.61%     5.94MB  5.73%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+    5.63MB  5.43% 63.05%    68.29MB 65.87%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    5.05MB  4.87% 67.92%    15.05MB 14.52%  github.com/wyusgw/v2node/limiter.AddLimiter
+       5MB  4.82% 72.75%        6MB  5.79%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+       4MB  3.86% 76.61%        4MB  3.86%  reflect.unsafe_New
+       4MB  3.86% 80.46%     4.51MB  4.35%  google.golang.org/protobuf/proto.MarshalOptions.marshal
+    3.50MB  3.38% 83.84%     3.50MB  3.38%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    3.50MB  3.38% 87.22%     8.01MB  7.73%  github.com/xtls/xray-core/common/serial.ToTypedMessage
+       3MB  2.89% 90.11%       19MB 18.33%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+       2MB  1.93% 92.04%    12.50MB 12.06%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+       2MB  1.93% 93.97%        2MB  1.93%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  1.45% 95.42%     1.50MB  1.45%  encoding/json/v2.makeString
+       1MB  0.96% 96.38%        1MB  0.96%  github.com/xtls/xray-core/proxy/shadowsocks.passwordToCipherKey
+    0.72MB  0.69% 97.07%    23.72MB 22.88%  github.com/wyusgw/v2node/core.buildSSUsers
+    0.52MB   0.5% 97.57%     0.52MB   0.5%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+         0     0% 97.57%       13MB 12.54%  context.WithDeadline (inline)
+         0     0% 97.57%       13MB 12.54%  context.WithTimeout
+         0     0% 97.57%     1.50MB  1.45%  encoding/json/v2.Unmarshal
+         0     0% 97.57%     1.50MB  1.45%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0% 97.57%     1.50MB  1.45%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0% 97.57%     1.50MB  1.45%  encoding/json/v2.unmarshalDecode
+         0     0% 97.57%   101.65MB 98.05%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0% 97.57%   101.65MB 98.05%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0% 97.57%   101.65MB 98.05%  github.com/spf13/cobra.(*Command).execute
+         0     0% 97.57%   101.65MB 98.05%  github.com/wyusgw/v2node/cmd.Run

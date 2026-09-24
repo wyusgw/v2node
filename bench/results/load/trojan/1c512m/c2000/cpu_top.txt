@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 11:48:45 UTC
+Duration: 22s, Total samples = 17.72s (80.54%)
+Showing nodes accounting for 15.38s, 86.79% of 17.72s total
+Dropped 275 nodes (cum <= 0.09s)
+Showing top 30 nodes out of 121
+      flat  flat%   sum%        cum   cum%
+    10.76s 60.72% 60.72%     10.76s 60.72%  internal/runtime/syscall/linux.Syscall6
+     0.79s  4.46% 65.18%     15.62s 88.15%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.48s  2.71% 67.89%      0.83s  4.68%  runtime.chansend
+     0.45s  2.54% 70.43%      0.45s  2.54%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.25s  1.41% 71.84%      0.25s  1.41%  runtime.gopark
+     0.23s  1.30% 73.14%      0.70s  3.95%  runtime.netpoll
+     0.23s  1.30% 74.44%      0.69s  3.89%  runtime.selectgo
+     0.22s  1.24% 75.68%      0.27s  1.52%  runtime.sellock
+     0.19s  1.07% 76.75%      3.46s 19.53%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.18s  1.02% 77.77%      0.54s  3.05%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.16s   0.9% 78.67%      2.78s 15.69%  internal/poll.(*FD).Read
+     0.14s  0.79% 79.46%      2.19s 12.36%  github.com/xtls/xray-core/common/buf.(*BufferedReader).Read
+     0.12s  0.68% 80.14%      0.12s  0.68%  internal/poll.(*fdMutex).rwlock
+     0.11s  0.62% 80.76%      0.11s  0.62%  internal/sync.(*Mutex).Lock (inline)
+     0.10s  0.56% 81.32%      1.29s  7.28%  runtime.schedule
+     0.09s  0.51% 81.83%      2.94s 16.59%  net.(*conn).Read
+     0.09s  0.51% 82.34%      0.22s  1.24%  runtime.(*waitq).dequeue (inline)
+     0.09s  0.51% 82.84%      0.29s  1.64%  runtime.casgstatus
+     0.09s  0.51% 83.35%      0.09s  0.51%  runtime.lock2
+     0.09s  0.51% 83.86%      0.09s  0.51%  runtime.nanotime (inline)
+     0.08s  0.45% 84.31%      3.20s 18.06%  github.com/xtls/xray-core/common/buf.ReadBuffer
+     0.07s   0.4% 84.71%      0.82s  4.63%  github.com/xtls/xray-core/transport/pipe.(*pipe).ReadMultiBuffer
+     0.06s  0.34% 85.05%      3.67s 20.71%  github.com/xtls/xray-core/common/buf.(*Buffer).ReadFrom (inline)
+     0.06s  0.34% 85.38%      2.85s 16.08%  net.(*netFD).Read
+     0.05s  0.28% 85.67%      0.21s  1.19%  runtime.execute
+     0.04s  0.23% 85.89%      2.23s 12.58%  github.com/xtls/xray-core/proxy/trojan.(*ConnReader).Read
+     0.04s  0.23% 86.12%      0.19s  1.07%  github.com/xtls/xray-core/proxy/trojan.(*Server).handleConnection.func1.UpdateActivity.1.1
+     0.04s  0.23% 86.34%      0.11s  0.62%  github.com/xtls/xray-core/proxy/trojan.(*Server).handleConnection.func2.UpdateActivity.1.1
+     0.04s  0.23% 86.57%      0.86s  4.85%  github.com/xtls/xray-core/transport/pipe.(*Reader).ReadMultiBuffer
+     0.04s  0.23% 86.79%     10.37s 58.52%  syscall.RawSyscall6

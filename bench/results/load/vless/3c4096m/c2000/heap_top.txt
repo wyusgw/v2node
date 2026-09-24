@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:38:24 UTC
+Showing nodes accounting for 51.87MB, 100% of 51.87MB total
+Showing top 30 nodes out of 163
+      flat  flat%   sum%        cum   cum%
+   26.22MB 50.54% 50.54%    26.22MB 50.54%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    4.50MB  8.68% 59.22%     4.50MB  8.68%  runtime.mallocgc
+    3.50MB  6.75% 65.97%     3.50MB  6.75%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  3.86% 69.83%        2MB  3.86%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  2.89% 72.72%     1.50MB  2.89%  encoding/json/v2.makeString
+    1.03MB  1.98% 74.70%     1.03MB  1.98%  github.com/go-playground/validator/v10.map.init.7
+    1.01MB  1.95% 76.65%     3.51MB  6.77%  github.com/wyusgw/v2node/limiter.AddLimiter
+       1MB  1.93% 78.58%        1MB  1.93%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       1MB  1.93% 80.51%        1MB  1.93%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       1MB  1.93% 82.43%        1MB  1.93%  context.withCancel (inline)
+    0.57MB  1.10% 83.53%     0.57MB  1.10%  github.com/xtls/xray-core/common.Interrupt
+    0.52MB  0.99% 84.53%     0.52MB  0.99%  net/http.init.func16
+    0.52MB  0.99% 85.52%     0.52MB  0.99%  regexp.(*bitState).reset
+    0.51MB  0.98% 86.50%     0.51MB  0.98%  encoding/xml.map.init.0
+    0.50MB  0.97% 87.47%     0.50MB  0.97%  github.com/xtls/xray-core/common.RegisterConfig
+    0.50MB  0.96% 88.43%     0.50MB  0.96%  net.newFD
+    0.50MB  0.96% 89.40%     0.50MB  0.96%  context.(*cancelCtx).Done
+    0.50MB  0.96% 90.36%     0.50MB  0.96%  github.com/baidubce/bce-sdk-go/util/log.NewLogger.func1
+    0.50MB  0.96% 91.32%        1MB  1.93%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+    0.50MB  0.96% 92.29%     0.50MB  0.96%  github.com/xtls/xray-core/common/task.Run
+    0.50MB  0.96% 93.25%     0.50MB  0.96%  time.newTimer
+    0.50MB  0.96% 94.22%     0.50MB  0.96%  github.com/wyusgw/v2node/core/app/dispatcher.NewManagedReader
+    0.50MB  0.96% 95.18%     0.50MB  0.96%  github.com/xtls/xray-core/common/geodata.parseCIDR
+    0.50MB  0.96% 96.14%     0.50MB  0.96%  github.com/xtls/xray-core/common/buf.NewWriter
+    0.50MB  0.96% 97.11%     0.50MB  0.96%  google.golang.org/grpc/internal/mem.newSizedBufferPool
+    0.50MB  0.96% 98.07%     0.50MB  0.96%  context.WithValue
+    0.50MB  0.96% 99.04%     1.50MB  2.89%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    0.50MB  0.96%   100%        2MB  3.86%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+         0     0%   100%        1MB  1.93%  context.WithCancel
+         0     0%   100%     1.50MB  2.89%  encoding/json/v2.Unmarshal

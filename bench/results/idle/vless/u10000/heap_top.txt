@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:25:49 UTC
+Showing nodes accounting for 16811.58kB, 100% of 16811.58kB total
+Showing top 30 nodes out of 85
+      flat  flat%   sum%        cum   cum%
+ 2560.39kB 15.23% 15.23%  2560.39kB 15.23%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 2560.27kB 15.23% 30.46%  3072.29kB 18.27%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 1549.49kB  9.22% 39.68%  2573.65kB 15.31%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1536.12kB  9.14% 48.81%  1536.12kB  9.14%  fmt.Sprintf
+ 1024.05kB  6.09% 54.90%  1024.05kB  6.09%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.02kB  6.09% 61.00%  3584.30kB 21.32%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+  902.59kB  5.37% 66.36%   902.59kB  5.37%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  3.13% 69.49%   525.43kB  3.13%  github.com/go-playground/validator/v10.map.init.7
+  518.65kB  3.09% 72.57%   518.65kB  3.09%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+     513kB  3.05% 75.63%      513kB  3.05%  github.com/json-iterator/go.init.0
+  512.69kB  3.05% 78.68%   512.69kB  3.05%  regexp/syntax.(*compiler).inst (inline)
+  512.28kB  3.05% 81.72%   512.28kB  3.05%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls (inline)
+  512.19kB  3.05% 84.77%  1024.27kB  6.09%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.12kB  3.05% 87.82%   512.12kB  3.05%  github.com/spf13/pflag.NewFlagSet (inline)
+  512.10kB  3.05% 90.86%   512.10kB  3.05%  google.golang.org/protobuf/internal/filedesc.(*EnumValues).lazyInit.func1
+  512.09kB  3.05% 93.91%   512.09kB  3.05%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalSeed
+  512.09kB  3.05% 96.95%   512.09kB  3.05%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+  512.02kB  3.05%   100%   512.02kB  3.05%  github.com/xtls/xray-core/common/protocol.NewID
+         0     0%   100%   512.09kB  3.05%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.file_appctl_proto_base_proto_init
+         0     0%   100%   512.09kB  3.05%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.init.0
+         0     0%   100%   525.43kB  3.13%  github.com/go-playground/validator/v10.init
+         0     0%   100%   512.28kB  3.05%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.file_internal_proto_v2_s2a_s2a_proto_init
+         0     0%   100%   512.28kB  3.05%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.init.0
+         0     0%   100% 12181.06kB 72.46%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100% 12181.06kB 72.46%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%   512.12kB  3.05%  github.com/spf13/cobra.(*Command).Flags
+         0     0%   100%   512.12kB  3.05%  github.com/spf13/cobra.(*Command).InitDefaultCompletionCmd
+         0     0%   100% 11668.94kB 69.41%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%   512.69kB  3.05%  github.com/subosito/gotenv.init
+         0     0%   100% 12181.06kB 72.46%  github.com/wyusgw/v2node/cmd.Run

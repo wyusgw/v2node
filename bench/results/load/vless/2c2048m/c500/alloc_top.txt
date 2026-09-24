@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:35:32 UTC
+Showing nodes accounting for 43.90MB, 86.25% of 50.90MB total
+Showing top 30 nodes out of 214
+      flat  flat%   sum%        cum   cum%
+    8.06MB 15.83% 15.83%     8.06MB 15.83%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+    4.03MB  7.92% 23.75%    13.57MB 26.67%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       3MB  5.89% 29.65%     3.50MB  6.88%  github.com/wyusgw/v2node/core.buildVlessUser
+       3MB  5.89% 35.54%        3MB  5.89%  fmt.Sprintf
+       3MB  5.89% 41.43%     5.52MB 10.84%  github.com/xtls/xray-core/common/buf.New
+    2.16MB  4.24% 45.67%     2.66MB  5.22%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       2MB  3.93% 49.60%     2.50MB  4.91%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       2MB  3.93% 53.53%        2MB  3.93%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  2.95% 56.48%     1.50MB  2.95%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    1.50MB  2.95% 59.42%     1.50MB  2.95%  reflect.unsafe_New
+    1.50MB  2.95% 62.37%     1.50MB  2.95%  context.WithDeadlineCause
+    1.03MB  2.02% 64.39%    14.53MB 28.54%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    1.03MB  2.02% 66.40%     4.03MB  7.91%  github.com/wyusgw/v2node/limiter.AddLimiter
+       1MB  1.96% 68.37%        1MB  1.96%  google.golang.org/protobuf/internal/impl.fieldInfoForMessage
+       1MB  1.96% 70.33%        1MB  1.96%  context.(*cancelCtx).Done
+       1MB  1.96% 72.30%        5MB  9.82%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+    0.53MB  1.04% 73.34%     0.53MB  1.04%  net.open
+    0.52MB  1.02% 74.36%     0.52MB  1.02%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+    0.52MB  1.01% 75.38%     0.52MB  1.01%  bytes.growSlice
+    0.51MB  1.01% 76.38%     0.51MB  1.01%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB     1% 77.38%     0.51MB     1%  github.com/wyusgw/v2node/node.(*Controller).reportUserTrafficTask
+    0.51MB     1% 78.38%     0.51MB     1%  github.com/go-playground/validator/v10.map.init.3
+    0.50MB  0.99% 79.37%     0.50MB  0.99%  gvisor.dev/gvisor/pkg/state.Register
+    0.50MB  0.98% 80.35%     0.50MB  0.98%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+    0.50MB  0.98% 81.34%     0.50MB  0.98%  regexp/syntax.(*compiler).inst (inline)
+    0.50MB  0.98% 82.32%     0.50MB  0.98%  github.com/nrdcg/oci-go-sdk/dns/v1065.init
+    0.50MB  0.98% 83.30%     0.50MB  0.98%  google.golang.org/protobuf/internal/impl.fieldInfoForOneof
+    0.50MB  0.98% 84.28%        1MB  1.97%  regexp.compile
+    0.50MB  0.98% 85.27%     0.50MB  0.98%  strings.(*Builder).WriteByte
+    0.50MB  0.98% 86.25%     0.50MB  0.98%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout

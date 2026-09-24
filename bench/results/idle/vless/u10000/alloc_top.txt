@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 11:25:49 UTC
+Showing nodes accounting for 32274.43kB, 100% of 32274.43kB total
+Showing top 30 nodes out of 137
+      flat  flat%   sum%        cum   cum%
+ 4042.77kB 12.53% 12.53%  4042.77kB 12.53%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+ 2560.39kB  7.93% 20.46%  4096.48kB 12.69%  github.com/wyusgw/v2node/core.buildVlessUser
+ 2560.39kB  7.93% 28.39%  2560.39kB  7.93%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 2560.27kB  7.93% 36.33%  3072.29kB  9.52%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 2048.13kB  6.35% 42.67%  3072.24kB  9.52%  context.WithDeadlineCause
+ 1549.49kB  4.80% 47.47%  2573.65kB  7.97%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1536.23kB  4.76% 52.23%  1536.23kB  4.76%  reflect.unsafe_New
+ 1536.16kB  4.76% 56.99%  1536.16kB  4.76%  strings.(*Builder).WriteByte
+ 1536.12kB  4.76% 61.75%  1536.12kB  4.76%  fmt.Sprintf
+ 1024.11kB  3.17% 64.92%  1024.11kB  3.17%  time.newTimer
+ 1024.05kB  3.17% 68.10%  1024.05kB  3.17%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1024.02kB  3.17% 71.27%  3584.30kB 11.11%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add
+  544.67kB  1.69% 72.96%   544.67kB  1.69%  net.open
+  525.43kB  1.63% 74.59%   525.43kB  1.63%  github.com/go-playground/validator/v10.map.init.7
+  518.65kB  1.61% 76.19%   518.65kB  1.61%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+     513kB  1.59% 77.78%      513kB  1.59%  github.com/json-iterator/go.init.0
+  512.69kB  1.59% 79.37%   512.69kB  1.59%  regexp/syntax.(*compiler).inst
+  512.44kB  1.59% 80.96%   512.44kB  1.59%  github.com/sacloud/iaas-api-go.SetClientFactoryFunc
+  512.28kB  1.59% 82.55%   512.28kB  1.59%  google.golang.org/protobuf/internal/filedesc.(*File).initDecls
+  512.28kB  1.59% 84.13%   512.28kB  1.59%  gvisor.dev/gvisor/pkg/state.init.func1
+  512.19kB  1.59% 85.72%  1024.27kB  3.17%  google.golang.org/protobuf/internal/filedesc.(*Message).unmarshalFull
+  512.14kB  1.59% 87.31%   512.14kB  1.59%  regexp.makeOnePass
+  512.12kB  1.59% 88.89%   512.12kB  1.59%  github.com/spf13/pflag.NewFlagSet
+  512.10kB  1.59% 90.48%   512.10kB  1.59%  google.golang.org/protobuf/internal/filedesc.(*EnumValues).lazyInit.func1
+  512.09kB  1.59% 92.07%   512.09kB  1.59%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalSeed
+  512.09kB  1.59% 93.65%   512.09kB  1.59%  google.golang.org/protobuf/internal/filedesc.(*Enum).unmarshalFull
+  512.09kB  1.59% 95.24%   512.09kB  1.59%  math/big.nat.make
+  512.02kB  1.59% 96.83%   512.02kB  1.59%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+  512.02kB  1.59% 98.41%   512.02kB  1.59%  github.com/xtls/xray-core/common/protocol.NewID
+  512.01kB  1.59%   100%  2048.12kB  6.35%  github.com/wyusgw/v2node/common/format.UserTag (inline)

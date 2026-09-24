@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:30:17 UTC
+Showing nodes accounting for 46082.96kB, 100% of 46082.96kB total
+Showing top 30 nodes out of 85
+      flat  flat%   sum%        cum   cum%
+16385.25kB 35.56% 35.56% 16385.25kB 35.56%  fmt.Sprintf
+ 4648.45kB 10.09% 45.64% 13865.36kB 30.09%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 3677.99kB  7.98% 53.62% 25775.83kB 55.93%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 3584.55kB  7.78% 61.40%  3584.55kB  7.78%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 3333.01kB  7.23% 68.64%  4869.08kB 10.57%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+ 3152.57kB  6.84% 75.48%  3152.57kB  6.84%  github.com/xtls/xray-core/proxy/shadowsocks.(*Validator).Add
+ 2560.16kB  5.56% 81.03%  3584.17kB  7.78%  github.com/xtls/xray-core/proxy/shadowsocks.(*Account).AsAccount
+ 2048.09kB  4.44% 85.48%  6144.29kB 13.33%  github.com/xtls/xray-core/common/protocol.(*User).ToMemoryUser
+ 2048.09kB  4.44% 89.92%  2048.09kB  4.44%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 1536.07kB  3.33% 93.25%  1536.07kB  3.33%  encoding/json/v2.makeString
+ 1024.02kB  2.22% 95.48%  1024.02kB  2.22%  github.com/xtls/xray-core/proxy/shadowsocks.passwordToCipherKey
+  532.26kB  1.16% 96.63%   532.26kB  1.16%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  525.43kB  1.14% 97.77%   525.43kB  1.14%  google.golang.org/protobuf/internal/strs.(*Builder).grow (inline)
+     515kB  1.12% 98.89%      515kB  1.12%  regexp/syntax.(*compiler).inst
+  512.02kB  1.11%   100%   512.02kB  1.11%  google.golang.org/protobuf/internal/impl.consumeStringValidateUTF8
+         0     0%   100%  1536.07kB  3.33%  encoding/json/v2.Unmarshal
+         0     0%   100%  1536.07kB  3.33%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%  1536.07kB  3.33%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%  1536.07kB  3.33%  encoding/json/v2.unmarshalDecode
+         0     0%   100% 45035.70kB 97.73%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100% 45035.70kB 97.73%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100% 45035.70kB 97.73%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100% 45035.70kB 97.73%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100% 45035.70kB 97.73%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100% 16385.25kB 35.56%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%   525.43kB  1.14%  github.com/wyusgw/v2node/core.(*V2Core).Start
+         0     0%   100%   525.43kB  1.14%  github.com/wyusgw/v2node/core.GetCustomConfig
+         0     0%   100%   525.43kB  1.14%  github.com/wyusgw/v2node/core.buildDefaultOutbound
+         0     0%   100%  6144.47kB 13.33%  github.com/wyusgw/v2node/core.buildSSUser
+         0     0%   100%  6144.47kB 13.33%  github.com/wyusgw/v2node/core.buildSSUsers

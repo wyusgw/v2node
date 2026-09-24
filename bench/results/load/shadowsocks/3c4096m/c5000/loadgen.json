@@ -1,0 +1,1 @@
+{"conns":5000,"dial_errors":769,"dials":23114,"down_MBps":35.07943166227597,"io_errors":16532,"protocol":"shadowsocks","target_down_MBps":163.84,"target_up_MBps":20.48,"ttfb_p50_ms":6005.432,"ttfb_p99_ms":14835.31,"up_MBps":17.072629029177907,"users":10000}

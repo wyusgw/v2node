@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:31:14 UTC
+Showing nodes accounting for 23735.88kB, 100% of 23735.88kB total
+Showing top 30 nodes out of 87
+      flat  flat%   sum%        cum   cum%
+ 6192.12kB 26.09% 26.09%  6192.12kB 26.09%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+ 3584.55kB 15.10% 41.19%  3584.55kB 15.10%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+ 3125.77kB 13.17% 54.36%  6198.13kB 26.11%  github.com/wyusgw/v2node/limiter.AddLimiter
+ 1184.27kB  4.99% 59.35%  1184.27kB  4.99%  runtime/pprof.StartCPUProfile
+ 1050.86kB  4.43% 63.78%  3611.14kB 15.21%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+ 1024.47kB  4.32% 68.09%  1024.47kB  4.32%  runtime.mallocgc
+ 1024.08kB  4.31% 72.41%  1024.08kB  4.31%  fmt.Sprintf
+ 1024.05kB  4.31% 76.72%  1024.05kB  4.31%  encoding/json/v2.makeString
+ 1024.05kB  4.31% 81.03%  1024.05kB  4.31%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+  902.59kB  3.80% 84.84%  1926.63kB  8.12%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  525.43kB  2.21% 87.05%   525.43kB  2.21%  github.com/go-playground/validator/v10.map.init.7
+  512.88kB  2.16% 89.21%   512.88kB  2.16%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+  512.56kB  2.16% 91.37%   512.56kB  2.16%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+  512.07kB  2.16% 93.53%  3084.23kB 12.99%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+  512.05kB  2.16% 95.69%   512.05kB  2.16%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity (inline)
+  512.05kB  2.16% 97.84%   512.05kB  2.16%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+  512.03kB  2.16%   100%   512.03kB  2.16%  github.com/xtls/xray-core/common/buf.NewWriter
+         0     0%   100%  1024.05kB  4.31%  encoding/json/v2.Unmarshal
+         0     0%   100%  1024.05kB  4.31%  encoding/json/v2.makeDefaultArshaler.makeStringArshaler.func4
+         0     0%   100%  1024.05kB  4.31%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func7
+         0     0%   100%  1024.05kB  4.31%  encoding/json/v2.unmarshalDecode
+         0     0%   100%   525.43kB  2.21%  github.com/go-playground/validator/v10.init
+         0     0%   100% 11735.91kB 49.44%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100% 11735.91kB 49.44%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100% 11735.91kB 49.44%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100% 11735.91kB 49.44%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100% 11735.91kB 49.44%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%   512.08kB  2.16%  github.com/wyusgw/v2node/common/counter.(*TrafficCounter).GetCounter
+         0     0%   100%  1024.08kB  4.31%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%  4128.08kB 17.39%  github.com/wyusgw/v2node/core/app/dispatcher.(*CounterReader).ReadMultiBuffer

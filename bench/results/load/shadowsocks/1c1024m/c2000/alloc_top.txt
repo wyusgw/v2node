@@ -1,0 +1,38 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: alloc_space
+Time: 2026-09-24 12:00:01 UTC
+Showing nodes accounting for 18832.03MB, 99.21% of 18981.83MB total
+Dropped 293 nodes (cum <= 94.91MB)
+Showing top 30 nodes out of 48
+      flat  flat%   sum%        cum   cum%
+ 5605.10MB 29.53% 29.53%  5605.10MB 29.53%  crypto/internal/fips140/aes/gcm.New (inline)
+ 3648.78MB 19.22% 48.75%  3648.78MB 19.22%  crypto/internal/fips140/aes.New (inline)
+ 3344.36MB 17.62% 66.37%  3344.36MB 17.62%  crypto/sha1.New
+ 3290.24MB 17.33% 83.70%  6636.10MB 34.96%  crypto/internal/fips140/hmac.New[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+ 1112.12MB  5.86% 89.56%  1112.12MB  5.86%  github.com/xtls/xray-core/proxy/shadowsocks.init.func2
+  799.09MB  4.21% 93.77%  4053.38MB 21.35%  golang.org/x/crypto/hkdf.Expand
+  360.32MB  1.90% 95.67%   360.32MB  1.90%  github.com/xtls/xray-core/common/bytespool.init.0.createAllocFunc.func1
+  333.51MB  1.76% 97.43%   333.51MB  1.76%  crypto/sha1.(*digest).Sum
+  175.50MB  0.92% 98.35%   175.50MB  0.92%  github.com/xtls/xray-core/proxy/shadowsocks.putSubkey (inline)
+  126.50MB  0.67% 99.02%  7891.20MB 41.57%  github.com/xtls/xray-core/proxy/shadowsocks.hkdfSHA1
+      23MB  0.12% 99.14%   382.28MB  2.01%  github.com/xtls/xray-core/common/buf.New
+    7.50MB  0.04% 99.18%   339.44MB  1.79%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).ReadMultiBuffer
+    3.50MB 0.018% 99.20% 18584.54MB 97.91%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+    1.50MB 0.0079% 99.21% 18575.54MB 97.86%  github.com/xtls/xray-core/proxy/shadowsocks.(*Server).handleConnection
+    0.50MB 0.0026% 99.21% 18565.04MB 97.80%  github.com/xtls/xray-core/proxy/shadowsocks.ReadTCPSessionWithCache
+    0.50MB 0.0026% 99.21%   335.69MB  1.77%  github.com/xtls/xray-core/common/buf.Copy
+         0     0% 99.21%  3648.78MB 19.22%  crypto/aes.NewCipher
+         0     0% 99.21%  5605.10MB 29.53%  crypto/cipher.NewGCM
+         0     0% 99.21%  5605.10MB 29.53%  crypto/cipher.newGCM
+         0     0% 99.21%  3552.81MB 18.72%  crypto/hkdf.Extract[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+         0     0% 99.21%  1724.68MB  9.09%  crypto/hkdf.Extract[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }].UnwrapNew[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }].func1
+         0     0% 99.21%  3258.29MB 17.17%  crypto/hmac.New
+         0     0% 99.21%  1621.17MB  8.54%  crypto/hmac.New.UnwrapNew[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }].func1
+         0     0% 99.21%  3552.81MB 18.72%  crypto/internal/fips140/hkdf.Extract[go.shape.interface { BlockSize int; Reset; Size int; Sum []uint8; Write  }]
+         0     0% 99.21%   333.51MB  1.76%  crypto/internal/fips140/hmac.(*HMAC).Sum
+         0     0% 99.21%   117.82MB  0.62%  github.com/xtls/xray-core/common/buf.(*BufferedReader).Read
+         0     0% 99.21%   277.97MB  1.46%  github.com/xtls/xray-core/common/buf.(*BufferedReader).ReadMultiBuffer
+         0     0% 99.21%   334.69MB  1.76%  github.com/xtls/xray-core/common/buf.copyInternal
+         0     0% 99.21%   306.30MB  1.61%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readBuffer
+         0     0% 99.21%   331.94MB  1.75%  github.com/xtls/xray-core/common/crypto.(*AuthenticationReader).readInternal

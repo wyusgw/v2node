@@ -1,0 +1,7 @@
+2026/09/24 12:00:13 t=  5s active=2173 dials=2505 errs=0/332 down=1.2MB/s up=5.0MB/s
+2026/09/24 12:00:18 t= 10s active=4964 dials=5688 errs=0/724 down=11.4MB/s up=15.1MB/s
+2026/09/24 12:00:23 t= 15s active=5000 dials=10013 errs=0/4940 down=10.3MB/s up=19.5MB/s
+2026/09/24 12:00:28 t= 20s active=3864 dials=13105 errs=0/9043 down=19.5MB/s up=19.6MB/s
+2026/09/24 12:00:33 t= 25s active=2338 dials=16021 errs=0/13289 down=25.0MB/s up=19.7MB/s
+2026/09/24 12:00:38 t= 30s active=5000 dials=22818 errs=0/17179 down=13.0MB/s up=19.2MB/s
+2026/09/24 12:00:43 t= 35s active=5000 dials=23078 errs=0/17239 down=15.2MB/s up=20.4MB/s

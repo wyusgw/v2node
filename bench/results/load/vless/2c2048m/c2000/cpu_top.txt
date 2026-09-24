@@ -1,0 +1,39 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: cpu
+Time: 2026-09-24 11:35:49 UTC
+Duration: 22s, Total samples = 16.49s (74.95%)
+Showing nodes accounting for 14.48s, 87.81% of 16.49s total
+Dropped 319 nodes (cum <= 0.08s)
+Showing top 30 nodes out of 108
+      flat  flat%   sum%        cum   cum%
+    10.50s 63.67% 63.67%     10.50s 63.67%  internal/runtime/syscall/linux.Syscall6
+     0.86s  5.22% 68.89%      0.86s  5.22%  runtime.futex
+     0.33s  2.00% 70.89%     12.95s 78.53%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.26s  1.58% 72.47%      1.52s  9.22%  runtime.netpoll
+     0.26s  1.58% 74.04%      0.26s  1.58%  sync/atomic.(*Bool).Load (inline)
+     0.23s  1.39% 75.44%      3.88s 23.53%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.21s  1.27% 76.71%      0.22s  1.33%  runtime.chansend
+     0.18s  1.09% 77.80%      3.24s 19.65%  internal/poll.(*FD).Read
+     0.14s  0.85% 78.65%      0.14s  0.85%  internal/sync.(*Mutex).Lock (inline)
+     0.14s  0.85% 79.50%      0.14s  0.85%  runtime.gopark
+     0.13s  0.79% 80.29%      2.59s 15.71%  github.com/wyusgw/v2node/core/app/dispatcher.(*CounterReader).ReadMultiBuffer
+     0.10s  0.61% 80.90%      0.31s  1.88%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.10s  0.61% 81.50%      0.10s  0.61%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.10s  0.61% 82.11%      2.72s 16.49%  syscall.Read (inline)
+     0.09s  0.55% 82.66%      7.50s 45.48%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+     0.09s  0.55% 83.20%      2.44s 14.80%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBuffer
+     0.09s  0.55% 83.75%      0.09s  0.55%  runtime.memclrNoHeapPointers
+     0.07s  0.42% 84.17%      2.08s 12.61%  github.com/xtls/xray-core/common/buf.(*BufferedReader).ReadMultiBuffer
+     0.07s  0.42% 84.60%      3.31s 20.07%  net.(*netFD).Read
+     0.06s  0.36% 84.96%      3.53s 21.41%  github.com/xtls/xray-core/common/buf.ReadBuffer
+     0.06s  0.36% 85.32%      0.12s  0.73%  runtime.exitsyscall
+     0.06s  0.36% 85.69%      0.23s  1.39%  runtime.netpollblock
+     0.05s   0.3% 85.99%      7.15s 43.36%  internal/poll.(*FD).Write
+     0.05s   0.3% 86.29%      7.21s 43.72%  net.(*netFD).Write
+     0.05s   0.3% 86.60%      2.71s 16.43%  runtime.schedule
+     0.05s   0.3% 86.90%      9.38s 56.88%  syscall.RawSyscall6
+     0.04s  0.24% 87.14%      3.40s 20.62%  github.com/xtls/xray-core/common/buf.(*Buffer).ReadFrom (inline)
+     0.04s  0.24% 87.39%      7.25s 43.97%  net.(*conn).Write
+     0.04s  0.24% 87.63%      2.57s 15.59%  runtime.findRunnable
+     0.03s  0.18% 87.81%      0.13s  0.79%  github.com/xtls/xray-core/proxy.readV.UpdateActivity.func1.1

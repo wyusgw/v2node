@@ -1,0 +1,37 @@
+File: v2node
+Build ID: ffa910fd831f9f71fd2a576abeff1345d29c2073
+Type: inuse_space
+Time: 2026-09-24 11:29:35 UTC
+Showing nodes accounting for 4655.73kB, 100% of 4655.73kB total
+Showing top 30 nodes out of 65
+      flat  flat%   sum%        cum   cum%
+  525.43kB 11.29% 11.29%   525.43kB 11.29%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB 11.29% 22.57%  1037.47kB 22.28%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB 11.29% 33.86%   525.43kB 11.29%  golang.org/x/net/html.map.init.1
+  519.03kB 11.15% 45.01%   519.03kB 11.15%  google.golang.org/protobuf/internal/strs.(*Builder).grow
+  512.23kB 11.00% 56.01%   512.23kB 11.00%  google.golang.org/protobuf/internal/filedesc.newRawFile
+  512.10kB 11.00% 67.01%   512.10kB 11.00%  github.com/youmark/pkcs8.RegisterKDF
+  512.04kB 11.00% 78.00%   512.04kB 11.00%  fmt.Sprintf
+  512.03kB 11.00% 89.00%   512.03kB 11.00%  reflect.(*rtype).ptrTo
+  512.01kB 11.00%   100%   512.01kB 11.00%  google.golang.org/protobuf/internal/impl.(*MessageInfo).makeCoderMethods
+         0     0%   100%   512.03kB 11.00%  encoding/json.Marshal (inline)
+         0     0%   100%   512.03kB 11.00%  encoding/json/v2.Marshal
+         0     0%   100%   512.03kB 11.00%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func5
+         0     0%   100%   512.03kB 11.00%  encoding/json/v2.makeDefaultArshaler.makeStructArshaler.func6
+         0     0%   100%   512.03kB 11.00%  encoding/json/v2.makeStructFields
+         0     0%   100%   512.03kB 11.00%  encoding/json/v2.marshalEncode
+         0     0%   100%   512.23kB 11.00%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.file_appctl_proto_base_proto_init
+         0     0%   100%   512.23kB 11.00%  github.com/enfein/mieru/v3/pkg/appctl/appctlpb.init.0
+         0     0%   100%   525.43kB 11.29%  github.com/go-playground/validator/v10.init
+         0     0%   100%  2061.51kB 44.28%  github.com/spf13/cobra.(*Command).Execute (inline)
+         0     0%   100%  2061.51kB 44.28%  github.com/spf13/cobra.(*Command).ExecuteC
+         0     0%   100%  2061.51kB 44.28%  github.com/spf13/cobra.(*Command).execute
+         0     0%   100%  2061.51kB 44.28%  github.com/wyusgw/v2node/cmd.Run
+         0     0%   100%  2061.51kB 44.28%  github.com/wyusgw/v2node/cmd.serverHandle
+         0     0%   100%   512.04kB 11.00%  github.com/wyusgw/v2node/common/format.UserTag (inline)
+         0     0%   100%  1024.04kB 22.00%  github.com/wyusgw/v2node/core.(*V2Core).Start
+         0     0%   100%  1024.04kB 22.00%  github.com/wyusgw/v2node/core.GetCustomConfig
+         0     0%   100%  1024.04kB 22.00%  github.com/wyusgw/v2node/core.buildDefaultOutbound
+         0     0%   100%  1024.04kB 22.00%  github.com/wyusgw/v2node/core.getCore
+         0     0%   100%  1037.47kB 22.28%  github.com/wyusgw/v2node/node.(*Controller).Start
+         0     0%   100%  1037.47kB 22.28%  github.com/wyusgw/v2node/node.(*Node).Start
