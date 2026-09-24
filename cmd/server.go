@@ -69,6 +69,7 @@ func serverHandle(_ *cobra.Command, _ []string) {
 		}
 		log.SetOutput(f)
 	}
+	setMemoryLimitFromCgroup()
 	// Enable pprof if configured
 	if c.PprofPort != 0 {
 		go func() {
