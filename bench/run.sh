@@ -22,6 +22,7 @@ LOADS=${LOADS:-"500 2000 5000"}                # concurrent connections
 DOWN=${DOWN:-32768}                            # per-connection bytes/s
 UP=${UP:-4096}
 LIFE=${LIFE:-20s}
+LG_FLAGS=${LG_FLAGS:-}                         # extra loadgen flags, e.g. "-sticky -src-ips"
 RAMP=${RAMP:-10}                               # seconds
 STEADY=${STEADY:-30}                           # seconds
 ONLY=${ONLY:-}
@@ -33,8 +34,10 @@ SINK=127.0.0.1:19000
 TARGET_IP=11.11.11.11                          # DNAT'd to the sink; see below
 
 export GOEXPERIMENT=jsonv2
-echo "building into $BIN"
-(cd "$ROOT" && go build -trimpath -o "$BIN/v2node" . && go build -o "$BIN/" ./bench/mockpanel ./bench/loadgen)
+if [ -z "${SKIP_BUILD:-}" ]; then # SKIP_BUILD=1 runs the binaries already in $BIN
+	echo "building into $BIN"
+	(cd "$ROOT" && go build -trimpath -o "$BIN/v2node" . && go build -o "$BIN/" ./bench/mockpanel ./bench/loadgen)
+fi
 
 # xray's freedom outbound refuses private destinations for vless/vmess/
 # trojan/shadowsocks inbounds, so the node is pointed at a public-looking
@@ -161,7 +164,7 @@ if [ -z "$ONLY" ] || [ "$ONLY" = load ]; then
 				fi
 				taskset -c "$LG_CPUS" "$BIN/loadgen" -protocol "$proto" -server 127.0.0.1:$NODE_PORT -sink $SINK \
 					-target $TARGET_IP:19000 -users "$LOAD_USERS" -conns "$conns" -down "$DOWN" -up "$UP" \
-					-life "$LIFE" -ramp ${RAMP}s -duration $((RAMP + STEADY))s -out "$d/loadgen.json" \
+					-life "$LIFE" ${LG_FLAGS:-} -ramp ${RAMP}s -duration $((RAMP + STEADY))s -out "$d/loadgen.json" \
 					>/dev/null 2>"$d/loadgen.log" &
 				LG=$!; PIDS+=($LG)
 				sleep "$RAMP"

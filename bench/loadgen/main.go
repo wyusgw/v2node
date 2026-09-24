@@ -56,6 +56,8 @@ var (
 	cipher   = flag.String("cipher", "aes-128-gcm", "shadowsocks cipher")
 	out      = flag.String("out", "", "write the JSON summary here as well as stdout")
 	sinkOnly = flag.Bool("sink-only", false, "only run the sink")
+	sticky   = flag.Bool("sticky", false, "each connection slot keeps one user across reconnects, like a device does (default: a new random user per connection)")
+	srcIPs   = flag.Bool("src-ips", false, "connect from a per-user source address in 127.0.0.0/8, like direct clients (default: all from one address, like behind a relay)")
 )
 
 const tick = 100 * time.Millisecond
@@ -65,7 +67,8 @@ var (
 	dialOK, dialErr, ioErr atomic.Int64
 	active                 atomic.Int64
 	latMu                  sync.Mutex
-	latencies              []time.Duration
+	latencies              []time.Duration // time to first byte of connections opened after the ramp
+	steadyStart            time.Time
 	dialer                 = gonet.Dialer{Timeout: 10 * time.Second}
 )
 
@@ -86,6 +89,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), *duration)
 	defer cancel()
 	start := time.Now()
+	steadyStart = start.Add(*ramp)
 	// Throughput is reported for the steady window after the ramp only.
 	var steadyD, steadyU atomic.Int64
 	steadyAt := time.AfterFunc(*ramp, func() {
@@ -161,13 +165,17 @@ func main() {
 // worker keeps one connection slot busy until ctx ends, redialing as a new
 // random user whenever the current connection's lifetime runs out.
 func worker(ctx context.Context, dest net.Destination, r *rand.Rand) {
+	user := r.IntN(*nUsers)
 	for ctx.Err() == nil {
 		lifetime := *duration
 		if *life > 0 {
 			lifetime = time.Duration(float64(*life) * (0.5 + r.Float64()))
 		}
 		cctx, cancel := context.WithTimeout(ctx, lifetime)
-		if err := session(cctx, dest, r.IntN(*nUsers)); err != nil && ctx.Err() == nil {
+		if !*sticky {
+			user = r.IntN(*nUsers)
+		}
+		if err := session(cctx, dest, user); err != nil && ctx.Err() == nil {
 			time.Sleep(200 * time.Millisecond)
 		}
 		cancel()
@@ -181,7 +189,13 @@ type stream struct {
 }
 
 func session(ctx context.Context, dest net.Destination, uidx int) error {
-	conn, err := dialer.DialContext(ctx, "tcp", *server)
+	d := dialer
+	if *srcIPs {
+		// 127.0.0.0/8 is all local on Linux, so every user can have its own
+		// source address without any interface setup.
+		d.LocalAddr = &gonet.TCPAddr{IP: gonet.IPv4(127, byte(1+uidx>>16), byte(uidx>>8), byte(uidx))}
+	}
+	conn, err := d.DialContext(ctx, "tcp", *server)
 	if err != nil {
 		dialErr.Add(1)
 		return err
@@ -212,7 +226,7 @@ func session(ctx context.Context, dest net.Destination, uidx int) error {
 				if first {
 					first = false
 					latMu.Lock()
-					if len(latencies) < 1_000_000 {
+					if begin.After(steadyStart) && len(latencies) < 1_000_000 {
 						latencies = append(latencies, time.Since(begin))
 					}
 					latMu.Unlock()
