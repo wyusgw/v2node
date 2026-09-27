@@ -192,13 +192,17 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 		return nil, fmt.Errorf("unsupport protocol: %s", protocol)
 	}
 	node.Tag = fmt.Sprintf("[%s]-%s:%d", c.APIHost, node.Type, node.Id)
+	certDir := c.CertDir
+	if certDir == "" {
+		certDir = "/etc/v2node"
+	}
 	cf := cm.TlsSettings.CertFile
 	kf := cm.TlsSettings.KeyFile
 	if cf == "" {
-		cf = filepath.Join("/etc/v2node/", node.Type+strconv.Itoa(c.NodeId)+".cer")
+		cf = filepath.Join(certDir, node.Type+strconv.Itoa(c.NodeId)+".cer")
 	}
 	if kf == "" {
-		kf = filepath.Join("/etc/v2node/", node.Type+strconv.Itoa(c.NodeId)+".key")
+		kf = filepath.Join(certDir, node.Type+strconv.Itoa(c.NodeId)+".key")
 	}
 	cm.CertInfo = &CertInfo{
 		CertMode:         cm.TlsSettings.CertMode,
