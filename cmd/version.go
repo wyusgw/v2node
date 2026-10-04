@@ -9,7 +9,6 @@ import (
 var (
 	version  = "TempVersion" //use ldflags replace
 	codename = "v2node"
-	intro    = "A V2board backend based on modified xray-core"
 )
 
 var versionCommand = cobra.Command{
@@ -25,5 +24,5 @@ func init() {
 }
 
 func showVersion() {
-	fmt.Printf("%s %s (%s) \n", codename, version, intro)
+	fmt.Printf("%s %s\n", codename, version)
 }
