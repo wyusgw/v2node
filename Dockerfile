@@ -1,5 +1,6 @@
 # Build go
 FROM golang:1.27.1-alpine AS builder
+RUN apk add --no-cache git
 WORKDIR /app
 COPY . .
 ENV CGO_ENABLED=0
