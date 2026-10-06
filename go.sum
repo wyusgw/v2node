@@ -1720,6 +1720,8 @@ github.com/vultr/govultr/v3 v3.31.0 h1:xSRqIQEnB3tjgpIOADWQOhOedDsqZj9qawW+mAoq7
 github.com/vultr/govultr/v3 v3.31.0/go.mod h1:2zyUw9yADQaGwKnwDesmIOlBNLrm7edsCfWHFJpWKf8=
 github.com/wlynxg/anet v0.0.5 h1:J3VJGi1gvo0JwZ/P1/Yc/8p63SoW98B5dHkYDmpgvvU=
 github.com/wlynxg/anet v0.0.5/go.mod h1:eay5PRQr7fIVAMbTbchTnO9gG65Hg/uYGdc7mguHxoA=
+github.com/wyusgw/xray-core v0.0.0-20261006080833-4cea6af37350 h1:rK+tgr22cUyM7zzOKAhZXJbx36Z7Tlwhd6DpqW7KAK0=
+github.com/wyusgw/xray-core v0.0.0-20261006080833-4cea6af37350/go.mod h1:ssVal6NEl05bSaVu+oqH09xyNYQxOA+yOtSR7D9yZ1M=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.0.2/go.mod h1:1WAq6h33pAW+iRreB34OORO2Nf7qel3VV3fjBj+hCSs=
 github.com/xdg-go/scram v1.1.2/go.mod h1:RT/sEzTbU5y00aCK8UOx6R7YryM0iF1N2MOmC3kKLN4=
