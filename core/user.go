@@ -26,7 +26,8 @@ import (
 	"github.com/xtls/xray-core/proxy/vless"
 )
 
-func (v *V2Core) GetUserManager(tag string) (proxy.UserManager, error) {
+// getUserManager expects the caller to hold v.access.
+func (v *V2Core) getUserManager(tag string) (proxy.UserManager, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	handler, err := v.ihm.GetHandler(ctx, tag)
@@ -45,7 +46,12 @@ func (v *V2Core) GetUserManager(tag string) (proxy.UserManager, error) {
 }
 
 func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo) error {
-	userManager, err := vc.GetUserManager(tag)
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.ihm == nil {
+		return errCoreClosed
+	}
+	userManager, err := vc.getUserManager(tag)
 	if err != nil {
 		return fmt.Errorf("get user manager error: %s", err)
 	}
@@ -80,6 +86,11 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 // rate limiter (and may be using zero-copy splice), and ones opened while
 // limited keep their bucket, so neither would otherwise pick up the change.
 func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return
+	}
 	for i := range users {
 		user := format.UserTag(tag, users[i].Uuid)
 		if v, ok := vc.dispatcher.LinkManagers.LoadAndDelete(user); ok {
@@ -89,6 +100,11 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 }
 
 func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserTraffic, error) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return nil, errCoreClosed
+	}
 	trafficSlice := make([]panel.UserTraffic, 0)
 	vc.users.mapLock.RLock()
 	defer vc.users.mapLock.RUnlock()
@@ -182,6 +198,11 @@ func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 }
 
 func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return 0, errCoreClosed
+	}
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()
 	for i := range p.Users {
@@ -211,7 +232,7 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 	default:
 		return 0, fmt.Errorf("unsupported node type: %s", p.NodeInfo.Type)
 	}
-	man, err := v.GetUserManager(p.Tag)
+	man, err := v.getUserManager(p.Tag)
 	if err != nil {
 		return 0, fmt.Errorf("get user manager error: %s", err)
 	}

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -28,13 +29,17 @@ type AddUsersParams struct {
 type V2Core struct {
 	Config     *conf.Conf
 	ReloadCh   chan struct{}
-	access     sync.Mutex
+	access     sync.RWMutex // Start/Close hold it exclusively; calls from node tasks hold it shared
 	Server     *core.Instance
 	users      *UserMap
 	ihm        inbound.Manager
 	ohm        outbound.Manager
 	dispatcher *dispatcher.DefaultDispatcher
 }
+
+// errCoreClosed is returned by calls that arrive after Close, e.g. from a node
+// task that was still running when a reload closed this core.
+var errCoreClosed = errors.New("core is closed")
 
 type UserMap struct {
 	uidMap  map[string]int

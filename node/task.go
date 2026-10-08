@@ -87,6 +87,9 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		} else {
 			log.Panic("Reload failed")
 		}
+		// The reload rebuilds this node with fresh users on a new core, and
+		// tears the current one down meanwhile, so don't touch it any more.
+		return nil
 	}
 	log.WithField("tag", c.tag).Debug("Node info no change")
 
