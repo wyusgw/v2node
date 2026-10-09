@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
@@ -27,6 +28,10 @@ type Controller struct {
 	userReportPeriodic      *task.Task
 	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
+	faultMu                 sync.Mutex
+	faults                  map[string]string
+	faultReported           string
+	faultSynced             bool
 }
 
 // NewController return a Node controller with default parameters.
@@ -41,6 +46,15 @@ func NewController(api *panel.Client, conf *conf.NodeConfig, info *panel.NodeInf
 
 // Start implement the Start() function of the service interface
 func (c *Controller) Start(x *core.V2Core) error {
+	if err := c.start(x); err != nil {
+		c.setFault("start", err.Error())
+		return err
+	}
+	c.clearFault("start")
+	return nil
+}
+
+func (c *Controller) start(x *core.V2Core) error {
 	// Init Core
 	c.server = x
 	var err error

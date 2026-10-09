@@ -95,6 +95,7 @@ func serverHandle(_ *cobra.Command, _ []string) {
 	err = v2core.Start(nodes.NodeInfos)
 	if err != nil {
 		log.WithField("err", err).Error("Start core failed")
+		nodes.SetFault("core", err.Error())
 		return
 	}
 	defer v2core.Close()
@@ -191,6 +192,7 @@ func reload(config string, nodes **node.Node, v2core **core.V2Core) error {
 	// Reattach reload channel
 	newCore.ReloadCh = oldReloadCh
 	if err := newCore.Start(newNodes.NodeInfos); err != nil {
+		newNodes.SetFault("core", err.Error())
 		return err
 	}
 

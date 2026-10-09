@@ -25,19 +25,25 @@ func (c *Controller) renewCertTask(_ context.Context) error {
 	if !certUsable(cert.CertFile, cert.KeyFile, cert.CertDomain, true) {
 		if err := obtainCert(cert); err != nil {
 			log.WithField("tag", c.tag).Info("obtain cert error: ", err)
+			c.setFault("cert", "obtain cert failed: "+err.Error())
+			return nil
 		}
+		c.clearFault("cert")
 		return nil
 	}
 	l, err := NewLego(cert)
 	if err != nil {
 		log.WithField("tag", c.tag).Info("new lego error: ", err)
+		c.setFault("cert", "init cert client failed: "+err.Error())
 		return nil
 	}
 	err = l.RenewCert()
 	if err != nil {
 		log.WithField("tag", c.tag).Info("renew cert error: ", err)
+		c.setFault("cert", "renew cert failed: "+err.Error())
 		return nil
 	}
+	c.clearFault("cert")
 	return nil
 }
 

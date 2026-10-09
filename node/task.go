@@ -63,6 +63,8 @@ func (c *Controller) startTasks(node *panel.NodeInfo) {
 }
 
 func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
+	// retry a fault report that failed earlier
+	c.syncFault()
 	// get node info
 	newN, err := c.apiClient.GetNodeInfo(ctx)
 	if err != nil {
@@ -153,6 +155,7 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 				"tag": c.tag,
 				"err": err,
 			}).Error("Delete users failed")
+			c.setFault("users", "delete users failed: "+err.Error())
 			return nil
 		}
 	}
@@ -168,6 +171,7 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 				"tag": c.tag,
 				"err": err,
 			}).Error("Add users failed")
+			c.setFault("users", "add users failed: "+err.Error())
 			return nil
 		}
 	}
@@ -179,6 +183,7 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		c.server.CloseUserLinks(c.tag, speedToggled)
 	}
 	c.userList = newU
+	c.clearFault("users")
 	log.WithField("tag", c.tag).Infof("%d user deleted, %d user added, %d user modified", len(deleted), len(added), len(modified))
 	return nil
 }
