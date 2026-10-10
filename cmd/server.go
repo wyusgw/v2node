@@ -128,14 +128,14 @@ func serverHandle(_ *cobra.Command, _ []string) {
 	for {
 		select {
 		case <-osSignals:
-			log.Info("收到退出信号，正在关闭程序...")
+			log.Info("Exit signal received, shutting down...")
 			os.Exit(0)
 		case <-reloadCh:
-			log.Info("收到重启信号，正在重新加载配置...")
+			log.Info("Restart signal received, reloading the configuration...")
 			if err := reload(config, &nodes, &v2core); err != nil {
-				log.WithField("err", err).Panic("重启失败")
+				log.WithField("err", err).Panic("Restart failed")
 			}
-			log.Info("重启成功")
+			log.Info("Restart succeeded")
 		}
 	}
 }
