@@ -431,17 +431,17 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 }
 
 func buildHysteria2(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
-	inbound.Protocol = "hysteria"
+	inbound.Protocol = "hysteria2"
 	s := nodeInfo.Common
-	settings := &coreConf.HysteriaServerConfig{
+	settings := &coreConf.Hysteria2ServerConfig{
 		Version: 2,
 	}
 
-	t := coreConf.TransportProtocol("hysteria")
+	t := coreConf.TransportProtocol("hysteria2")
 	up := conf.Bandwidth(strconv.Itoa(s.UpMbps) + "mbps")
 	down := conf.Bandwidth(strconv.Itoa(s.DownMbps) + "mbps")
 	inbound.StreamSetting = &coreConf.StreamConfig{Network: &t}
-	hysteriasetting := &coreConf.HysteriaConfig{
+	hysteriasetting := &coreConf.Hysteria2Config{
 		Version: 2,
 	}
 	finalmask := &coreConf.FinalMask{
@@ -472,7 +472,7 @@ func buildHysteria2(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourCon
 	inbound.StreamSetting.FinalMask = finalmask
 	sets, err := json.Marshal(settings)
 	inbound.Settings = (*json.RawMessage)(&sets)
-	inbound.StreamSetting.HysteriaSettings = hysteriasetting
+	inbound.StreamSetting.Hysteria2Settings = hysteriasetting
 	if err != nil {
 		return fmt.Errorf("marshal hysteria2 settings error: %s", err)
 	}

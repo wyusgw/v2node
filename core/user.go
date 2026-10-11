@@ -17,7 +17,7 @@ import (
 	"github.com/xtls/xray-core/infra/conf"
 	"github.com/xtls/xray-core/proxy"
 	"github.com/xtls/xray-core/proxy/anytls"
-	hyaccount "github.com/xtls/xray-core/proxy/hysteria/account"
+	hyaccount "github.com/xtls/xray-core/proxy/hysteria2/account"
 	"github.com/xtls/xray-core/proxy/mieru"
 	"github.com/xtls/xray-core/proxy/shadowsocks"
 	"github.com/xtls/xray-core/proxy/shadowsocks_2022"
