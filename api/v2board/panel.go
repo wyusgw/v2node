@@ -39,6 +39,7 @@ var pinnedNodeTypes = map[string]bool{
 	"vmess":       true,
 	"trojan":      true,
 	"shadowsocks": true,
+	"hysteria":    true,
 	"hysteria2":   true,
 	"tuic":        true,
 	"anytls":      true,

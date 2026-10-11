@@ -47,7 +47,7 @@ type NodeConfig struct {
 	// NodeType is optional. Leave it empty (or set it to "v2node") to let the
 	// panel's unified v2node table tell the node which protocol to run via
 	// the config API's "protocol" field. Set it to a specific protocol name
-	// (vmess/vless/trojan/shadowsocks/hysteria2/tuic/anytls/mieru) instead to
+	// (vmess/vless/trojan/shadowsocks/hysteria/hysteria2/tuic/anytls/mieru) instead to
 	// pin this node to that protocol's own table, bypassing the v2node table.
 	NodeType   string `mapstructure:"NodeType"`
 	Key        string `mapstructure:"ApiKey"`

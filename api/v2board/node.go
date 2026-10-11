@@ -182,7 +182,7 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 		protocol = c.NodeType
 	}
 	switch protocol {
-	case "vmess", "trojan", "hysteria2", "tuic", "anytls", "vless":
+	case "vmess", "trojan", "hysteria", "hysteria2", "tuic", "anytls", "vless":
 		node.Type = protocol
 		node.Security = cm.Tls
 	case "shadowsocks", "mieru":

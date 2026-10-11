@@ -61,6 +61,8 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string, users []panel.UserInfo) 
 		err = buildTrojan(nodeInfo, in)
 	case "shadowsocks":
 		err = buildShadowsocks(nodeInfo, in)
+	case "hysteria":
+		err = buildHysteria(nodeInfo, in)
 	case "hysteria2":
 		err = buildHysteria2(nodeInfo, in)
 	case "tuic":
@@ -430,6 +432,46 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 	return nil
 }
 
+func setReceiveWindows(q *coreConf.QuicParamsConfig) {
+	// Start from small receive windows so a rate-limited user cannot burst a
+	// full default window past the limit; quic-go grows them to the same caps
+	// only while the application keeps reading.
+	q.InitStreamReceiveWindow = 128 << 10
+	q.MaxStreamReceiveWindow = 8 << 20
+	q.InitConnectionReceiveWindow = 320 << 10
+	q.MaxConnectionReceiveWindow = 20 << 20
+}
+
+func buildHysteria(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
+	inbound.Protocol = "hysteria"
+	s := nodeInfo.Common
+	t := coreConf.TransportProtocol("hysteria")
+	inbound.StreamSetting = &coreConf.StreamConfig{Network: &t}
+	hysteriasetting := &coreConf.HysteriaConfig{}
+	if s.Obfs != "" {
+		hysteriasetting.Obfs = "xplus"
+		hysteriasetting.ObfsPassword = s.Obfs
+	}
+	finalmask := &coreConf.FinalMask{
+		QuicParams: &coreConf.QuicParamsConfig{},
+	}
+	if s.UpMbps > 0 {
+		finalmask.QuicParams.BrutalUp = conf.Bandwidth(strconv.Itoa(s.UpMbps) + "mbps")
+	}
+	if s.DownMbps > 0 {
+		finalmask.QuicParams.BrutalDown = conf.Bandwidth(strconv.Itoa(s.DownMbps) + "mbps")
+	}
+	setReceiveWindows(finalmask.QuicParams)
+	inbound.StreamSetting.FinalMask = finalmask
+	inbound.StreamSetting.HysteriaSettings = hysteriasetting
+	sets, err := json.Marshal(&coreConf.HysteriaServerConfig{})
+	if err != nil {
+		return fmt.Errorf("marshal hysteria settings error: %s", err)
+	}
+	inbound.Settings = (*json.RawMessage)(&sets)
+	return nil
+}
+
 func buildHysteria2(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig) error {
 	inbound.Protocol = "hysteria2"
 	s := nodeInfo.Common
@@ -452,14 +494,7 @@ func buildHysteria2(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourCon
 		finalmask.QuicParams.BrutalUp = up
 		finalmask.QuicParams.BrutalDown = down
 	}
-	// Xray 的 hysteria 服务端默认初始接收窗口就是上限（单流 8MB、单连接 20MB），
-	// 限速用户可以先满速塞进这么多数据才被限住，客户端看起来上行没被限速。
-	// 改为从小窗口起步，quic-go 只在应用读得跟上时才把窗口放大到同样的上限，
-	// 不限速的用户几个 RTT 内就能涨满，限速用户则一直只能超前一个小窗口
-	finalmask.QuicParams.InitStreamReceiveWindow = 128 << 10
-	finalmask.QuicParams.MaxStreamReceiveWindow = 8 << 20
-	finalmask.QuicParams.InitConnectionReceiveWindow = 320 << 10
-	finalmask.QuicParams.MaxConnectionReceiveWindow = 20 << 20
+	setReceiveWindows(finalmask.QuicParams)
 	if s.Obfs != "" && s.ObfsPassword != "" {
 		rawobfsJSON := json.RawMessage(fmt.Sprintf(`{"password":"%s"}`, s.ObfsPassword))
 		finalmask.Udp = []conf.Mask{

@@ -221,7 +221,7 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 			p.Users,
 			p.Common.Cipher,
 			p.Common.ServerKey)
-	case "hysteria2":
+	case "hysteria", "hysteria2":
 		users = buildHysteria2Users(p.Tag, p.Users)
 	case "tuic":
 		users = buildTuicUsers(p.Tag, p.Users)
