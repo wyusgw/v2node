@@ -124,14 +124,17 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	if newA != nil {
 		c.limiter.AliveList = newA
 	}
+	// drop kicked devices
+	c.applyKicks(c.apiClient.AliveMap.Kick)
 	// node no changed, check users
 	if len(newU) == 0 {
 		log.WithField("tag", c.tag).Debug("User list no change")
 		return nil
 	}
 	deleted, added, modified := compareUserList(c.userList, newU)
-	// 限速在"不限速 ↔ 限速"之间切换时，已建立的连接拿不到新的限速器，
-	// 需要断开让客户端重连；限速值之间的调整由限速桶实时更新，不必断开
+	// Open connections don't pick up a new limiter when the speed limit switches
+	// between unlimited and limited, so they are dropped to make clients reconnect;
+	// changes between two limits are applied live by the bucket
 	var speedToggled []panel.UserInfo
 	if len(modified) > 0 {
 		limited := func(u panel.UserInfo) bool {
@@ -186,4 +189,22 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	c.clearFault("users")
 	log.WithField("tag", c.tag).Infof("%d user deleted, %d user added, %d user modified", len(deleted), len(added), len(modified))
 	return nil
+}
+
+// applyKicks blocks the devices the panel kicked offline and drops their
+// open connections on this node.
+func (c *Controller) applyKicks(kicks map[int]map[string]int) {
+	c.limiter.ApplyKicks(kicks)
+	if len(kicks) == 0 {
+		return
+	}
+	links := make(map[string][]string)
+	for _, u := range c.userList {
+		for ip := range kicks[u.Id] {
+			links[u.Uuid] = append(links[u.Uuid], ip)
+		}
+	}
+	if len(links) > 0 {
+		c.server.CloseIPLinks(c.tag, links)
+	}
 }

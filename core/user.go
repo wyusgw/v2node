@@ -99,6 +99,25 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	}
 }
 
+// CloseIPLinks drops the connections users have open from the given ips,
+// keyed by uuid. Used when the panel kicks a device offline, leaving the
+// user's other devices connected.
+func (vc *V2Core) CloseIPLinks(tag string, links map[string][]string) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return
+	}
+	for uuid, ips := range links {
+		if v, ok := vc.dispatcher.LinkManagers.Load(format.UserTag(tag, uuid)); ok {
+			lm := v.(*dispatcher.LinkManager)
+			for _, ip := range ips {
+				lm.CloseIP(ip)
+			}
+		}
+	}
+}
+
 func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserTraffic, error) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()

@@ -3,6 +3,7 @@ package limiter
 import (
 	"context"
 	"errors"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -33,6 +34,7 @@ type Limiter struct {
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
 	SpeedLimiter  *sync.Map      // key: TagUUID, value: *rate.DuplexBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
+	Kicked        *sync.Map      // Key: "Uid|Ip", value: unix time the kick block ends
 	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
 }
 
@@ -53,6 +55,7 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		UserLimitInfo: new(sync.Map),
 		SpeedLimiter:  new(sync.Map),
 		AliveList:     aliveList,
+		Kicked:        new(sync.Map),
 		Client:        client,
 	}
 	uuidmap := make(map[string]int)
@@ -206,6 +209,9 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	} else {
 		return nil, true
 	}
+	if l.isKicked(uid, ip) {
+		return nil, true
+	}
 	// Store online user for device limit. This runs for every inbound
 	// regardless of TCP/UDP: a device whose only traffic to this node is UDP
 	// (e.g. DNS-only, or a protocol other than hysteria2/tuic that never
@@ -268,6 +274,48 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	} else {
 		return nil, false
 	}
+}
+
+func kickKey(uid int, ip string) string {
+	return strconv.Itoa(uid) + "|" + ip
+}
+
+func (l *Limiter) isKicked(uid int, ip string) bool {
+	v, ok := l.Kicked.Load(kickKey(uid, ip))
+	return ok && v.(int64) > time.Now().Unix()
+}
+
+// ApplyKicks blocks the ips the panel kicked offline until their block ends,
+// and drops them from this cycle's admitted set so they aren't reported as
+// online again. Expired blocks are cleared here as well.
+func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
+	now := time.Now().Unix()
+	l.Kicked.Range(func(key, value interface{}) bool {
+		if value.(int64) <= now {
+			l.Kicked.Delete(key)
+		}
+		return true
+	})
+	if len(kicks) == 0 {
+		return
+	}
+	for uid, ips := range kicks {
+		for ip, seconds := range ips {
+			l.Kicked.Store(kickKey(uid, ip), now+int64(seconds))
+		}
+	}
+	l.UserOnlineIP.Range(func(_, value interface{}) bool {
+		ipMap := value.(*sync.Map)
+		ipMap.Range(func(key, value interface{}) bool {
+			if ips, ok := kicks[value.(int)]; ok {
+				if _, ok := ips[key.(string)]; ok {
+					ipMap.Delete(key)
+				}
+			}
+			return true
+		})
+		return true
+	})
 }
 
 // clearOnlineState drops taguuid's per-cycle admitted-IP set, so the next
