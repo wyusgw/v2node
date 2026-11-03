@@ -73,7 +73,7 @@ func TestPruneSSRemovedLimit(t *testing.T) {
 
 func TestSaveSSStatePrivate(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "ss-users.json")
-	if err := os.WriteFile(path, []byte("{}"), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte("{}"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	state := &ssUserState{Cipher: "aes-128-gcm", Users: []string{"u1"}, Removed: []ssRemovedUser{{Uuid: "u2", Cipher: "aes-128-gcm", At: 1}}}
@@ -84,7 +84,7 @@ func TestSaveSSStatePrivate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info.Mode().Perm() != 0o600 {
+	if info.Mode().Perm() != 0600 {
 		t.Fatalf("mode %v, want 0600", info.Mode().Perm())
 	}
 	got, err := loadSSState(path)

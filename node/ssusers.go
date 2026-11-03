@@ -78,10 +78,10 @@ func saveSSState(path string, state *ssUserState) error {
 		return err
 	}
 	tmp := path + ".tmp"
-	if err := os.WriteFile(tmp, data, 0o600); err != nil {
+	if err := os.WriteFile(tmp, data, 0600); err != nil {
 		return err
 	}
-	if err := os.Chmod(tmp, 0o600); err != nil { // an old file keeps its mode
+	if err := os.Chmod(tmp, 0600); err != nil { // an old file keeps its mode
 		os.Remove(tmp)
 		return err
 	}
