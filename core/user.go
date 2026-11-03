@@ -216,6 +216,42 @@ func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 	}
 }
 
+type ssRetirer interface {
+	RetireUsers(context.Context, []*protocol.MemoryUser)
+}
+
+var _ ssRetirer = (*shadowsocks.Server)(nil)
+
+// RetireSSUsers tells the Shadowsocks (not 2022) inbound tag about users
+// removed while it was not running, so that it recognizes their clients that
+// keep reconnecting instead of rate-limiting their source IP, which may be a
+// relay shared with other users.
+func (v *V2Core) RetireSSUsers(tag string, users []panel.UserInfo, cipher string) error {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return errCoreClosed
+	}
+	man, err := v.getUserManager(tag)
+	if err != nil {
+		return fmt.Errorf("get user manager error: %s", err)
+	}
+	retirer, ok := man.(ssRetirer)
+	if !ok {
+		return fmt.Errorf("inbound %s cannot retire users", tag)
+	}
+	mUsers := make([]*protocol.MemoryUser, 0, len(users))
+	for i := range users {
+		mUser, err := buildSSUser(tag, &users[i], cipher, "").ToMemoryUser()
+		if err != nil {
+			return err
+		}
+		mUsers = append(mUsers, mUser)
+	}
+	retirer.RetireUsers(context.Background(), mUsers)
+	return nil
+}
+
 func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 	v.access.RLock()
 	defer v.access.RUnlock()

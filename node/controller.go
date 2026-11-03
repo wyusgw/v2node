@@ -21,6 +21,7 @@ type Controller struct {
 	tag                     string
 	limiter                 *limiter.Limiter
 	userList                []panel.UserInfo
+	ssRemoved               []ssRemovedUser // see ssusers.go
 	aliveMap                map[int]int
 	conf                    *conf.NodeConfig
 	info                    *panel.NodeInfo
@@ -118,6 +119,7 @@ func (c *Controller) start(x *core.V2Core) error {
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
 	c.info = node
+	c.restoreSSUsers()
 	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
 		behavior.AddRecorder(c.tag)
 	}

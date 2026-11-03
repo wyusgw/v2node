@@ -186,6 +186,7 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		c.server.CloseUserLinks(c.tag, speedToggled)
 	}
 	c.userList = newU
+	c.updateSSUsers(deleted, added)
 	c.clearFault("users")
 	log.WithField("tag", c.tag).Infof("%d user deleted, %d user added, %d user modified", len(deleted), len(added), len(modified))
 	return nil
