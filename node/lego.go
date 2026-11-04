@@ -40,7 +40,8 @@ func NewLego(config *panel.CertInfo) (*Lego, error) {
 		return nil, fmt.Errorf("create user error: %s", err)
 	}
 	c := lego.NewConfig(user)
-	c.Certificate.KeyType = certcrypto.RSA2048
+	// ECDSA: far cheaper to sign with than RSA on every TLS handshake.
+	c.Certificate.KeyType = certcrypto.EC256
 	client, err := lego.NewClient(c)
 	if err != nil {
 		return nil, err

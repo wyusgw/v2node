@@ -3,8 +3,9 @@ package node
 import (
 	"bytes"
 	"context"
+	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/rand"
-	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
 	"crypto/x509/pkix"
@@ -151,8 +152,14 @@ func fileContentIs(path, content string) bool {
 	return err == nil && string(data) == content
 }
 
+// generateSelfSslCertificate uses an ECDSA P-256 key: the server signs once
+// per TLS handshake, and an RSA-2048 signature costs many times as much CPU,
+// which dominated nodes that take many new connections.
 func generateSelfSslCertificate(domain, certPath, keyPath string) error {
-	key, _ := rsa.GenerateKey(rand.Reader, 2048)
+	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		return err
+	}
 	tmpl := &x509.Certificate{
 		Version:      3,
 		SerialNumber: big.NewInt(time.Now().Unix()),
@@ -161,7 +168,7 @@ func generateSelfSslCertificate(domain, certPath, keyPath string) error {
 		},
 		DNSNames:              []string{domain},
 		BasicConstraintsValid: true,
-		KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		NotBefore:             time.Now(),
 		NotAfter:              time.Now().AddDate(30, 0, 0),
@@ -177,8 +184,12 @@ func generateSelfSslCertificate(domain, certPath, keyPath string) error {
 	if err != nil {
 		return err
 	}
+	der, err := x509.MarshalECPrivateKey(key)
+	if err != nil {
+		return err
+	}
 	return os.WriteFile(keyPath, pem.EncodeToMemory(&pem.Block{
-		Type:  "RSA PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(key),
+		Type:  "EC PRIVATE KEY",
+		Bytes: der,
 	}), 0600)
 }
