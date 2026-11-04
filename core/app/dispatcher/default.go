@@ -148,6 +148,19 @@ func (*DefaultDispatcher) Start() error {
 // Close implements common.Closable.
 func (*DefaultDispatcher) Close() error { return nil }
 
+// getLinkManager returns email's LinkManager, creating it atomically so two
+// concurrent first connections can't each store their own and orphan one
+// (whose links CloseAll would then never reach).
+func (d *DefaultDispatcher) getLinkManager(email string) *LinkManager {
+	if v, ok := d.LinkManagers.Load(email); ok {
+		return v.(*LinkManager)
+	}
+	v, _ := d.LinkManagers.LoadOrStore(email, &LinkManager{
+		links: make(map[*ManagedWriter]buf.Reader),
+	})
+	return v.(*LinkManager)
+}
+
 func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *transport.Link, *limiter.Limiter, *behaviorTracker, error) {
 	opt := pipe.OptionsFromContext(ctx)
 	uplinkReader, uplinkWriter := pipe.New(opt...)
@@ -193,25 +206,19 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			common.Interrupt(inboundLink.Reader)
 			return nil, nil, nil, nil, errors.New("Limited ", user.Email, " by conn or ip")
 		}
-		var lm *LinkManager
-		if lmloaded, ok := d.LinkManagers.Load(user.Email); !ok {
-			lm = &LinkManager{
-				links: make(map[*ManagedWriter]buf.Reader),
-			}
-			d.LinkManagers.Store(user.Email, lm)
-		} else {
-			lm = lmloaded.(*LinkManager)
-		}
+		lm := d.getLinkManager(user.Email)
 		managedWriter := &ManagedWriter{
 			writer:   uplinkWriter,
 			manager:  lm,
 			downlink: []interface{}{downlinkReader, downlinkWriter},
+			ip:       strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
 		}
 		lm.AddLink(managedWriter, outboundLink.Reader)
 		inboundLink.Writer = managedWriter
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			// inboundLink.Writer 是上行(客户端→目标)，outboundLink.Writer 是下行，各用各的桶
+			// inboundLink.Writer is the uplink (client to target) and outboundLink.Writer the
+			// downlink, each with its own bucket
 			inboundLink.Writer = rate.NewRateLimitWriter(inboundLink.Writer, w.Up)
 			outboundLink.Writer = rate.NewRateLimitWriter(outboundLink.Writer, w.Down)
 		}
@@ -394,30 +401,25 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			common.Interrupt(outbound.Reader)
 			return errors.New("Limited ", user.Email, " by conn or ip")
 		}
-		var lm *LinkManager
-		if lmloaded, ok := d.LinkManagers.Load(user.Email); !ok {
-			lm = &LinkManager{
-				links: make(map[*ManagedWriter]buf.Reader),
-			}
-			d.LinkManagers.Store(user.Email, lm)
-		} else {
-			lm = lmloaded.(*LinkManager)
-		}
+		lm := d.getLinkManager(user.Email)
 		managedWriter := &ManagedWriter{
 			writer:  outbound.Writer,
 			manager: lm,
+			ip:      strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
 		}
 		outbound.Writer = managedWriter
-		// 客户端连接直接交给 DispatchLink 时，关闭/中断底层读写不一定能断开连接，
-		// 由 ManagedReader 在连接被 CloseAll 后让下一次读取报错，确保断开生效
+		// Closing or interrupting a client connection handed to DispatchLink may not
+		// disconnect it, so ManagedReader fails the next read once CloseAll has run
 		outbound.Reader = NewManagedReader(outbound.Reader, managedWriter)
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			// outbound.Writer 是下行；上行没有可包的 Writer，改为限速读取客户端数据
+			// outbound.Writer is the downlink; the uplink has no writer to wrap, so client
+			// reads are rate limited instead
 			outbound.Writer = rate.NewRateLimitWriter(outbound.Writer, w.Down)
-			// mieru 会先把客户端上传的数据收进自己几十 MB 的会话缓冲，在这里限速只能限住转发出去的速度，
-			// 客户端照样满速上传；改为在原始 TCP 连接上限速读取，让客户端自身被限住。找不到原始连接
-			// （如 UDP 底层）时退回到限速读取
+			// mieru buffers tens of MB of client uploads per session, so limiting here only
+			// slows forwarding while the client keeps uploading at full speed. Limit reads on
+			// the raw TCP connection instead, falling back to reader limiting when there is
+			// none (e.g. over UDP)
 			if !(sessionInbound.Name == "mieru" && mieru.AttachIngressLimiter(sessionInbound.Source.NetAddr(), w.Up)) {
 				outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
 			}

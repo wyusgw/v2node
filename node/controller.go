@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
+	"sync/atomic"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
@@ -20,6 +22,7 @@ type Controller struct {
 	tag                     string
 	limiter                 *limiter.Limiter
 	userList                []panel.UserInfo
+	ssRemoved               []ssRemovedUser // see ssusers.go
 	aliveMap                map[int]int
 	conf                    *conf.NodeConfig
 	info                    *panel.NodeInfo
@@ -27,6 +30,13 @@ type Controller struct {
 	userReportPeriodic      *task.Task
 	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
+	faultMu                 sync.Mutex
+	faults                  map[string]string
+	faultReported           string
+	faultSynced             bool
+	// userNum is len(userList) for the traffic report task, which runs on
+	// its own goroutine while nodeInfoMonitor replaces userList.
+	userNum atomic.Int64
 }
 
 // NewController return a Node controller with default parameters.
@@ -41,6 +51,15 @@ func NewController(api *panel.Client, conf *conf.NodeConfig, info *panel.NodeInf
 
 // Start implement the Start() function of the service interface
 func (c *Controller) Start(x *core.V2Core) error {
+	if err := c.start(x); err != nil {
+		c.setFault("start", err.Error())
+		return err
+	}
+	c.clearFault("start")
+	return nil
+}
+
+func (c *Controller) start(x *core.V2Core) error {
 	// Init Core
 	c.server = x
 	var err error
@@ -61,6 +80,7 @@ func (c *Controller) Start(x *core.V2Core) error {
 	if len(c.userList) == 0 {
 		return errors.New("add users error: not have any user")
 	}
+	c.userNum.Store(int64(len(c.userList)))
 	c.aliveMap, err = c.apiClient.GetUserAlive(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to get user alive list: %s", err)
@@ -104,6 +124,7 @@ func (c *Controller) Start(x *core.V2Core) error {
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
 	c.info = node
+	c.restoreSSUsers()
 	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
 		behavior.AddRecorder(c.tag)
 	}

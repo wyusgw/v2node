@@ -23,6 +23,9 @@ type ManagedWriter struct {
 	// upload side leaves data from the target still flowing to the client,
 	// so CloseAll interrupts this one as well.
 	downlink []interface{}
+	// ip is the client address the link was opened from, so CloseIP can
+	// drop a single device without touching the user's other links.
+	ip string
 }
 
 func (w *ManagedWriter) WriteMultiBuffer(mb buf.MultiBuffer) error {
@@ -71,6 +74,14 @@ func (w *ManagedWriter) Close() error {
 	return common.Close(w.writer)
 }
 
+// Interrupt forwards a real interrupt to the underlying pipe. Without it,
+// common.Interrupt falls back to Close, which lets a failed connection's
+// buffered data be drained instead of released right away.
+func (w *ManagedWriter) Interrupt() {
+	w.manager.RemoveWriter(w)
+	common.Interrupt(w.writer)
+}
+
 type LinkManager struct {
 	links  map[*ManagedWriter]buf.Reader
 	mu     sync.RWMutex
@@ -106,12 +117,38 @@ func (m *LinkManager) CloseAll() {
 	m.mu.Unlock()
 
 	for w, r := range links {
-		w.killed.Store(true)
-		for _, p := range w.downlink {
-			common.Interrupt(p)
-			common.Close(p)
-		}
-		common.Close(w.writer)
-		common.Interrupt(r)
+		killLink(w, r)
 	}
+}
+
+// CloseIP drops only the links opened from ip. Unlike CloseAll the manager
+// stays open, so the user's other devices keep connecting through it.
+func (m *LinkManager) CloseIP(ip string) {
+	m.mu.Lock()
+	if m.closed {
+		m.mu.Unlock()
+		return
+	}
+	links := make(map[*ManagedWriter]buf.Reader)
+	for w, r := range m.links {
+		if w.ip == ip {
+			links[w] = r
+			delete(m.links, w)
+		}
+	}
+	m.mu.Unlock()
+
+	for w, r := range links {
+		killLink(w, r)
+	}
+}
+
+func killLink(w *ManagedWriter, r buf.Reader) {
+	w.killed.Store(true)
+	for _, p := range w.downlink {
+		common.Interrupt(p)
+		common.Close(p)
+	}
+	common.Close(w.writer)
+	common.Interrupt(r)
 }

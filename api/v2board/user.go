@@ -58,7 +58,8 @@ type UserListBody struct {
 }
 
 type AliveMap struct {
-	Alive map[int]int `json:"alive"`
+	Alive map[int]int            `json:"alive"` // Key: Uid, value: alive_ip
+	Kick  map[int]map[string]int `json:"kick"`  // Key: Uid, value: {Key: Ip, value: seconds blocked}
 }
 
 // GetUserList will pull user from v2board

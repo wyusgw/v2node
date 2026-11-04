@@ -95,6 +95,10 @@ func (w *Writer) Close() error {
 	return common.Close(w.writer)
 }
 
+func (w *Writer) Interrupt() {
+	common.Interrupt(w.writer)
+}
+
 func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	limiter := w.limiter.Get()
 	if limiter != nil {

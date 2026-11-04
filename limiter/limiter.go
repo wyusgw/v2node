@@ -3,6 +3,7 @@ package limiter
 import (
 	"context"
 	"errors"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -33,6 +34,7 @@ type Limiter struct {
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
 	SpeedLimiter  *sync.Map      // key: TagUUID, value: *rate.DuplexBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
+	Kicked        *sync.Map      // Key: "Uid|Ip", value: unix time the kick block ends
 	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
 }
 
@@ -53,6 +55,7 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		UserLimitInfo: new(sync.Map),
 		SpeedLimiter:  new(sync.Map),
 		AliveList:     aliveList,
+		Kicked:        new(sync.Map),
 		Client:        client,
 	}
 	uuidmap := make(map[string]int)
@@ -100,21 +103,22 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		delete(l.AliveList, deleted[i].Id)
 	}
 	for i := range modified {
-		if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, modified[i].Uuid)); ok {
-			u := v.(*UserLimitInfo)
+		key := format.UserTag(tag, modified[i].Uuid)
+		deviceLimitChanged := false
+		l.updateInfo(key, func(u *UserLimitInfo) {
 			u.SpeedLimit = modified[i].SpeedLimitBytes()
 			u.SpeedLimitUp = modified[i].SpeedLimitUpBytes()
-			if u.DeviceLimit != modified[i].DeviceLimit {
-				// Devices already admitted this report cycle won't be
-				// re-checked against the limit until the cycle rolls over
-				// (up to one PushInterval away). Drop this user's
-				// per-cycle tracking now so the very next connection from
-				// every device re-earns admission under the new limit
-				// immediately instead of waiting for that rollover.
-				l.clearOnlineState(format.UserTag(tag, modified[i].Uuid))
-			}
+			deviceLimitChanged = u.DeviceLimit != modified[i].DeviceLimit
 			u.DeviceLimit = modified[i].DeviceLimit
-			l.UserLimitInfo.Store(format.UserTag(tag, modified[i].Uuid), u)
+		})
+		if deviceLimitChanged {
+			// Devices already admitted this report cycle won't be
+			// re-checked against the limit until the cycle rolls over
+			// (up to one PushInterval away). Drop this user's
+			// per-cycle tracking now so the very next connection from
+			// every device re-earns admission under the new limit
+			// immediately instead of waiting for that rollover.
+			l.clearOnlineState(key)
 		}
 		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
 		up := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitUpBytes())
@@ -147,14 +151,31 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 }
 
 func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire time.Time) error {
-	if v, ok := l.UserLimitInfo.Load(format.UserTag(tag, uuid)); ok {
-		info := v.(*UserLimitInfo)
-		info.DynamicSpeedLimit = panel.MbpsToBytes(limit)
-		info.ExpireTime = expire.Unix()
-	} else {
+	if !l.updateInfo(format.UserTag(tag, uuid), func(u *UserLimitInfo) {
+		u.DynamicSpeedLimit = panel.MbpsToBytes(limit)
+		u.ExpireTime = expire.Unix()
+	}) {
 		return errors.New("not found")
 	}
 	return nil
+}
+
+// updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
+// copy. CheckLimit reads these entries without a lock on every new
+// connection, so they are never modified in place.
+func (l *Limiter) updateInfo(key string, fn func(*UserLimitInfo)) bool {
+	for {
+		v, ok := l.UserLimitInfo.Load(key)
+		if !ok {
+			return false
+		}
+		old := v.(*UserLimitInfo)
+		u := *old
+		fn(&u)
+		if l.UserLimitInfo.CompareAndSwap(key, old, &u) {
+			return true
+		}
+	}
 }
 
 func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bucket *rate.DuplexBucket, Reject bool) {
@@ -171,19 +192,24 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 		deviceLimit = u.DeviceLimit
 		uid = u.UID
 		if u.ExpireTime < time.Now().Unix() && u.ExpireTime != 0 {
-			if u.SpeedLimit != 0 || u.SpeedLimitUp != 0 {
-				userLimit = u.SpeedLimit
-				userLimitUp = u.SpeedLimitUp
-				u.DynamicSpeedLimit = 0
-				u.ExpireTime = 0
-			} else {
-				l.UserLimitInfo.Delete(taguuid)
-			}
+			// The dynamic limit has expired: fall back to the user's own
+			// limits. The entry must stay - a missing entry means "unknown
+			// user" and every later connection would be rejected.
+			userLimit = u.SpeedLimit
+			userLimitUp = u.SpeedLimitUp
+			expired := *u
+			expired.DynamicSpeedLimit = 0
+			expired.ExpireTime = 0
+			// Lose to a concurrent update rather than overwrite it.
+			l.UserLimitInfo.CompareAndSwap(taguuid, u, &expired)
 		} else {
 			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
 			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)
 		}
 	} else {
+		return nil, true
+	}
+	if l.isKicked(uid, ip) {
 		return nil, true
 	}
 	// Store online user for device limit. This runs for every inbound
@@ -248,6 +274,48 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	} else {
 		return nil, false
 	}
+}
+
+func kickKey(uid int, ip string) string {
+	return strconv.Itoa(uid) + "|" + ip
+}
+
+func (l *Limiter) isKicked(uid int, ip string) bool {
+	v, ok := l.Kicked.Load(kickKey(uid, ip))
+	return ok && v.(int64) > time.Now().Unix()
+}
+
+// ApplyKicks blocks the ips the panel kicked offline until their block ends,
+// and drops them from this cycle's admitted set so they aren't reported as
+// online again. Expired blocks are cleared here as well.
+func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
+	now := time.Now().Unix()
+	l.Kicked.Range(func(key, value interface{}) bool {
+		if value.(int64) <= now {
+			l.Kicked.Delete(key)
+		}
+		return true
+	})
+	if len(kicks) == 0 {
+		return
+	}
+	for uid, ips := range kicks {
+		for ip, seconds := range ips {
+			l.Kicked.Store(kickKey(uid, ip), now+int64(seconds))
+		}
+	}
+	l.UserOnlineIP.Range(func(_, value interface{}) bool {
+		ipMap := value.(*sync.Map)
+		ipMap.Range(func(key, value interface{}) bool {
+			if ips, ok := kicks[value.(int)]; ok {
+				if _, ok := ips[key.(string)]; ok {
+					ipMap.Delete(key)
+				}
+			}
+			return true
+		})
+		return true
+	})
 }
 
 // clearOnlineState drops taguuid's per-cycle admitted-IP set, so the next

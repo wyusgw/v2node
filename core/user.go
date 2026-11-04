@@ -17,7 +17,7 @@ import (
 	"github.com/xtls/xray-core/infra/conf"
 	"github.com/xtls/xray-core/proxy"
 	"github.com/xtls/xray-core/proxy/anytls"
-	hyaccount "github.com/xtls/xray-core/proxy/hysteria/account"
+	hyaccount "github.com/xtls/xray-core/proxy/hysteria2/account"
 	"github.com/xtls/xray-core/proxy/mieru"
 	"github.com/xtls/xray-core/proxy/shadowsocks"
 	"github.com/xtls/xray-core/proxy/shadowsocks_2022"
@@ -26,7 +26,8 @@ import (
 	"github.com/xtls/xray-core/proxy/vless"
 )
 
-func (v *V2Core) GetUserManager(tag string) (proxy.UserManager, error) {
+// getUserManager expects the caller to hold v.access.
+func (v *V2Core) getUserManager(tag string) (proxy.UserManager, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	handler, err := v.ihm.GetHandler(ctx, tag)
@@ -45,7 +46,12 @@ func (v *V2Core) GetUserManager(tag string) (proxy.UserManager, error) {
 }
 
 func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo) error {
-	userManager, err := vc.GetUserManager(tag)
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.ihm == nil {
+		return errCoreClosed
+	}
+	userManager, err := vc.getUserManager(tag)
 	if err != nil {
 		return fmt.Errorf("get user manager error: %s", err)
 	}
@@ -80,6 +86,11 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 // rate limiter (and may be using zero-copy splice), and ones opened while
 // limited keep their bucket, so neither would otherwise pick up the change.
 func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return
+	}
 	for i := range users {
 		user := format.UserTag(tag, users[i].Uuid)
 		if v, ok := vc.dispatcher.LinkManagers.LoadAndDelete(user); ok {
@@ -88,7 +99,31 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	}
 }
 
+// CloseIPLinks drops the connections users have open from the given ips,
+// keyed by uuid. Used when the panel kicks a device offline, leaving the
+// user's other devices connected.
+func (vc *V2Core) CloseIPLinks(tag string, links map[string][]string) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return
+	}
+	for uuid, ips := range links {
+		if v, ok := vc.dispatcher.LinkManagers.Load(format.UserTag(tag, uuid)); ok {
+			lm := v.(*dispatcher.LinkManager)
+			for _, ip := range ips {
+				lm.CloseIP(ip)
+			}
+		}
+	}
+}
+
 func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserTraffic, error) {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return nil, errCoreClosed
+	}
 	trafficSlice := make([]panel.UserTraffic, 0)
 	vc.users.mapLock.RLock()
 	defer vc.users.mapLock.RUnlock()
@@ -100,8 +135,11 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 			up := traffic.UpCounter.Load()
 			down := traffic.DownCounter.Load()
 			if up+down > int64(mintraffic*1000) {
-				traffic.UpCounter.Store(0)
-				traffic.DownCounter.Store(0)
+				// Swap rather than Store(0): traffic counted by live
+				// connections between the Load above and here would
+				// otherwise be dropped instead of reported.
+				up = traffic.UpCounter.Swap(0)
+				down = traffic.DownCounter.Swap(0)
 				if vc.users.uidMap[email] == 0 {
 					c.Delete(email)
 					return true
@@ -178,7 +216,48 @@ func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 	}
 }
 
+type ssRetirer interface {
+	RetireUsers(context.Context, []*protocol.MemoryUser)
+}
+
+var _ ssRetirer = (*shadowsocks.Server)(nil)
+
+// RetireSSUsers tells the Shadowsocks (not 2022) inbound tag about users
+// removed while it was not running, so that it recognizes their clients that
+// keep reconnecting instead of rate-limiting their source IP, which may be a
+// relay shared with other users.
+func (v *V2Core) RetireSSUsers(tag string, users []panel.UserInfo, cipher string) error {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return errCoreClosed
+	}
+	man, err := v.getUserManager(tag)
+	if err != nil {
+		return fmt.Errorf("get user manager error: %s", err)
+	}
+	retirer, ok := man.(ssRetirer)
+	if !ok {
+		return fmt.Errorf("inbound %s cannot retire users", tag)
+	}
+	mUsers := make([]*protocol.MemoryUser, 0, len(users))
+	for i := range users {
+		mUser, err := buildSSUser(tag, &users[i], cipher, "").ToMemoryUser()
+		if err != nil {
+			return err
+		}
+		mUsers = append(mUsers, mUser)
+	}
+	retirer.RetireUsers(context.Background(), mUsers)
+	return nil
+}
+
 func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return 0, errCoreClosed
+	}
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()
 	for i := range p.Users {
@@ -197,7 +276,7 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 			p.Users,
 			p.Common.Cipher,
 			p.Common.ServerKey)
-	case "hysteria2":
+	case "hysteria", "hysteria2":
 		users = buildHysteria2Users(p.Tag, p.Users)
 	case "tuic":
 		users = buildTuicUsers(p.Tag, p.Users)
@@ -208,7 +287,7 @@ func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
 	default:
 		return 0, fmt.Errorf("unsupported node type: %s", p.NodeInfo.Type)
 	}
-	man, err := v.GetUserManager(p.Tag)
+	man, err := v.getUserManager(p.Tag)
 	if err != nil {
 		return 0, fmt.Errorf("get user manager error: %s", err)
 	}
@@ -306,15 +385,7 @@ func buildSSUser(tag string, userInfo *panel.UserInfo, cypher string, serverKey 
 			Account: serial.ToTypedMessage(ssAccount),
 		}
 	} else {
-		var keyLength int
-		switch cypher {
-		case "2022-blake3-aes-128-gcm":
-			keyLength = 16
-		case "2022-blake3-aes-256-gcm":
-			keyLength = 32
-		case "2022-blake3-chacha20-poly1305":
-			keyLength = 32
-		}
+		keyLength := ss2022KeyLength(cypher)
 		ssAccount := &shadowsocks_2022.Account{
 			Key: base64.StdEncoding.EncodeToString([]byte(userInfo.Uuid[:keyLength])),
 		}
@@ -324,6 +395,15 @@ func buildSSUser(tag string, userInfo *panel.UserInfo, cypher string, serverKey 
 			Account: serial.ToTypedMessage(ssAccount),
 		}
 	}
+}
+
+// ss2022KeyLength returns the key length in bytes of a Shadowsocks 2022
+// cipher.
+func ss2022KeyLength(cipher string) int {
+	if cipher == "2022-blake3-aes-128-gcm" {
+		return 16
+	}
+	return 32
 }
 
 func getCipherFromString(c string) shadowsocks.CipherType {

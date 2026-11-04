@@ -7,6 +7,11 @@ import (
 )
 
 func (v *V2Core) AddNode(tag string, info *panel.NodeInfo, users []panel.UserInfo) error {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return errCoreClosed
+	}
 	inBoundConfig, err := buildInbound(info, tag, users)
 	if err != nil {
 		return fmt.Errorf("build inbound error: %s", err)
@@ -19,6 +24,11 @@ func (v *V2Core) AddNode(tag string, info *panel.NodeInfo, users []panel.UserInf
 }
 
 func (v *V2Core) DelNode(tag string) error {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return errCoreClosed
+	}
 	err := v.removeInbound(tag)
 	if err != nil {
 		return fmt.Errorf("remove in error: %s", err)

@@ -41,7 +41,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 	// it - not a locally-tracked online-history set, so this is the count
 	// of currently-valid-subscription users regardless of whether they've
 	// ever connected.
-	logSummary(log.WarnLevel, "current user num: %d", len(c.userList))
+	logSummary(log.WarnLevel, "current user num: %d", c.userNum.Load())
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
 	if len(userTraffic) > 0 {

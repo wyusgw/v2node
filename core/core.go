@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -28,13 +29,17 @@ type AddUsersParams struct {
 type V2Core struct {
 	Config     *conf.Conf
 	ReloadCh   chan struct{}
-	access     sync.Mutex
+	access     sync.RWMutex // Start/Close hold it exclusively; calls from node tasks hold it shared
 	Server     *core.Instance
 	users      *UserMap
 	ihm        inbound.Manager
 	ohm        outbound.Manager
 	dispatcher *dispatcher.DefaultDispatcher
 }
+
+// errCoreClosed is returned by calls that arrive after Close, e.g. from a node
+// task that was still running when a reload closed this core.
+var errCoreClosed = errors.New("core is closed")
 
 type UserMap struct {
 	uidMap  map[string]int
@@ -94,14 +99,15 @@ func getCore(c *conf.Conf, infos []*panel.NodeInfo) *core.Instance {
 	var inBoundConfig []*core.InboundHandlerConfig
 
 	// Policy config
+	cc := c.ConnectionConfig
 	levelPolicyConfig := &coreConf.Policy{
 		StatsUserUplink:   true,
 		StatsUserDownlink: true,
-		Handshake:         proto.Uint32(4),
-		ConnectionIdle:    proto.Uint32(120),
-		UplinkOnly:        proto.Uint32(2),
-		DownlinkOnly:      proto.Uint32(4),
-		BufferSize:        proto.Int32(128),
+		Handshake:         proto.Uint32(cc.Handshake),
+		ConnectionIdle:    proto.Uint32(cc.ConnIdle),
+		UplinkOnly:        proto.Uint32(cc.UplinkOnly),
+		DownlinkOnly:      proto.Uint32(cc.DownlinkOnly),
+		BufferSize:        proto.Int32(cc.BufferSize),
 	}
 	corePolicyConfig := &coreConf.PolicyConfig{}
 	corePolicyConfig.Levels = map[uint32]*coreConf.Policy{0: levelPolicyConfig}

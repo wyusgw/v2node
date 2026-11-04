@@ -21,6 +21,7 @@ type Client struct {
 	Token            string
 	NodeId           int
 	NodeType         string
+	CertDir          string
 	nodeEtag         string
 	userEtag         string
 	responseBodyHash string
@@ -38,6 +39,7 @@ var pinnedNodeTypes = map[string]bool{
 	"vmess":       true,
 	"trojan":      true,
 	"shadowsocks": true,
+	"hysteria":    true,
 	"hysteria2":   true,
 	"tuic":        true,
 	"anytls":      true,
@@ -85,6 +87,7 @@ func New(c *conf.NodeConfig) (*Client, error) {
 		APIHost:  c.APIHost,
 		NodeId:   c.NodeID,
 		NodeType: nodeType,
+		CertDir:  c.CertDir,
 		UserList: &UserListBody{},
 		AliveMap: &AliveMap{},
 	}, nil

@@ -69,6 +69,7 @@ func serverHandle(_ *cobra.Command, _ []string) {
 		}
 		log.SetOutput(f)
 	}
+	setMemoryLimitFromCgroup()
 	// Enable pprof if configured
 	if c.PprofPort != 0 {
 		go func() {
@@ -94,6 +95,7 @@ func serverHandle(_ *cobra.Command, _ []string) {
 	err = v2core.Start(nodes.NodeInfos)
 	if err != nil {
 		log.WithField("err", err).Error("Start core failed")
+		nodes.SetFault("core", err.Error())
 		return
 	}
 	defer v2core.Close()
@@ -126,14 +128,14 @@ func serverHandle(_ *cobra.Command, _ []string) {
 	for {
 		select {
 		case <-osSignals:
-			log.Info("收到退出信号，正在关闭程序...")
+			log.Info("Exit signal received, shutting down...")
 			os.Exit(0)
 		case <-reloadCh:
-			log.Info("收到重启信号，正在重新加载配置...")
+			log.Info("Restart signal received, reloading the configuration...")
 			if err := reload(config, &nodes, &v2core); err != nil {
-				log.WithField("err", err).Panic("重启失败")
+				log.WithField("err", err).Panic("Restart failed")
 			}
-			log.Info("重启成功")
+			log.Info("Restart succeeded")
 		}
 	}
 }
@@ -190,6 +192,7 @@ func reload(config string, nodes **node.Node, v2core **core.V2Core) error {
 	// Reattach reload channel
 	newCore.ReloadCh = oldReloadCh
 	if err := newCore.Start(newNodes.NodeInfos); err != nil {
+		newNodes.SetFault("core", err.Error())
 		return err
 	}
 
