@@ -369,7 +369,9 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 	cipher := s.Cipher
 	if s.ServerKey != "" {
 		settings.Password = s.ServerKey
-		randomPasswd = base64.StdEncoding.EncodeToString([]byte(randomPasswd))
+		// A 2022 user key must be exactly the cipher's key length, or the
+		// inbound refuses to start.
+		randomPasswd = base64.StdEncoding.EncodeToString(p[:ss2022KeyLength(s.Cipher)])
 		cipher = ""
 	}
 	defaultSSuser := &coreConf.ShadowsocksUserConfig{
