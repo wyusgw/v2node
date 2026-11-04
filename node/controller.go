@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"sync/atomic"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
@@ -33,6 +34,9 @@ type Controller struct {
 	faults                  map[string]string
 	faultReported           string
 	faultSynced             bool
+	// userNum is len(userList) for the traffic report task, which runs on
+	// its own goroutine while nodeInfoMonitor replaces userList.
+	userNum atomic.Int64
 }
 
 // NewController return a Node controller with default parameters.
@@ -76,6 +80,7 @@ func (c *Controller) start(x *core.V2Core) error {
 	if len(c.userList) == 0 {
 		return errors.New("add users error: not have any user")
 	}
+	c.userNum.Store(int64(len(c.userList)))
 	c.aliveMap, err = c.apiClient.GetUserAlive(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to get user alive list: %s", err)
