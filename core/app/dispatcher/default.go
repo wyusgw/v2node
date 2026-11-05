@@ -212,6 +212,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			manager:  lm,
 			downlink: []interface{}{downlinkReader, downlinkWriter},
 			ip:       strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
+			conn:     sessionInbound.Conn,
 		}
 		lm.AddLink(managedWriter, outboundLink.Reader)
 		inboundLink.Writer = managedWriter
@@ -406,6 +407,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			writer:  outbound.Writer,
 			manager: lm,
 			ip:      strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
+			conn:    sessionInbound.Conn,
 		}
 		outbound.Writer = managedWriter
 		// Closing or interrupting a client connection handed to DispatchLink may not

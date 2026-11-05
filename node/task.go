@@ -182,6 +182,10 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		// update Limiter
 		c.limiter.UpdateUser(c.tag, added, deleted, modified)
 	}
+	if len(deleted) > 0 {
+		// Links opened after DelUsers closed the old ones, while the limiter still knew the user
+		c.server.CloseUserLinks(c.tag, deleted)
+	}
 	if len(speedToggled) > 0 {
 		c.server.CloseUserLinks(c.tag, speedToggled)
 	}

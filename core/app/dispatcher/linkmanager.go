@@ -8,6 +8,7 @@ import (
 
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
+	"github.com/xtls/xray-core/common/net"
 )
 
 type ManagedWriter struct {
@@ -26,6 +27,11 @@ type ManagedWriter struct {
 	// ip is the client address the link was opened from, so CloseIP can
 	// drop a single device without touching the user's other links.
 	ip string
+	// conn is the client connection, nil when the inbound has none (e.g. UDP).
+	// Zero-copy splice runs on the raw sockets and never touches the pipes, so
+	// only closing the connection ends it. Mux streams share it, which is fine:
+	// they belong to the same user and device.
+	conn net.Conn
 }
 
 func (w *ManagedWriter) WriteMultiBuffer(mb buf.MultiBuffer) error {
@@ -90,9 +96,14 @@ type LinkManager struct {
 
 func (m *LinkManager) AddLink(writer *ManagedWriter, reader buf.Reader) {
 	m.mu.Lock()
-	defer m.mu.Unlock()
-	if !m.closed {
+	closed := m.closed
+	if !closed {
 		m.links[writer] = reader
+	}
+	m.mu.Unlock()
+	// CloseAll ran after this link passed the limiter check, nothing else would stop it
+	if closed {
+		killLink(writer, reader)
 	}
 }
 
@@ -151,4 +162,8 @@ func killLink(w *ManagedWriter, r buf.Reader) {
 	}
 	common.Close(w.writer)
 	common.Interrupt(r)
+	if w.conn != nil {
+		// TLS close can wait on a stalled client to send its alert
+		go w.conn.Close()
+	}
 }
