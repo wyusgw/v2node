@@ -10,16 +10,9 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-// logSummary writes a compact "timestamp\tLEVEL\tmessage" status line
-// directly to the same output the rest of the app logs to (respecting
-// -o/Log.Output), instead of the tag=/err= key=value fields logrus's
-// TextFormatter attaches to every other log call. These three lines are
-// meant to be read as an at-a-glance status feed, not troubleshooting
-// detail, so they're deliberately logged at Warn severity - that's what
-// keeps them visible at the normal "warning" Log.Level instead of
-// requiring "info" - while still displaying as "INFO" since that's what
-// they semantically are. minLevel gates them the same way any other log
-// call is gated by the configured level.
+// logSummary writes a compact "timestamp\tLEVEL\tmessage" status line to the app's log output,
+// without logrus's key=value fields. The lines are logged at Warn severity to stay visible at
+// the normal Log.Level, but display as INFO; minLevel gates them like any other log call.
 func logSummary(minLevel log.Level, format string, args ...interface{}) {
 	if log.GetLevel() < minLevel {
 		return
@@ -36,11 +29,8 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 		devicemin = c.info.Common.BaseConfig.DeviceOnlineMinTraffic
 	}
 
-	// c.userList is the panel's /user response for this node, which only
-	// ever contains users with a currently valid subscription assigned to
-	// it - not a locally-tracked online-history set, so this is the count
-	// of currently-valid-subscription users regardless of whether they've
-	// ever connected.
+	// c.userList only holds users with a valid subscription on this node, so this counts them
+	// whether or not they have ever connected.
 	logSummary(log.WarnLevel, "current user num: %d", c.userNum.Load())
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)

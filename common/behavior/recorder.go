@@ -1,9 +1,5 @@
-// Package behavior buffers per-connection "what did this user visit"
-// records (domain, port, network, connect time, duration, up/down bytes)
-// per inbound tag, so the node controller can periodically drain and report
-// them to the panel. Recording is opt-in per tag: nothing is buffered for a
-// tag unless AddRecorder has been called for it, which keeps the feature at
-// zero cost when disabled (the default).
+// Package behavior buffers per-connection visit records per inbound tag for the node
+// controller to drain and report. Nothing is buffered for a tag until AddRecorder is called.
 package behavior
 
 import (
@@ -11,11 +7,8 @@ import (
 	"time"
 )
 
-// Entry is one completed connection's behavior record. Email is the raw
-// inbound-tagged user identifier (dispatcher session user.Email, i.e.
-// format.UserTag(tag, uuid)) rather than a resolved panel UID, since the
-// dispatcher package has no access to the tag/uuid -> UID map maintained by
-// core.V2Core; callers resolve it when draining (see core.GetBehaviorSlice).
+// Entry is one completed connection's behavior record. Email is the raw inbound-tagged user
+// identifier, as the dispatcher has no tag/uuid -> UID map; core.GetBehaviorSlice resolves it.
 type Entry struct {
 	Email       string
 	SourceIP    string

@@ -80,11 +80,8 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 	return nil
 }
 
-// CloseUserLinks drops every open connection of the given users so they
-// reconnect under the current limits. Used when a user's speed limit switches
-// between limited and unlimited: connections opened while unlimited carry no
-// rate limiter (and may be using zero-copy splice), and ones opened while
-// limited keep their bucket, so neither would otherwise pick up the change.
+// CloseUserLinks drops the given users' open connections so they reconnect under the current
+// limits: a speed limit switching between limited and unlimited doesn't reach existing ones.
 func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -160,12 +157,8 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 	return nil, nil
 }
 
-// GetBehaviorSlice drains this tag's buffered behavior records (see
-// common/behavior) and resolves each one's dispatcher-session email back to
-// a panel UID via the same tag+uuid -> UID map GetUserTrafficSlice uses.
-// Records whose email isn't in the map (e.g. the user was removed between
-// connecting and this drain) are dropped rather than reported with a UID of
-// 0.
+// GetBehaviorSlice drains tag's behavior records and resolves each email to a panel UID.
+// Records of users no longer in the map are dropped rather than reported with UID 0.
 func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	entries := behavior.Drain(tag)
 	if len(entries) == 0 {
@@ -197,17 +190,9 @@ func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	return records, nil
 }
 
-// RegisterUidMap populates the tag+uuid -> panel UID lookup that
-// GetUserTrafficSlice uses to resolve a traffic counter's email back to a
-// user. mieru's initial user set is baked into the inbound config at
-// construction time by AddNode, because its listener refuses to start
-// with zero users and adding them again afterward via AddUsers would
-// fail as a duplicate (see Controller.Start) — so unlike every other
-// protocol, mieru's initial users never go through AddUsers() and never
-// get a uidMap entry. Without one, GetUserTrafficSlice can't resolve
-// their traffic counters to a UID and silently drops them every
-// reporting cycle (uidMap[email] == 0 looks identical to "unknown user"),
-// so mieru's online users never get reported to the panel at all.
+// RegisterUidMap fills the tag+uuid -> UID lookup GetUserTrafficSlice needs. mieru's initial
+// users are baked into its config and never go through AddUsers, so without this their
+// traffic would be dropped silently and they would never be reported as online.
 func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()

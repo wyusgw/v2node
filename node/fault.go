@@ -30,11 +30,9 @@ func (c *Controller) clearFault(source string) {
 	c.syncFault()
 }
 
-// syncFault sends the current fault set to the panel unless the panel already
-// has it. The first sync always sends, so a fault left behind by a crashed
-// earlier run is cleared once this process starts cleanly. A failed send keeps
-// the old state, so the next sync retries it. Reporting is best effort: an
-// unreachable panel or an older panel without the fault endpoint only logs.
+// syncFault sends the current fault set unless the panel already has it. The first sync always
+// sends, clearing a fault left by a crashed run; a failed send is retried by the next sync.
+// Best effort: an unreachable or older panel only logs.
 func (c *Controller) syncFault() {
 	c.faultMu.Lock()
 	defer c.faultMu.Unlock()

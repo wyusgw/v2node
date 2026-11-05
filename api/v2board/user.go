@@ -193,13 +193,9 @@ type claimDeviceResult struct {
 	Allow bool `json:"allow"`
 }
 
-// ClaimDevice atomically checks-and-registers ip against uid's device limit
-// in the panel's Redis-backed, cross-node online-IP set, which is the only
-// way to enforce the limit correctly when a user's devices are spread across
-// more than one node: each node's own locally-cached alive count is only
-// refreshed periodically, so nodes can't see each other's admissions in
-// between syncs. Callers must treat a returned error as a reject
-// (fail-closed) rather than letting the device through.
+// ClaimDevice atomically checks and registers ip against uid's device limit in the panel's
+// cross-node online-IP set, as each node's alive count only refreshes periodically.
+// Callers must treat an error as a reject (fail-closed).
 func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimit int) (bool, error) {
 	const path = "/api/v1/server/UniProxy/claimDevice"
 	r, err := c.client.R().

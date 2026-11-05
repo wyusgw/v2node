@@ -26,12 +26,9 @@ type ConnectionConfig struct {
 	ConnIdle     uint32 `mapstructure:"ConnIdle"`
 	UplinkOnly   uint32 `mapstructure:"UplinkOnly"`
 	DownlinkOnly uint32 `mapstructure:"DownlinkOnly"`
-	// BufferSize is how much data, in KB, each connection may buffer in
-	// the node on top of the kernel socket buffers. Every connection whose
-	// client reads slower than the target sends fills it completely, and
-	// the kernel buffers already absorb bursts, so larger values cost
-	// memory without adding throughput. Only protocols that relay through
-	// an internal pipe (vmess, trojan, shadowsocks) use it.
+	// BufferSize is how much data, in KB, each connection may buffer on top of the kernel
+	// socket buffers; larger values cost memory without adding throughput. Only protocols
+	// relaying through an internal pipe (vmess, trojan, shadowsocks) use it.
 	BufferSize int32 `mapstructure:"BufferSize"`
 }
 
@@ -44,11 +41,9 @@ type LogConfig struct {
 type NodeConfig struct {
 	APIHost string `mapstructure:"ApiHost"`
 	NodeID  int    `mapstructure:"NodeID"`
-	// NodeType is optional. Leave it empty (or set it to "v2node") to let the
-	// panel's unified v2node table tell the node which protocol to run via
-	// the config API's "protocol" field. Set it to a specific protocol name
-	// (vmess/vless/trojan/shadowsocks/hysteria/hysteria2/tuic/anytls/mieru) instead to
-	// pin this node to that protocol's own table, bypassing the v2node table.
+	// NodeType is optional. Empty or "v2node" lets the panel's unified table choose the
+	// protocol; a protocol name (vmess/vless/trojan/shadowsocks/hysteria/hysteria2/tuic/
+	// anytls/mieru) pins this node to that protocol's own table.
 	NodeType   string `mapstructure:"NodeType"`
 	Key        string `mapstructure:"ApiKey"`
 	Timeout    int    `mapstructure:"Timeout"`

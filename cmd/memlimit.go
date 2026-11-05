@@ -11,12 +11,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// setMemoryLimitFromCgroup gives the Go runtime a soft memory limit of 90%
-// of the cgroup's memory limit (systemd MemoryMax, docker --memory), unless
-// GOMEMLIMIT already sets one. Without it the GC lets the heap grow to twice
-// the live data before collecting, so a node near its limit, above all one
-// whose CPU is saturated and whose GC falls behind, gets OOM-killed instead
-// of collecting harder.
+// setMemoryLimitFromCgroup sets the Go soft memory limit to 90% of the cgroup limit, unless
+// GOMEMLIMIT is set. Without it the heap can grow to twice the live data and get OOM-killed
+// instead of the GC collecting harder.
 func setMemoryLimitFromCgroup() {
 	if os.Getenv("GOMEMLIMIT") != "" {
 		return

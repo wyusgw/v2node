@@ -8,11 +8,8 @@ import (
 	"github.com/xtls/xray-core/common/net"
 )
 
-// behaviorTracker accumulates one connection's per-connection upload/download
-// byte counts (via the same XrayTrafficCounter/SizeStatWriter wiring already
-// used for the per-user aggregate counters, just pointed at connection-local
-// atomics instead of the shared per-user ones) so the totals can be read back
-// once the connection finishes.
+// behaviorTracker accumulates one connection's upload/download byte counts with the same
+// counter wiring as the per-user totals, read back once the connection finishes.
 type behaviorTracker struct {
 	tag         string
 	email       string

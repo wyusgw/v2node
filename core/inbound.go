@@ -580,16 +580,9 @@ func buildAnyTLS(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig
 	return nil
 }
 
-// buildMieru builds the mieru inbound. mieru carries traffic over its own
-// obfuscated transport and binds its own sockets, so it needs no TLS and no
-// Xray stream settings beyond the transport marker — the "mieru" network is
-// what routes the listener to transport/internet/mieru.
-//
-// Unlike Xray's own inbounds, mieru's underlying listener (mieru's Mux)
-// refuses to start at all when it has zero users — AddUser added afterwards
-// is too late, since the listener has already failed. So the fetched user
-// list is baked into the config here, at construction time, rather than left
-// for the post-AddNode AddUsers() call the other protocols rely on.
+// buildMieru builds the mieru inbound, which binds its own sockets and needs no TLS or
+// stream settings beyond the "mieru" network marker. Its listener refuses to start with
+// zero users, so the user list is baked into the config here instead of added by AddUsers.
 func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig, tag string, users []panel.UserInfo) error {
 	inbound.Protocol = "mieru"
 	s := nodeInfo.Common

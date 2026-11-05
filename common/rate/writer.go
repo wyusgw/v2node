@@ -18,14 +18,8 @@ type DynamicBucket struct {
 	v atomic.Value // *ratelimit.Bucket
 }
 
-// fillInterval controls how often the bucket is refilled. Refilling the
-// whole per-second quota in one go (fillInterval = time.Second) lets a
-// connection burst at full, uncapped speed until that quota is drained,
-// then stall until the next tick - measured/instantaneous throughput
-// spikes well above the configured limit even though the 1s average is
-// correct. Refilling in smaller slices bounds the burst size to a
-// fraction of a second, so the observed speed tracks the configured
-// limit much more precisely.
+// fillInterval is how often the bucket is refilled. Refilling a whole second's quota at once
+// lets a connection burst uncapped and then stall; small slices keep the speed near the limit.
 const fillInterval = 20 * time.Millisecond
 const ticksPerSecond = int64(time.Second / fillInterval)
 

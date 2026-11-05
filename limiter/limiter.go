@@ -112,12 +112,8 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 			u.DeviceLimit = modified[i].DeviceLimit
 		})
 		if deviceLimitChanged {
-			// Devices already admitted this report cycle won't be
-			// re-checked against the limit until the cycle rolls over
-			// (up to one PushInterval away). Drop this user's
-			// per-cycle tracking now so the very next connection from
-			// every device re-earns admission under the new limit
-			// immediately instead of waiting for that rollover.
+			// Admitted devices aren't re-checked until the report cycle rolls over, so drop
+			// this user's tracking to apply the new limit on their next connection.
 			l.clearOnlineState(key)
 		}
 		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
@@ -212,32 +208,11 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	if l.isKicked(uid, ip) {
 		return nil, true
 	}
-	// Store online user for device limit. This runs for every inbound
-	// regardless of TCP/UDP: a device whose only traffic to this node is UDP
-	// (e.g. DNS-only, or a protocol other than hysteria2/tuic that never
-	// opens a TCP connection here) used to skip this whole block and so was
-	// never subject to the device limit at all.
-	//
-	// UserOnlineIP only dedups within the current report cycle (it's wiped
-	// by GetOnlineDevice() every cycle): the first connection this cycle
-	// from a given ip always goes through claimDevice, including for a
-	// device that's been continuously online for a while. That's
-	// deliberate, not just an optimization boundary - the panel's
-	// Redis-backed claim entry for that ip has to be re-confirmed at least
-	// once per cycle, or it ages out of the shared claim set (device_claim
-	// TTL) while the device is still connected, freeing its slot for a
-	// different device to claim and letting the user exceed deviceLimit in
-	// aggregate even though no single node ever saw too many at once.
-	//
-	// An ip is only ever written into UserOnlineIP after claimDevice has
-	// confirmed it (or immediately, when there's no limit to confirm against).
-	// GetOnlineDevice() - the periodic report to the panel - runs
-	// concurrently on its own timer and takes a live snapshot of this map.
-	// claimDevice's HTTP round trip can take up to claimDeviceTimeout, so
-	// writing the ip optimistically and deleting it again on rejection would
-	// leave a window where a report snapshot lands between the write and the
-	// delete and wrongly tells the panel a device is online right before
-	// it's rejected.
+	// Applies to UDP-only devices too. UserOnlineIP is wiped every report cycle, so each ip
+	// goes through claimDevice at least once per cycle: the panel's claim entry would otherwise
+	// expire while the device is connected and free its slot for another device.
+	// An ip is stored only after the claim succeeds, since GetOnlineDevice snapshots this map
+	// concurrently and could otherwise report a device that is about to be rejected.
 	var ipMap *sync.Map
 	if v, ok := l.UserOnlineIP.Load(taguuid); ok {
 		ipMap = v.(*sync.Map)
@@ -325,12 +300,8 @@ func (l *Limiter) clearOnlineState(taguuid string) {
 	l.UserOnlineIP.Delete(taguuid)
 }
 
-// claimDevice asks the panel to atomically check ip against uid's device
-// limit in its cross-node online-IP set and register it if admitted. It
-// fails closed: a nil client (gating not wired up) is treated as "no limit
-// configured" and allowed, but any request error (panel or Redis
-// unreachable, timeout, bad response) is treated as a reject rather than
-// letting an unverifiable device through.
+// claimDevice asks the panel to atomically check and register ip against uid's device limit.
+// A nil client means no limit configured and allows; any request error rejects (fail-closed).
 func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLimit int) bool {
 	if l.Client == nil {
 		return true

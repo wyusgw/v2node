@@ -31,7 +31,7 @@ type Controller struct {
 	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
 	faultMu                 sync.Mutex
-	faults                  map[string]string
+	faults                  map[string]string // Key: source, value: message
 	faultReported           string
 	faultSynced             bool
 	// userNum is len(userList) for the traffic report task, which runs on
@@ -115,11 +115,8 @@ func (c *Controller) start(x *core.V2Core) error {
 		}
 		log.WithField("tag", c.tag).Infof("Added %d new users", added)
 	} else {
-		// AddNode already baked c.userList into mieru's inbound config, so
-		// calling AddUsers here would just fail as a duplicate registration —
-		// but AddUsers is also the only thing that populates the uidMap
-		// GetUserTrafficSlice needs to report traffic back to the panel.
-		// Register it directly instead of skipping it entirely.
+		// AddUsers would fail as a duplicate for mieru's baked-in users, but it is also what
+		// fills the uidMap traffic reporting needs, so register that directly.
 		c.server.RegisterUidMap(c.tag, c.userList)
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}

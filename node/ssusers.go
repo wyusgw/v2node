@@ -14,12 +14,9 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-// A Shadowsocks (not 2022) node has to try every user's key to find who a
-// connection belongs to, so clients of removed users that keep reconnecting
-// are expensive. The core recognizes them by their old keys, but only knows
-// the users removed since it started. To cover users removed before a
-// restart, the node saves its users and the users removed in the last week,
-// and hands the removed ones to the core when it starts.
+// A Shadowsocks (not 2022) node tries every user's key per connection, so reconnecting clients
+// of removed users are expensive. The core only knows users removed since it started, so the
+// node saves its users and the last week's removed ones and restores them on start.
 const (
 	// Same as how long the core keeps keys of removed users.
 	ssRemovedMaxAge = 7 * 24 * time.Hour
