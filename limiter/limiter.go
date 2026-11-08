@@ -116,12 +116,10 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		up := modified[i].SpeedLimitUpBytes()
 		down := modified[i].SpeedLimitBytes()
 		if up > 0 || down > 0 {
-			if v, ok := l.SpeedLimiter.Load(format.UserTag(tag, modified[i].Uuid)); ok {
-				d := v.(*rate.DuplexBucket)
-				d.Update(up, down)
-			} else {
-				d := rate.NewDuplexBucket(up, down)
-				l.SpeedLimiter.Store(format.UserTag(tag, modified[i].Uuid), d)
+			// LoadOrStore: a bucket CheckLimit creates meanwhile must not be replaced.
+			v, loaded := l.SpeedLimiter.LoadOrStore(key, rate.NewDuplexBucket(up, down))
+			if loaded {
+				v.(*rate.DuplexBucket).Update(up, down)
 			}
 		} else {
 			l.SpeedLimiter.Delete(format.UserTag(tag, modified[i].Uuid))
@@ -210,11 +208,11 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	if up > 0 || down > 0 {
 		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
 			return v.(*rate.DuplexBucket), false
-		} else {
-			d := rate.NewDuplexBucket(up, down)
-			l.SpeedLimiter.Store(taguuid, d)
-			return d, false
 		}
+		// Concurrent first connections of a user must share one bucket, or
+		// each would get the full rate.
+		v, _ := l.SpeedLimiter.LoadOrStore(taguuid, rate.NewDuplexBucket(up, down))
+		return v.(*rate.DuplexBucket), false
 	} else {
 		return nil, false
 	}
