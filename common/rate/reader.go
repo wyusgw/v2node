@@ -14,6 +14,8 @@ import (
 type Reader struct {
 	reader  buf.TimeoutReader
 	limiter *DynamicBucket
+	// read from the client but not passed on yet, see take
+	pending buf.MultiBuffer
 }
 
 func NewRateLimitReader(reader buf.TimeoutReader, limiter *DynamicBucket) *Reader {
@@ -23,24 +25,44 @@ func NewRateLimitReader(reader buf.TimeoutReader, limiter *DynamicBucket) *Reade
 	}
 }
 
-func (r *Reader) wait(mb buf.MultiBuffer) {
-	if n := int64(mb.Len()); n > 0 {
-		if limiter := r.limiter.Get(); limiter != nil {
+// take passes on mb in parts of at most one refill and keeps the rest for the
+// next read, so a low limit doesn't let a whole read through in one burst.
+func (r *Reader) take(mb buf.MultiBuffer, err error) (buf.MultiBuffer, error) {
+	limiter := r.limiter.Get()
+	if limiter == nil {
+		return mb, err
+	}
+	if err != nil {
+		// Nothing reads after an error, so pass the rest on now.
+		if n := int64(mb.Len()); n > 0 {
 			limiter.Wait(n)
 		}
+		return mb, err
 	}
+	part, rest, size := splitRefill(mb, limiter.Capacity())
+	if len(rest) > 0 {
+		r.pending = rest
+	}
+	if size > 0 {
+		limiter.Wait(size)
+	}
+	return part, nil
 }
 
 func (r *Reader) ReadMultiBuffer() (buf.MultiBuffer, error) {
-	mb, err := r.reader.ReadMultiBuffer()
-	r.wait(mb)
-	return mb, err
+	if mb := r.pending; len(mb) > 0 {
+		r.pending = nil
+		return r.take(mb, nil)
+	}
+	return r.take(r.reader.ReadMultiBuffer())
 }
 
 func (r *Reader) ReadMultiBufferTimeout(timeout time.Duration) (buf.MultiBuffer, error) {
-	mb, err := r.reader.ReadMultiBufferTimeout(timeout)
-	r.wait(mb)
-	return mb, err
+	if mb := r.pending; len(mb) > 0 {
+		r.pending = nil
+		return r.take(mb, nil)
+	}
+	return r.take(r.reader.ReadMultiBufferTimeout(timeout))
 }
 
 func (r *Reader) Interrupt() {

@@ -93,10 +93,33 @@ func (w *Writer) Interrupt() {
 	common.Interrupt(w.writer)
 }
 
+// WriteMultiBuffer passes mb on in parts of at most one refill each: waiting
+// for all of it at once makes a low limit deliver tens of KB in one burst.
 func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	limiter := w.limiter.Get()
-	if limiter != nil {
-		limiter.Wait(int64(mb.Len()))
+	if limiter == nil {
+		return w.writer.WriteMultiBuffer(mb)
 	}
-	return w.writer.WriteMultiBuffer(mb)
+	for len(mb) > 0 {
+		var part buf.MultiBuffer
+		var size int64
+		part, mb, size = splitRefill(mb, limiter.Capacity())
+		limiter.Wait(size)
+		if err := w.writer.WriteMultiBuffer(part); err != nil {
+			buf.ReleaseMulti(mb)
+			return err
+		}
+	}
+	return nil
+}
+
+// splitRefill cuts mb after the buffers that fit in limit bytes, keeping at
+// least one buffer in part.
+func splitRefill(mb buf.MultiBuffer, limit int64) (part, rest buf.MultiBuffer, size int64) {
+	n := 0
+	for n < len(mb) && (n == 0 || size+int64(mb[n].Len()) <= limit) {
+		size += int64(mb[n].Len())
+		n++
+	}
+	return mb[:n:n], mb[n:], size
 }
