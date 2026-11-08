@@ -28,7 +28,6 @@ func Init() {
 
 type Limiter struct {
 	Nodetype      string         // Node type, e.g. "v2ray", "trojan", "shadowsocks"
-	SpeedLimit    int            // Node speed limit in Mbps
 	UserOnlineIP  *sync.Map      // Key: TagUUID, value: {Key: Ip, value: Uid}
 	UUIDtoUID     map[string]int // Key: UUID, value: Uid
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
@@ -39,13 +38,11 @@ type Limiter struct {
 }
 
 type UserLimitInfo struct {
-	UID               int
-	SpeedLimit        int64 // download, bytes/s
-	SpeedLimitUp      int64 // upload, bytes/s
-	DeviceLimit       int
-	DynamicSpeedLimit int64 // bytes/s
-	ExpireTime        int64
-	OverLimit         bool
+	UID          int
+	SpeedLimit   int64 // download, bytes/s
+	SpeedLimitUp int64 // upload, bytes/s
+	DeviceLimit  int
+	OverLimit    bool
 }
 
 func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList map[int]int, client *panel.Client) *Limiter {
@@ -116,9 +113,8 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 			// this user's tracking to apply the new limit on their next connection.
 			l.clearOnlineState(key)
 		}
-		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
-		up := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitUpBytes())
-		down := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitBytes())
+		up := modified[i].SpeedLimitUpBytes()
+		down := modified[i].SpeedLimitBytes()
 		if up > 0 || down > 0 {
 			if v, ok := l.SpeedLimiter.Load(format.UserTag(tag, modified[i].Uuid)); ok {
 				d := v.(*rate.DuplexBucket)
@@ -146,16 +142,6 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 	}
 }
 
-func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire time.Time) error {
-	if !l.updateInfo(format.UserTag(tag, uuid), func(u *UserLimitInfo) {
-		u.DynamicSpeedLimit = panel.MbpsToBytes(limit)
-		u.ExpireTime = expire.Unix()
-	}) {
-		return errors.New("not found")
-	}
-	return nil
-}
-
 // updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
 // copy. CheckLimit reads these entries without a lock on every new
 // connection, so they are never modified in place.
@@ -178,30 +164,15 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	// check if ipv4 mapped ipv6
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
-	// check and gen speed limit Bucket
-	nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
-	var userLimit, userLimitUp int64
+	var down, up int64
 	deviceLimit := 0
 	var uid int
 	if v, ok := l.UserLimitInfo.Load(taguuid); ok {
 		u := v.(*UserLimitInfo)
 		deviceLimit = u.DeviceLimit
 		uid = u.UID
-		if u.ExpireTime < time.Now().Unix() && u.ExpireTime != 0 {
-			// The dynamic limit has expired: fall back to the user's own
-			// limits. The entry must stay - a missing entry means "unknown
-			// user" and every later connection would be rejected.
-			userLimit = u.SpeedLimit
-			userLimitUp = u.SpeedLimitUp
-			expired := *u
-			expired.DynamicSpeedLimit = 0
-			expired.ExpireTime = 0
-			// Lose to a concurrent update rather than overwrite it.
-			l.UserLimitInfo.CompareAndSwap(taguuid, u, &expired)
-		} else {
-			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
-			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)
-		}
+		down = u.SpeedLimit
+		up = u.SpeedLimitUp
 	} else {
 		return nil, true
 	}
@@ -236,8 +207,6 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	}
 	ipMap.Store(ip, uid)
 
-	down := determineSpeedLimit(nodeLimit, userLimit)
-	up := determineSpeedLimit(nodeLimit, userLimitUp)
 	if up > 0 || down > 0 {
 		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
 			return v.(*rate.DuplexBucket), false
