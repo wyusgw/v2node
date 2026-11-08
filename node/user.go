@@ -55,7 +55,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 			"tag": c.tag,
 			"err": err,
 		}).Info("Get online device failed")
-	} else if len(*onlineDevice) > 0 {
+	} else if devices := c.addOpenLinkDevices(*onlineDevice); len(devices) > 0 {
 		var result []panel.OnlineUser
 		var nocountUID = make(map[int]struct{})
 		for _, traffic := range userTraffic {
@@ -64,7 +64,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				nocountUID[traffic.UID] = struct{}{}
 			}
 		}
-		for _, online := range *onlineDevice {
+		for _, online := range devices {
 			if _, ok := nocountUID[online.UID]; !ok {
 				result = append(result, online)
 			}
@@ -95,6 +95,30 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 	}
 
 	return nil
+}
+
+// addOpenLinkDevices adds the devices that still have connections open but
+// opened none this cycle, so a device on one long connection stays reported
+// online and keeps its slot in the panel.
+func (c *Controller) addOpenLinkDevices(devices []panel.OnlineUser) []panel.OnlineUser {
+	seen := make(map[panel.OnlineUser]struct{}, len(devices))
+	for _, d := range devices {
+		seen[d] = struct{}{}
+	}
+	for email, ips := range c.server.OpenLinkIPs(c.tag) {
+		uid, ok := c.limiter.UID(email)
+		if !ok {
+			continue
+		}
+		for _, ip := range ips {
+			d := panel.OnlineUser{UID: uid, IP: ip}
+			if _, ok := seen[d]; !ok {
+				seen[d] = struct{}{}
+				devices = append(devices, d)
+			}
+		}
+	}
+	return devices
 }
 
 func (c *Controller) reportBehaviorLogTask(ctx context.Context) (err error) {

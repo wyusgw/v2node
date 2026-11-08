@@ -282,6 +282,15 @@ func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLim
 	return allow
 }
 
+// UID returns the panel user id of taguuid.
+func (l *Limiter) UID(taguuid string) (int, bool) {
+	v, ok := l.UserLimitInfo.Load(taguuid)
+	if !ok {
+		return 0, false
+	}
+	return v.(*UserLimitInfo).UID, true
+}
+
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {
 	var onlineUser []panel.OnlineUser
 	l.UserOnlineIP.Range(func(key, value interface{}) bool {

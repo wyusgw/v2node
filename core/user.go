@@ -96,6 +96,28 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	}
 }
 
+// OpenLinkIPs returns, keyed by user email, the client ips that have a
+// connection open on inbound tag.
+func (vc *V2Core) OpenLinkIPs(tag string) map[string][]string {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return nil
+	}
+	prefix := tag + "|"
+	result := make(map[string][]string)
+	vc.dispatcher.LinkManagers.Range(func(key, value interface{}) bool {
+		email := key.(string)
+		if strings.HasPrefix(email, prefix) {
+			if ips := value.(*dispatcher.LinkManager).IPs(); len(ips) > 0 {
+				result[email] = ips
+			}
+		}
+		return true
+	})
+	return result
+}
+
 // CloseIPLinks drops the connections users have open from the given ips,
 // keyed by uuid. Used when the panel kicks a device offline, leaving the
 // user's other devices connected.

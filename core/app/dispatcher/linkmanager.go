@@ -132,6 +132,21 @@ func (m *LinkManager) CloseAll() {
 	}
 }
 
+// IPs returns the client ips that have a link open, each once.
+func (m *LinkManager) IPs() []string {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	seen := make(map[string]struct{}, len(m.links))
+	ips := make([]string, 0, len(m.links))
+	for w := range m.links {
+		if _, ok := seen[w.ip]; !ok && w.ip != "" {
+			seen[w.ip] = struct{}{}
+			ips = append(ips, w.ip)
+		}
+	}
+	return ips
+}
+
 // CloseIP drops only the links opened from ip. Unlike CloseAll the manager
 // stays open, so the user's other devices keep connecting through it.
 func (m *LinkManager) CloseIP(ip string) {
