@@ -291,6 +291,25 @@ func (l *Limiter) UID(taguuid string) (int, bool) {
 	return v.(*UserLimitInfo).UID, true
 }
 
+// Reclaim asks the panel again for the slot of a device of taguuid that is
+// already connected, after its device limit changed, and reports whether the
+// panel refused it. A failed request is not a refusal: it must not drop
+// devices that hold their slot.
+func (l *Limiter) Reclaim(ctx context.Context, taguuid string, ip string) bool {
+	v, ok := l.UserLimitInfo.Load(taguuid)
+	if !ok || l.Client == nil {
+		return false
+	}
+	u := v.(*UserLimitInfo)
+	if u.DeviceLimit <= 0 {
+		return false
+	}
+	cctx, cancel := context.WithTimeout(ctx, claimDeviceTimeout)
+	defer cancel()
+	allow, err := l.Client.ClaimDevice(cctx, u.UID, ip, u.DeviceLimit)
+	return err == nil && !allow
+}
+
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {
 	var onlineUser []panel.OnlineUser
 	l.UserOnlineIP.Range(func(key, value interface{}) bool {

@@ -7,6 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
+	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/common/task"
 	vCore "github.com/wyusgw/v2node/core"
 )
@@ -136,17 +137,23 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	// between unlimited and limited, so they are dropped to make clients reconnect;
 	// changes between two limits are applied live by the bucket
 	var speedToggled []panel.UserInfo
+	var deviceChanged []panel.UserInfo
 	if len(modified) > 0 {
 		limited := func(u panel.UserInfo) bool {
 			return u.SpeedLimitBytes() > 0 || u.SpeedLimitUpBytes() > 0
 		}
 		oldLimited := make(map[string]bool, len(c.userList))
+		oldDeviceLimit := make(map[string]int, len(c.userList))
 		for _, u := range c.userList {
 			oldLimited[u.Uuid] = limited(u)
+			oldDeviceLimit[u.Uuid] = u.DeviceLimit
 		}
 		for _, u := range modified {
 			if oldLimited[u.Uuid] != limited(u) {
 				speedToggled = append(speedToggled, u)
+			}
+			if oldDeviceLimit[u.Uuid] != u.DeviceLimit {
+				deviceChanged = append(deviceChanged, u)
 			}
 		}
 	}
@@ -189,12 +196,34 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 	if len(speedToggled) > 0 {
 		c.server.CloseUserLinks(c.tag, speedToggled)
 	}
+	if len(deviceChanged) > 0 {
+		go c.reclaimDevices(deviceChanged)
+	}
 	c.userList = newU
 	c.userNum.Store(int64(len(newU)))
 	c.updateSSUsers(deleted, added)
 	c.clearFault("users")
 	log.WithField("tag", c.tag).Infof("%d user deleted, %d user added, %d user modified", len(deleted), len(added), len(modified))
 	return nil
+}
+
+// reclaimDevices claims again the connected devices of users whose device
+// limit changed and drops those the panel now refuses: a device on one long
+// connection opens nothing new that would be checked against a lowered limit.
+func (c *Controller) reclaimDevices(users []panel.UserInfo) {
+	open := c.server.OpenLinkIPs(c.tag)
+	links := make(map[string][]string)
+	for _, u := range users {
+		email := format.UserTag(c.tag, u.Uuid)
+		for _, ip := range open[email] {
+			if c.limiter.Reclaim(context.Background(), email, ip) {
+				links[u.Uuid] = append(links[u.Uuid], ip)
+			}
+		}
+	}
+	if len(links) > 0 {
+		c.server.CloseIPLinks(c.tag, links)
+	}
 }
 
 // applyKicks blocks the devices the panel kicked offline and drops their
