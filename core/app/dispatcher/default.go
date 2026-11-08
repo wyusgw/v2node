@@ -421,7 +421,9 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			// mieru buffers tens of MB of client uploads per session, so limiting here only
 			// slows forwarding while the client keeps uploading at full speed. Limit reads on
 			// the raw TCP connection instead, falling back to reader limiting when there is
-			// none (e.g. over UDP)
+			// none (e.g. over UDP). Known cost: the session's streams share that connection,
+			// so after an upload closes, new streams wait while its backlog is read at the
+			// limit (about 2 s at 2 MiB/s)
 			if !(sessionInbound.Name == "mieru" && mieru.AttachIngressLimiter(sessionInbound.Source.NetAddr(), w.Up)) {
 				outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
 			}
