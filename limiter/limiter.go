@@ -116,10 +116,14 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		up := modified[i].SpeedLimitUpBytes()
 		down := modified[i].SpeedLimitBytes()
 		if up > 0 || down > 0 {
-			// LoadOrStore: a bucket CheckLimit creates meanwhile must not be replaced.
-			v, loaded := l.SpeedLimiter.LoadOrStore(key, rate.NewDuplexBucket(up, down))
-			if loaded {
+			if v, ok := l.SpeedLimiter.Load(key); ok {
 				v.(*rate.DuplexBucket).Update(up, down)
+			} else {
+				// LoadOrStore: a bucket CheckLimit creates meanwhile must not be replaced.
+				v, loaded := l.SpeedLimiter.LoadOrStore(key, rate.NewDuplexBucket(up, down))
+				if loaded {
+					v.(*rate.DuplexBucket).Update(up, down)
+				}
 			}
 		} else {
 			l.SpeedLimiter.Delete(format.UserTag(tag, modified[i].Uuid))
