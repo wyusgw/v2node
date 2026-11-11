@@ -1,0 +1,29 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 17:25:38 UTC
+Duration: 10s, Total samples = 4.78s (47.80%)
+Showing nodes accounting for 4.25s, 88.91% of 4.78s total
+Dropped 80 nodes (cum <= 0.02s)
+Showing top 20 nodes out of 86
+      flat  flat%   sum%        cum   cum%
+     3.66s 76.57% 76.57%      3.66s 76.57%  internal/runtime/syscall/linux.Syscall6
+     0.13s  2.72% 79.29%      0.13s  2.72%  runtime.futex
+     0.05s  1.05% 80.33%      0.10s  2.09%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.05s  1.05% 81.38%      0.05s  1.05%  runtime.memclrNoHeapPointers
+     0.04s  0.84% 82.22%      1.82s 38.08%  internal/poll.(*FD).Writev
+     0.04s  0.84% 83.05%      0.04s  0.84%  runtime.gopark
+     0.04s  0.84% 83.89%      0.04s  0.84%  sync/atomic.(*Bool).Load (inline)
+     0.03s  0.63% 84.52%      4.34s 90.79%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.03s  0.63% 85.15%      0.04s  0.84%  internal/poll.(*FD).readLock (inline)
+     0.03s  0.63% 85.77%      0.03s  0.63%  runtime.chansend
+     0.02s  0.42% 86.19%      2.09s 43.72%  github.com/xtls/xray-core/common/buf.(*BufferedWriter).WriteMultiBuffer
+     0.02s  0.42% 86.61%      2.01s 42.05%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.02s  0.42% 87.03%      0.05s  1.05%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.02s  0.42% 87.45%      0.03s  0.63%  runtime.exitsyscall
+     0.02s  0.42% 87.87%      0.04s  0.84%  runtime.mallocgcSmallScanNoHeaderSC5
+     0.01s  0.21% 88.08%      0.03s  0.63%  github.com/juju/ratelimit.(*Bucket).Take
+     0.01s  0.21% 88.28%      0.08s  1.67%  github.com/juju/ratelimit.(*Bucket).Wait
+     0.01s  0.21% 88.49%      2.24s 46.86%  github.com/wyusgw/v2node/common/rate.(*Writer).WriteMultiBuffer
+     0.01s  0.21% 88.70%      2.14s 44.77%  github.com/wyusgw/v2node/core/app/dispatcher.(*ManagedWriter).WriteMultiBuffer
+     0.01s  0.21% 88.91%      1.69s 35.36%  github.com/xtls/xray-core/common/buf.(*ReadVReader).readMulti.func1

@@ -458,7 +458,9 @@ func (s *series) stats(idx []int, skip float64) stat {
 		if k == 1 {
 			st.FirstWinMB = float64(sum(s.v[k])-sum(s.v[0])) / 1e6
 		}
-		if s.t[k].Sub(t0).Seconds() >= skip {
+		// the final snapshot after stop can close a window of a few ms,
+		// whose rate is meaningless
+		if s.t[k].Sub(t0).Seconds() >= skip && dt >= 0.05 {
 			if first < 0 {
 				first = k - 1
 			}
