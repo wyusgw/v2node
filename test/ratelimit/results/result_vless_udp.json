@@ -1,0 +1,68 @@
+{
+ "udp": [
+  {
+   "dir": "down",
+   "limit_mbps": 10,
+   "offered_mbps": 300,
+   "avg_mbps": 10,
+   "p95_100ms_mbps": 10.1,
+   "err_pct": 0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 10,
+   "offered_mbps": 300,
+   "avg_mbps": 10,
+   "p95_100ms_mbps": 10.1,
+   "err_pct": 0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 50,
+   "offered_mbps": 300,
+   "avg_mbps": 49.9,
+   "p95_100ms_mbps": 57.5,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 50,
+   "offered_mbps": 300,
+   "avg_mbps": 50,
+   "p95_100ms_mbps": 50.3,
+   "err_pct": -0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 100,
+   "offered_mbps": 300,
+   "avg_mbps": 100,
+   "p95_100ms_mbps": 105.1,
+   "err_pct": -0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 100,
+   "offered_mbps": 300,
+   "avg_mbps": 100,
+   "p95_100ms_mbps": 100.7,
+   "err_pct": -0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 0,
+   "offered_mbps": 300,
+   "avg_mbps": 299.5,
+   "p95_100ms_mbps": 303.3,
+   "err_pct": 0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 0,
+   "offered_mbps": 300,
+   "avg_mbps": 300.1,
+   "p95_100ms_mbps": 303.4,
+   "err_pct": 0
+  }
+ ]
+}

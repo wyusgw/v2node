@@ -1,0 +1,348 @@
+{
+ "accuracy": [
+  {
+   "dir": "down",
+   "limit_mbps": 1,
+   "avg_mbps": 0.9992627719387913,
+   "p5_100ms_mbps": 0,
+   "p95_100ms_mbps": 4.58770919712729,
+   "max_100ms_mbps": 4.629450553975046,
+   "first_1s_mbps": 0.9580006926630151,
+   "first_100ms_mb": 0,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 1,
+   "avg_mbps": 0.9992283892186078,
+   "p5_100ms_mbps": 0.6508489464268471,
+   "p95_100ms_mbps": 1.3147661270175905,
+   "max_100ms_mbps": 1.3173941559248634,
+   "first_1s_mbps": 0.9821585186224875,
+   "first_100ms_mb": 0.008192,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 5,
+   "avg_mbps": 4.995673187496834,
+   "p5_100ms_mbps": 3.2535500338515955,
+   "p95_100ms_mbps": 7.649538642622574,
+   "max_100ms_mbps": 8.933524406780906,
+   "first_1s_mbps": 4.527579175270969,
+   "first_100ms_mb": 0.049152,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 5,
+   "avg_mbps": 4.996063107373321,
+   "p5_100ms_mbps": 4.5445982689727895,
+   "p95_100ms_mbps": 5.287106167249487,
+   "max_100ms_mbps": 5.294564372601171,
+   "first_1s_mbps": 4.9782071752973,
+   "first_100ms_mb": 0.065536,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 10,
+   "avg_mbps": 9.886787387148775,
+   "p5_100ms_mbps": 7.564784518882004,
+   "p95_100ms_mbps": 12.028232362175432,
+   "max_100ms_mbps": 12.616289492945405,
+   "first_1s_mbps": 9.723724077767248,
+   "first_100ms_mb": 0.08192,
+   "err_pct": -1.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 10,
+   "avg_mbps": 10.002445924769185,
+   "p5_100ms_mbps": 9.769517539038814,
+   "p95_100ms_mbps": 10.523523981513382,
+   "max_100ms_mbps": 11.399809806029635,
+   "first_1s_mbps": 9.956891123144084,
+   "first_100ms_mb": 0.12288,
+   "err_pct": 0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 50,
+   "avg_mbps": 50.13092111405201,
+   "p5_100ms_mbps": 46.94184371279002,
+   "p95_100ms_mbps": 52.638544348173134,
+   "max_100ms_mbps": 59.98533128245692,
+   "first_1s_mbps": 50.57056269500503,
+   "first_100ms_mb": 0.666894,
+   "err_pct": 0.3
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 50,
+   "avg_mbps": 50.00675470521977,
+   "p5_100ms_mbps": 49.476561687619046,
+   "p95_100ms_mbps": 50.635207314661166,
+   "max_100ms_mbps": 50.923200680634736,
+   "first_1s_mbps": 49.95537244880412,
+   "first_100ms_mb": 0.625416,
+   "err_pct": 0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 100,
+   "avg_mbps": 100.05512886626929,
+   "p5_100ms_mbps": 89.137676581912,
+   "p95_100ms_mbps": 109.60273955559256,
+   "max_100ms_mbps": 115.64176544790759,
+   "first_1s_mbps": 99.89413489209359,
+   "first_100ms_mb": 1.397896,
+   "err_pct": 0.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 100,
+   "avg_mbps": 100.00083978142627,
+   "p5_100ms_mbps": 99.20497863698459,
+   "p95_100ms_mbps": 101.05460530170717,
+   "max_100ms_mbps": 101.3816999251695,
+   "first_1s_mbps": 99.93388319374354,
+   "first_100ms_mb": 1.253376,
+   "err_pct": 0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 500,
+   "avg_mbps": 499.87568525467225,
+   "p5_100ms_mbps": 481.97941422177155,
+   "p95_100ms_mbps": 524.4583587231268,
+   "max_100ms_mbps": 530.1640556385345,
+   "first_1s_mbps": 500.79480640423975,
+   "first_100ms_mb": 6.873358,
+   "err_pct": -0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 500,
+   "avg_mbps": 499.93402507505255,
+   "p5_100ms_mbps": 496.82020557663054,
+   "p95_100ms_mbps": 503.61289913354534,
+   "max_100ms_mbps": 505.08275452496775,
+   "first_1s_mbps": 499.4800473486017,
+   "first_100ms_mb": 6.251908,
+   "err_pct": -0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 1000,
+   "avg_mbps": 999.8062543176546,
+   "p5_100ms_mbps": 965.1155188410306,
+   "p95_100ms_mbps": 1029.574784620907,
+   "max_100ms_mbps": 1042.5817875107434,
+   "first_1s_mbps": 1004.9810661589814,
+   "first_100ms_mb": 12.863628,
+   "err_pct": -0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 1000,
+   "avg_mbps": 1000.1261957269749,
+   "p5_100ms_mbps": 992.4496847098623,
+   "p95_100ms_mbps": 1008.3363643199616,
+   "max_100ms_mbps": 1092.051344432657,
+   "first_1s_mbps": 998.9931656009666,
+   "first_100ms_mb": 12.498751,
+   "err_pct": 0
+  }
+ ],
+ "directions": {
+  "asymmetric_down20_up5": {
+   "down_mbps": 20,
+   "up_mbps": 5
+  },
+  "down10_up_unlimited": {
+   "down_mbps": 10,
+   "up_mbps": 2304.4
+  },
+  "legacy_speed_limit_8": {
+   "down_mbps": 8,
+   "up_mbps": 8
+  }
+ },
+ "isolation": {
+  "limited_users_mbps": [
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10
+  ],
+  "unlimited_user_mbps": 2269.8
+ },
+ "live_change": {
+  "events": [
+   {
+    "t": 0,
+    "what": "start at 10 Mbps"
+   },
+   {
+    "t": 6,
+    "what": "panel: 10 -\u003e 40 Mbps"
+   },
+   {
+    "t": 13,
+    "what": "panel: 40 -\u003e 5 Mbps"
+   },
+   {
+    "t": 20,
+    "what": "panel: 5 -\u003e unlimited"
+   },
+   {
+    "t": 21.5,
+    "what": "connection closed by node, reconnecting"
+   },
+   {
+    "t": 27,
+    "what": "panel: unlimited -\u003e 10 Mbps"
+   },
+   {
+    "t": 29.5,
+    "what": "connection closed by node, reconnecting"
+   }
+  ],
+  "per_second_mbps": [
+   7.6,
+   10.2,
+   10,
+   9.8,
+   10,
+   9.8,
+   26.9,
+   40.4,
+   39.8,
+   39.8,
+   40.4,
+   39.8,
+   39.9,
+   40.1,
+   20.7,
+   4.8,
+   4.8,
+   5.3,
+   4.8,
+   5.3,
+   2.1,
+   673.8,
+   2353.9,
+   2494.4,
+   2446.2,
+   2239.8,
+   2176.8,
+   2554.3,
+   1104.9,
+   3.5,
+   9.8,
+   10,
+   9.8,
+   10
+  ]
+ },
+ "shared": {
+  "conns_1": {
+   "per_conn_max": 20,
+   "per_conn_min": 20,
+   "total_mbps": 20
+  },
+  "conns_16": {
+   "per_conn_max": 1.3,
+   "per_conn_min": 1.2,
+   "total_mbps": 20
+  },
+  "conns_4": {
+   "per_conn_max": 5,
+   "per_conn_min": 5,
+   "total_mbps": 20
+  },
+  "conns_64": {
+   "per_conn_max": 0.3,
+   "per_conn_min": 0.3,
+   "total_mbps": 20
+  },
+  "two_devices": {
+   "device_a_2conns": 13.5,
+   "device_b_1conn": 6.5,
+   "total_mbps": 20
+  }
+ },
+ "udp": [
+  {
+   "dir": "down",
+   "limit_mbps": 10,
+   "offered_mbps": 300,
+   "avg_mbps": 10,
+   "p95_100ms_mbps": 10.1,
+   "err_pct": -0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 10,
+   "offered_mbps": 300,
+   "avg_mbps": 10,
+   "p95_100ms_mbps": 10.1,
+   "err_pct": -0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 50,
+   "offered_mbps": 300,
+   "avg_mbps": 49.8,
+   "p95_100ms_mbps": 50.5,
+   "err_pct": -0.3
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 50,
+   "offered_mbps": 300,
+   "avg_mbps": 50,
+   "p95_100ms_mbps": 50.4,
+   "err_pct": -0
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 100,
+   "offered_mbps": 300,
+   "avg_mbps": 99.9,
+   "p95_100ms_mbps": 100.8,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 100,
+   "offered_mbps": 300,
+   "avg_mbps": 99.9,
+   "p95_100ms_mbps": 103.9,
+   "err_pct": -0.1
+  },
+  {
+   "dir": "down",
+   "limit_mbps": 0,
+   "offered_mbps": 300,
+   "avg_mbps": 298.1,
+   "p95_100ms_mbps": 304.5,
+   "err_pct": 0
+  },
+  {
+   "dir": "up",
+   "limit_mbps": 0,
+   "offered_mbps": 300,
+   "avg_mbps": 298.9,
+   "p95_100ms_mbps": 306,
+   "err_pct": 0
+  }
+ ]
+}

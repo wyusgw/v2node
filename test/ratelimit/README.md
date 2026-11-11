@@ -41,6 +41,8 @@
 | 設備數限制 | 第 3 台設備被拒；面板故障或逾時時 fail-closed，3 秒後拒絕 ✅（行為注意見下文） |
 | 踢人 | 被踢 IP 的連線 1.6 秒內斷開，封鎖期內無法重連，到期後恢復，同用戶其他 IP 不受影響 ✅ |
 | CPU 開銷 | 4 Gbps 限速流量下，每 Gbps 多約 2.4% 單核（+24%） |
+| UDP 限速（VLESS / hysteria2 / tuic） | 10/50/100 Mbps 上下行誤差 ≤ 0.3%，不限速時完整通過 300 Mbps ✅ |
+| hysteria2、tuic 的 TCP 限速 | 精度、上下行、共用、隔離、即時改速都與 VLESS 一致 ✅ |
 
 ## 1. 限速精度
 
@@ -167,10 +169,58 @@ t(s)   事件                      實測每秒 Mbps
 
 以上都只記錄在報告裡，沒有修改程式碼。若要調整，請告訴我要改哪一項。
 
+## 9. UDP 與 QUIC 協議（hysteria2、tuic）
+
+hysteria2 / tuic 的節點由 mock 面板下發，使用 `cert_mode: self` 自簽證書。客戶端是同一份 xray-core 編譯的 xray，每個用戶一個 socks 入站，分別以該用戶的 uuid 認證。TCP 測試走 socks CONNECT。UDP 測試的走法：
+
+- **VLESS UDP**：直接用 VLESS 的 UDP 命令；
+- **hysteria2 / tuic UDP**：走 socks5 UDP ASSOCIATE，即 QUIC datagram。
+
+hysteria2 / tuic 在節點內走 `DispatchLink`：下行包 writer，上行包 reader。VLESS 走 `getLink`，上下行都包 writer。所以這部分測的是另一條程式路徑。
+
+### UDP 限速
+
+客戶端或來源端以 300 Mbps 送 1200 B 的 UDP 包，計算穿過節點後實際到達的速率：
+
+| 協議 | 方向 | 10 Mbps | 50 Mbps | 100 Mbps | 不限速（送 300） |
+|---|---|---|---|---|---|
+| VLESS UDP | 下行 | 10.00 | 49.95 | 99.97 | 299.5 |
+| VLESS UDP | 上行 | 10.00 | 50.00 | 99.99 | 300.1 |
+| hysteria2 | 下行 | 10.00 | 49.96 | 100.00 | 299.0 |
+| hysteria2 | 上行 | 10.00 | 50.00 | 99.99 | 298.2 |
+| tuic | 下行 | 10.00 | 49.83 | 99.90 | 298.1 |
+| tuic | 上行 | 10.00 | 50.00 | 99.89 | 298.9 |
+
+UDP 同樣精準。超出額度的包在節點的 UDP socket 緩衝溢出後被丟棄，不會排隊造成延遲暴增。不限速時能完整通過，代表限速數字不是測試端瓶頸造成的。
+
+### hysteria2 / tuic 的 TCP 限速
+
+| 項目 | hysteria2 | tuic |
+|---|---|---|
+| 精度 1 Mbps–1 Gbps（上下行） | 平均誤差 ≤ 0.1%，只有 1 Mbps 下行為 −5%（8 秒內的低速突發） | ≤ 1.1% |
+| 下行 20 / 上行 5 同時 | 19.99 / 5.01 | 20.03 / 5.01 |
+| 舊面板 `speed_limit`=8 | 7.99 / 8.00 | 8.00 / 8.00 |
+| 上行不限（`speed_limit_up_bps`=0） | 下行 10.03、上行 2,515 | 下行 9.96、上行 2,304 |
+| 一用戶 1/4/16/64 條連線總和 | 19.98 / 20.00 / 19.95 / 20.08 | 20.01 / 20.03 / 19.97 / 20.01 |
+| 10 用戶 × 10 Mbps + 1 不限速 | 各 9.9–10.0，不限速 2,396 | 各 10.0，不限速 2,270 |
+| 即時改速 10→40→5→不限→10 | 與 VLESS 相同：限速值之間即時生效；與不限速互切時斷線重連 | 同左 |
+
+hysteria2 / tuic 的不限速吞吐約 2.3–2.5 Gbps，受限於本機 QUIC 客戶端的 CPU，不是節點的上限。
+
+hysteria2 / tuic 的每秒時間線：
+
+```
+hysteria2: 7.6 10 10.2 9.8 10 10.2 | 27.7 40.1 39.2 41 39.9 40 39.8 40.1 | 19.3 4.9 5.4 5 4.3 5.3 | 2.1 775 2584 2441 2526 2364 2507 2253 | 1021 3.5 10.2 10.2 9.6 10.2
+tuic:      7.6 10.2 10 9.8 10 9.8  | 26.9 40.4 39.8 39.8 40.4 39.8 39.9 40.1 | 20.7 4.8 4.8 5.3 4.8 5.3 | 2.1 674 2354 2494 2446 2240 2177 2554 | 1105 3.5 9.8 10 9.8 10
+```
+
+設備限制與踢人沒有在 QUIC 協議上重跑：這兩個邏輯在 `CheckLimit` / `LinkManager` 中與協議無關，而 QUIC 客戶端無法指定多個來源 IP。
+
 ## 未覆蓋的範圍
 
-- **UDP**：VLESS UDP、hysteria2/tuic 等 QUIC 協議的限速路徑沒有在端到端測試中覆蓋。hysteria2/tuic 走 `DispatchLink`，用 reader 限上行；mieru 有自己的 TCP ingress limiter。
-- **TLS/Reality 傳輸**：限速邏輯與傳輸層無關，但 CPU 開銷數字未包含加密。
+- **mieru**：mieru 走自己的 TCP ingress limiter（`mieru.AttachIngressLimiter`），本次未測。
+- **TLS/Reality 傳輸下的 VLESS/trojan/vmess**：限速邏輯與傳輸層無關，但 CPU 開銷數字未包含加密。
+- **設備限制、踢人在 QUIC 協議上的端到端測試**：理由見第 9 節。
 
 ## 重跑
 
@@ -182,7 +232,11 @@ GOEXPERIMENT=jsonv2 go test ./limiter/ ./common/rate/ -v
 GOEXPERIMENT=jsonv2 go build -trimpath -o build_assets/v2node .
 cd test/ratelimit && go build -o ratelimit . && \
   taskset -c 2-3 ./ratelimit -bin ../../build_assets/v2node -cpus 0-1 -out results
-# 只跑部分情境：-only accuracy,directions,shared,isolation,live,device,kick,overhead
+# 只跑部分情境：-only accuracy,directions,shared,isolation,live,device,kick,overhead,udp
+
+# hysteria2 / tuic：需要一個 xray 客戶端（在 xray-core 倉庫中 go build -o xray ./main）
+./ratelimit -bin ../../build_assets/v2node -xray /path/to/xray -proto hysteria2 \
+  -only accuracy,directions,shared,isolation,live,udp -out results/hy2
 ```
 
-`results/result.json` 是本次的完整數據。`cpu_limited.pb.gz` / `cpu_baseline.pb.gz` 可用 `go tool pprof` 開啟。
+`results/result.json` 是 VLESS 的完整數據，`result_vless_udp.json`、`result_hysteria2.json`、`result_tuic.json` 是第 9 節的數據。`cpu_limited.pb.gz` / `cpu_baseline.pb.gz` 可用 `go tool pprof` 開啟。
