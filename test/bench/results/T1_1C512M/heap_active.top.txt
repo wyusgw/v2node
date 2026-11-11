@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:34:29 UTC
+Showing nodes accounting for 4187.93kB, 100% of 4187.93kB total
+Showing top 12 nodes out of 20
+      flat  flat%   sum%        cum   cum%
+ 2640.83kB 63.06% 63.06%  2640.83kB 63.06%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+  518.65kB 12.38% 75.44%   518.65kB 12.38%  github.com/refraction-networking/utls/dicttls.map.init.5
+  516.01kB 12.32% 87.76%  3156.84kB 75.38%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+  512.44kB 12.24%   100%   512.44kB 12.24%  regexp.onePassCopy
+         0     0%   100%   518.65kB 12.38%  github.com/refraction-networking/utls/dicttls.init
+         0     0%   100%   512.44kB 12.24%  github.com/softlayer/softlayer-go/config.init
+         0     0%   100%  2640.83kB 63.06%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+         0     0%   100%  2640.83kB 63.06%  github.com/wyusgw/v2node/core/app/dispatcher.sniffer
+         0     0%   100%  3156.84kB 75.38%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+         0     0%   100%  2640.83kB 63.06%  github.com/xtls/xray-core/common/buf.NewWithSize (inline)
+         0     0%   100%  2640.83kB 63.06%  github.com/xtls/xray-core/common/bytespool.Alloc
+         0     0%   100%  2640.83kB 63.06%  github.com/xtls/xray-core/common/mux.(*Server).DispatchLink

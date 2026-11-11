@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:36:05 UTC
+Showing nodes accounting for 20336.46kB, 100% of 20336.46kB total
+Showing top 12 nodes out of 70
+      flat  flat%   sum%        cum   cum%
+13416.27kB 65.97% 65.97% 13416.27kB 65.97%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+ 1536.70kB  7.56% 73.53%  1536.70kB  7.56%  runtime.mallocgc
+  727.78kB  3.58% 77.11%   727.78kB  3.58%  reflect.compiledTypelinks
+  525.43kB  2.58% 79.69%   525.43kB  2.58%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  2.58% 82.27%  1549.47kB  7.62%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  521.05kB  2.56% 84.84%   521.05kB  2.56%  gvisor.dev/gvisor/pkg/state.Register
+  518.65kB  2.55% 87.39%   518.65kB  2.55%  github.com/refraction-networking/utls/dicttls.map.init.5
+     515kB  2.53% 89.92%      515kB  2.53%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.init
+     514kB  2.53% 92.45%      514kB  2.53%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+  512.10kB  2.52% 94.96%   512.10kB  2.52%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+  512.04kB  2.52% 97.48%   512.04kB  2.52%  fmt.Sprintf
+  512.01kB  2.52%   100%   512.01kB  2.52%  github.com/xtls/xray-core/proxy/vless.(*MemoryValidator).Add

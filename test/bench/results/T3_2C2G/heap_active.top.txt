@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:36:52 UTC
+Showing nodes accounting for 81.06MB, 94.17% of 86.07MB total
+Showing top 12 nodes out of 118
+      flat  flat%   sum%        cum   cum%
+   69.11MB 80.29% 80.29%    69.11MB 80.29%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+       4MB  4.65% 84.94%        4MB  4.65%  runtime.mallocgc
+    1.51MB  1.76% 86.70%    64.05MB 74.41%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       1MB  1.16% 87.86%        1MB  1.16%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+       1MB  1.16% 89.02%        1MB  1.16%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       1MB  1.16% 90.18%        1MB  1.16%  fmt.Sprintf
+    0.71MB  0.83% 91.01%     0.71MB  0.83%  reflect.compiledTypelinks
+    0.66MB  0.77% 91.78%     0.66MB  0.77%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+    0.52MB   0.6% 92.38%     0.52MB   0.6%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+    0.51MB   0.6% 92.98%     0.51MB   0.6%  github.com/go-playground/validator/v10.map.init.7
+    0.51MB   0.6% 93.57%     2.51MB  2.92%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+    0.51MB   0.6% 94.17%     1.01MB  1.18%  github.com/wyusgw/v2node/limiter.AddLimiter

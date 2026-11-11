@@ -1,0 +1,16 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: goroutine
+Time: 2026-11-11 16:35:40 UTC
+Showing nodes accounting for 3011, 99.90% of 3014 total
+Dropped 40 nodes (cum <= 15)
+Showing top 8 nodes out of 33
+      flat  flat%   sum%        cum   cum%
+      3011 99.90% 99.90%       3011 99.90%  runtime.gopark
+         0     0% 99.90%       1000 33.18%  github.com/wyusgw/v2node/core/app/dispatcher.(*CounterReader).ReadMultiBuffer
+         0     0% 99.90%       1000 33.18%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+         0     0% 99.90%       1000 33.18%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).routedDispatch
+         0     0% 99.90%       1000 33.18%  github.com/wyusgw/v2node/core/app/dispatcher.(*ManagedReader).ReadMultiBuffer
+         0     0% 99.90%       1000 33.18%  github.com/wyusgw/v2node/core/app/dispatcher.(*cachedReader).ReadMultiBuffer
+         0     0% 99.90%       1000 33.18%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback
+         0     0% 99.90%       1000 33.18%  github.com/xtls/xray-core/app/proxyman/outbound.(*Handler).Dispatch

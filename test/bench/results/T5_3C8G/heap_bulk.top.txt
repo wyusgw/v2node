@@ -1,0 +1,20 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:39:34 UTC
+Showing nodes accounting for 360.50MB, 88.01% of 409.61MB total
+Dropped 128 nodes (cum <= 2.05MB)
+Showing top 12 nodes out of 107
+      flat  flat%   sum%        cum   cum%
+  273.02MB 66.65% 66.65%   273.02MB 66.65%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+   18.63MB  4.55% 71.20%    18.63MB  4.55%  runtime.mallocgc
+   10.50MB  2.56% 73.77%    10.50MB  2.56%  strings.(*Builder).Write
+   10.50MB  2.56% 76.33%    10.50MB  2.56%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    9.08MB  2.22% 78.55%    16.08MB  3.93%  github.com/wyusgw/v2node/limiter.AddLimiter
+       9MB  2.20% 80.74%        9MB  2.20%  fmt.Sprintf
+    8.50MB  2.08% 82.82%        9MB  2.20%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+    8.50MB  2.08% 84.89%     8.50MB  2.08%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+    3.50MB  0.85% 85.75%       14MB  3.42%  runtime/pprof.printCountProfile.func1
+    3.25MB  0.79% 86.54%     5.25MB  1.28%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       3MB  0.73% 87.28%        3MB  0.73%  github.com/wyusgw/v2node/core/app/dispatcher.(*LinkManager).AddLink
+       3MB  0.73% 88.01%   214.80MB 52.44%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback

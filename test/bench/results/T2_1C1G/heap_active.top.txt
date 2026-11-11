@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:35:40 UTC
+Showing nodes accounting for 23752.34kB, 90.27% of 26312.56kB total
+Showing top 12 nodes out of 86
+      flat  flat%   sum%        cum   cum%
+16828.39kB 63.96% 63.96% 16828.39kB 63.96%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+ 1024.47kB  3.89% 67.85%  1024.47kB  3.89%  runtime.mallocgc
+ 1024.02kB  3.89% 71.74%  1536.12kB  5.84%  context.WithDeadlineCause
+  727.78kB  2.77% 74.51%   727.78kB  2.77%  reflect.compiledTypelinks
+  525.43kB  2.00% 76.50%   525.43kB  2.00%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  2.00% 78.50%  1549.47kB  5.89%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  521.05kB  1.98% 80.48%   521.05kB  1.98%  gvisor.dev/gvisor/pkg/state.Register
+  518.65kB  1.97% 82.45%   518.65kB  1.97%  github.com/refraction-networking/utls/dicttls.map.init.5
+  516.01kB  1.96% 84.41% 18868.67kB 71.71%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+     515kB  1.96% 86.37%      515kB  1.96%  github.com/google/s2a-go/internal/proto/v2/s2a_go_proto.init
+     514kB  1.95% 88.32%      514kB  1.95%  github.com/yandex-cloud/go-genproto/yandex/cloud/iam/v1.init
+  512.10kB  1.95% 90.27%   512.10kB  1.95%  context.(*cancelCtx).propagateCancel

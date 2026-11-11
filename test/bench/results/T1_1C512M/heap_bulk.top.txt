@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:34:46 UTC
+Showing nodes accounting for 5143.42kB, 100% of 5143.42kB total
+Showing top 12 nodes out of 42
+      flat  flat%   sum%        cum   cum%
+ 2064.04kB 40.13% 40.13%  2064.04kB 40.13%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+  518.65kB 10.08% 50.21%   518.65kB 10.08%  github.com/refraction-networking/utls/dicttls.map.init.5
+  512.44kB  9.96% 60.18%   512.44kB  9.96%  regexp.onePassCopy
+  512.23kB  9.96% 70.14%   512.23kB  9.96%  runtime.mallocgc
+  512.02kB  9.95% 80.09%   512.02kB  9.95%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLinkManager
+  512.02kB  9.95% 90.05%  2576.06kB 50.08%  github.com/xtls/xray-core/common/buf.New
+  512.01kB  9.95%   100%   512.01kB  9.95%  github.com/xtls/xray-core/common/buf.UpdateActivity.1
+         0     0%   100%   518.65kB 10.08%  github.com/refraction-networking/utls/dicttls.init
+         0     0%   100%   512.44kB  9.96%  github.com/softlayer/softlayer-go/config.init
+         0     0%   100%   512.02kB  9.95%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+         0     0%   100%   516.01kB 10.03%  github.com/wyusgw/v2node/core/app/dispatcher.(*ManagedReader).ReadMultiBuffer
+         0     0%   100%   512.02kB  9.95%  github.com/xtls/xray-core/app/proxyman/inbound.(*tcpWorker).callback

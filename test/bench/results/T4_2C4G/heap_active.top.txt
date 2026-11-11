@@ -1,0 +1,20 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:38:04 UTC
+Showing nodes accounting for 112.76MB, 91.83% of 122.79MB total
+Dropped 69 nodes (cum <= 0.61MB)
+Showing top 12 nodes out of 82
+      flat  flat%   sum%        cum   cum%
+   79.29MB 64.58% 64.58%    79.29MB 64.58%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+       8MB  6.52% 71.09%        8MB  6.52%  fmt.Sprintf
+    5.50MB  4.48% 75.57%     5.50MB  4.48%  internal/sync.newIndirectNode[go.shape.interface {},go.shape.interface {}] (inline)
+    4.03MB  3.28% 78.86%    78.72MB 64.11%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       4MB  3.26% 82.12%        4MB  3.26%  runtime.mallocgc
+    3.03MB  2.46% 84.58%     6.53MB  5.32%  github.com/wyusgw/v2node/limiter.AddLimiter
+    2.50MB  2.04% 86.62%     2.50MB  2.04%  internal/sync.newEntryNode[go.shape.interface {},go.shape.interface {}] (inline)
+       2MB  1.63% 88.25%        2MB  1.63%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+    1.40MB  1.14% 89.39%     2.40MB  1.96%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       1MB  0.81% 90.20%        1MB  0.81%  github.com/xtls/xray-core/common/buf.NewReadVReader (inline)
+       1MB  0.81% 91.02%    59.58MB 48.52%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).DispatchLink
+       1MB  0.81% 91.83%        1MB  0.81%  encoding/json/v2.makeString

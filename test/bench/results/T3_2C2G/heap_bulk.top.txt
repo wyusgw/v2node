@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:37:09 UTC
+Showing nodes accounting for 67.05MB, 80.28% of 83.52MB total
+Showing top 12 nodes out of 165
+      flat  flat%   sum%        cum   cum%
+   49.89MB 59.73% 59.73%    49.89MB 59.73%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+       6MB  7.19% 66.92%        6MB  7.19%  runtime.mallocgc
+    1.50MB  1.80% 68.72%     1.50MB  1.80%  context.withCancel
+    1.50MB  1.80% 70.51%     1.50MB  1.80%  github.com/xtls/xray-core/common/buf.NewWriter
+    1.16MB  1.38% 71.90%     1.16MB  1.38%  runtime/pprof.StartCPUProfile
+       1MB  1.20% 73.09%        1MB  1.20%  context.(*cancelCtx).propagateCancel
+       1MB  1.20% 74.29%        1MB  1.20%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+       1MB  1.20% 75.49%        1MB  1.20%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       1MB  1.20% 76.69%     1.50MB  1.80%  github.com/xtls/xray-core/common/signal.CancelAfterInactivity
+       1MB  1.20% 77.88%        1MB  1.20%  fmt.Sprintf
+       1MB  1.20% 79.08%        2MB  2.39%  github.com/xtls/xray-core/common/buf.NewReadVReader
+       1MB  1.20% 80.28%        1MB  1.20%  github.com/wyusgw/v2node/core/app/dispatcher.(*DefaultDispatcher).getLinkManager

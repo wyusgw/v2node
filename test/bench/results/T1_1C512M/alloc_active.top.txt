@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: alloc_space
+Time: 2026-11-11 16:34:29 UTC
+Showing nodes accounting for 7267.42kB, 100% of 7267.42kB total
+Showing top 12 nodes out of 63
+      flat  flat%   sum%        cum   cum%
+ 2640.83kB 36.34% 36.34%  2640.83kB 36.34%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+  688.56kB  9.47% 45.81%   688.56kB  9.47%  compress/flate.(*fastGen).addBlock
+  678.95kB  9.34% 55.15%   678.95kB  9.34%  reflect.compiledTypelinks
+  655.29kB  9.02% 64.17%  1199.96kB 16.51%  compress/flate.NewWriter
+  544.67kB  7.49% 71.67%   544.67kB  7.49%  compress/flate.(*compressor).init
+  518.65kB  7.14% 78.80%   518.65kB  7.14%  github.com/refraction-networking/utls/dicttls.map.init.5
+  516.01kB  7.10% 85.90%  3156.84kB 43.44%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+  512.44kB  7.05% 92.95%   512.44kB  7.05%  regexp.onePassCopy
+  512.02kB  7.05%   100%   512.02kB  7.05%  runtime.mallocgcSmallScanNoHeaderSC4
+         0     0%   100%   688.56kB  9.47%  compress/flate.(*Writer).Close
+         0     0%   100%   688.56kB  9.47%  compress/flate.(*compressor).close
+         0     0%   100%   688.56kB  9.47%  compress/flate.(*compressor).deflateFast

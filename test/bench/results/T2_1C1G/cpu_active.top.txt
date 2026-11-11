@@ -1,0 +1,23 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 16:35:10 UTC
+Duration: 25s, Total samples = 1.74s ( 6.96%)
+Showing nodes accounting for 1.47s, 84.48% of 1.74s total
+Showing top 15 nodes out of 92
+      flat  flat%   sum%        cum   cum%
+     1.19s 68.39% 68.39%      1.19s 68.39%  internal/runtime/syscall/linux.Syscall6
+     0.06s  3.45% 71.84%      0.06s  3.45%  runtime.futex
+     0.03s  1.72% 73.56%      0.04s  2.30%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.02s  1.15% 74.71%      0.34s 19.54%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.02s  1.15% 75.86%      1.46s 83.91%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.02s  1.15% 77.01%      0.28s 16.09%  internal/poll.(*FD).Read
+     0.02s  1.15% 78.16%      0.02s  1.15%  runtime.casgstatus
+     0.02s  1.15% 79.31%      0.24s 13.79%  runtime.findRunnable
+     0.02s  1.15% 80.46%      0.02s  1.15%  runtime.ifaceeq
+     0.02s  1.15% 81.61%      0.02s  1.15%  runtime.nanotime (inline)
+     0.01s  0.57% 82.18%      0.21s 12.07%  github.com/wyusgw/v2node/core/app/dispatcher.(*ManagedReader).ReadMultiBuffer
+     0.01s  0.57% 82.76%      0.01s  0.57%  github.com/wyusgw/v2node/core/app/dispatcher.(*ManagedReader).check
+     0.01s  0.57% 83.33%      0.01s  0.57%  github.com/wyusgw/v2node/core/app/dispatcher.(*cachedReader).readInternal
+     0.01s  0.57% 83.91%      0.38s 21.84%  github.com/xtls/xray-core/app/dispatcher.(*SizeStatWriter).WriteMultiBuffer
+     0.01s  0.57% 84.48%      0.02s  1.15%  github.com/xtls/xray-core/common/buf.(*Buffer).Release

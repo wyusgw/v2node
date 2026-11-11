@@ -1,0 +1,24 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 16:37:34 UTC
+Duration: 25s, Total samples = 6.82s (27.28%)
+Showing nodes accounting for 5.69s, 83.43% of 6.82s total
+Dropped 59 nodes (cum <= 0.03s)
+Showing top 15 nodes out of 81
+      flat  flat%   sum%        cum   cum%
+     4.30s 63.05% 63.05%      4.30s 63.05%  internal/runtime/syscall/linux.Syscall6
+     0.46s  6.74% 69.79%      0.46s  6.74%  runtime.futex
+     0.14s  2.05% 71.85%      5.34s 78.30%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.13s  1.91% 73.75%      1.59s 23.31%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.09s  1.32% 75.07%      0.09s  1.32%  runtime.gopark
+     0.07s  1.03% 76.10%      1.46s 21.41%  github.com/xtls/xray-core/common/buf.ReadBuffer
+     0.07s  1.03% 77.13%      0.07s  1.03%  internal/runtime/atomic.(*Uint32).CompareAndSwap (inline)
+     0.07s  1.03% 78.15%      0.07s  1.03%  runtime.chansend
+     0.06s  0.88% 79.03%      1.02s 14.96%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBuffer
+     0.06s  0.88% 79.91%      1.31s 19.21%  internal/poll.(*FD).Read
+     0.05s  0.73% 80.65%      3.15s 46.19%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+     0.05s  0.73% 81.38%      1.76s 25.81%  github.com/xtls/xray-core/common/buf.(*BufferedWriter).WriteMultiBuffer
+     0.05s  0.73% 82.11%      0.06s  0.88%  runtime.execute
+     0.05s  0.73% 82.84%      0.05s  0.73%  runtime.nanotime
+     0.04s  0.59% 83.43%      1.83s 26.83%  github.com/xtls/xray-core/app/dispatcher.(*SizeStatWriter).WriteMultiBuffer

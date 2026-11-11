@@ -1,0 +1,17 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:33:55 UTC
+Showing nodes accounting for 1031.09kB, 100% of 1031.09kB total
+      flat  flat%   sum%        cum   cum%
+  518.65kB 50.30% 50.30%   518.65kB 50.30%  github.com/refraction-networking/utls/dicttls.map.init.5
+  512.44kB 49.70%   100%   512.44kB 49.70%  regexp.onePassCopy
+         0     0%   100%   518.65kB 50.30%  github.com/refraction-networking/utls/dicttls.init
+         0     0%   100%   512.44kB 49.70%  github.com/softlayer/softlayer-go/config.init
+         0     0%   100%   512.44kB 49.70%  regexp.Compile (inline)
+         0     0%   100%   512.44kB 49.70%  regexp.MustCompile
+         0     0%   100%   512.44kB 49.70%  regexp.compile
+         0     0%   100%   512.44kB 49.70%  regexp.compileOnePass
+         0     0%   100%  1031.09kB   100%  runtime.doInit (inline)
+         0     0%   100%  1031.09kB   100%  runtime.doInit1
+         0     0%   100%  1031.09kB   100%  runtime.main

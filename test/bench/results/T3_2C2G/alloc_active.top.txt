@@ -1,0 +1,20 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: alloc_space
+Time: 2026-11-11 16:36:52 UTC
+Showing nodes accounting for 93.64MB, 88.13% of 106.25MB total
+Dropped 86 nodes (cum <= 0.53MB)
+Showing top 12 nodes out of 91
+      flat  flat%   sum%        cum   cum%
+   69.61MB 65.52% 65.52%    69.61MB 65.52%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
+   10.58MB  9.96% 75.48%    75.62MB 71.17%  github.com/xtls/xray-core/proxy/vless/inbound.(*Handler).Process
+       4MB  3.77% 79.24%        4MB  3.77%  runtime.mallocgc
+    1.50MB  1.41% 80.66%     2.50MB  2.35%  github.com/wyusgw/v2node/core.buildVlessUser
+    1.50MB  1.41% 82.07%     1.50MB  1.41%  github.com/xtls/xray-core/common/buf.(*TimeoutWrapperReader).ReadMultiBufferTimeout
+    1.16MB  1.09% 83.16%     1.16MB  1.09%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+       1MB  0.94% 84.10%     1.50MB  1.41%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+       1MB  0.94% 85.04%        1MB  0.94%  time.newTimer
+       1MB  0.94% 85.99%        1MB  0.94%  fmt.Sprintf
+       1MB  0.94% 86.93%        1MB  0.94%  github.com/xtls/xray-core/proxy/vless/encoding.DecodeRequestHeader
+    0.71MB  0.67% 87.60%     0.71MB  0.67%  reflect.compiledTypelinks
+    0.57MB  0.54% 88.13%     0.57MB  0.54%  compress/flate.newFastEnc

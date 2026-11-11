@@ -1,0 +1,24 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 16:35:42 UTC
+Duration: 12.11s, Total samples = 11.49s (94.86%)
+Showing nodes accounting for 10.71s, 93.21% of 11.49s total
+Dropped 104 nodes (cum <= 0.06s)
+Showing top 15 nodes out of 66
+      flat  flat%   sum%        cum   cum%
+    10.22s 88.95% 88.95%     10.22s 88.95%  internal/runtime/syscall/linux.Syscall6
+     0.08s   0.7% 89.64%      0.13s  1.13%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.06s  0.52% 90.17%      4.44s 38.64%  github.com/xtls/xray-core/common/buf.(*ReadVReader).readMulti
+     0.06s  0.52% 90.69%      0.06s  0.52%  sync.(*poolDequeue).pushHead
+     0.05s  0.44% 91.12%      6.07s 52.83%  internal/poll.(*FD).Writev
+     0.04s  0.35% 91.47%      4.66s 40.56%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.03s  0.26% 91.73%      6.50s 56.57%  github.com/xtls/xray-core/common/buf.(*BufferedWriter).WriteMultiBuffer
+     0.03s  0.26% 91.99%     10.25s 89.21%  syscall.RawSyscall6
+     0.02s  0.17% 92.17%     11.38s 99.04%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.02s  0.17% 92.34%      4.11s 35.77%  internal/poll.(*FD).RawRead
+     0.02s  0.17% 92.52%      6.10s 53.09%  net.(*Buffers).WriteTo
+     0.02s  0.17% 92.69%      4.13s 35.94%  net.(*rawConn).Read
+     0.02s  0.17% 92.86%      0.10s  0.87%  runtime.mallocgcSmallScanNoHeaderSC5
+     0.02s  0.17% 93.04%      0.08s   0.7%  sync.(*poolChain).pushHead
+     0.02s  0.17% 93.21%     10.32s 89.82%  syscall.Syscall

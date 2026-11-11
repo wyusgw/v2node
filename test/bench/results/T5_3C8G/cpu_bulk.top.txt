@@ -1,0 +1,24 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 16:39:19 UTC
+Duration: 12s, Total samples = 15.51s (129.20%)
+Showing nodes accounting for 13.98s, 90.14% of 15.51s total
+Dropped 97 nodes (cum <= 0.08s)
+Showing top 15 nodes out of 74
+      flat  flat%   sum%        cum   cum%
+    13.04s 84.07% 84.07%     13.04s 84.07%  internal/runtime/syscall/linux.Syscall6
+     0.18s  1.16% 85.24%      0.18s  1.16%  runtime.futex
+     0.12s  0.77% 86.01%      7.08s 45.65%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer
+     0.12s  0.77% 86.78%      0.20s  1.29%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.07s  0.45% 87.23%     14.77s 95.23%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.06s  0.39% 87.62%      0.66s  4.26%  internal/poll.(*FD).Read
+     0.06s  0.39% 88.01%      5.28s 34.04%  internal/poll.(*FD).Writev
+     0.06s  0.39% 88.39%      0.43s  2.77%  runtime.netpoll
+     0.05s  0.32% 88.72%      6.23s 40.17%  github.com/xtls/xray-core/common/buf.(*ReadVReader).readMulti
+     0.05s  0.32% 89.04%      0.71s  4.58%  runtime.findRunnable
+     0.04s  0.26% 89.30%      0.08s  0.52%  internal/poll.runtime_pollReset
+     0.04s  0.26% 89.56%      0.14s   0.9%  runtime.mallocgcSmallScanNoHeaderSC5
+     0.03s  0.19% 89.75%      0.27s  1.74%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+     0.03s  0.19% 89.94%      5.73s 36.94%  github.com/xtls/xray-core/common/buf.(*ReadVReader).readMulti.func1
+     0.03s  0.19% 90.14%      0.10s  0.64%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update

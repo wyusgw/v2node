@@ -1,0 +1,24 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: cpu
+Time: 2026-11-11 16:38:06 UTC
+Duration: 12.05s, Total samples = 22.51s (186.81%)
+Showing nodes accounting for 20.03s, 88.98% of 22.51s total
+Dropped 145 nodes (cum <= 0.11s)
+Showing top 15 nodes out of 74
+      flat  flat%   sum%        cum   cum%
+    18.95s 84.18% 84.18%     18.95s 84.18%  internal/runtime/syscall/linux.Syscall6
+     0.14s  0.62% 84.81%      0.26s  1.16%  runtime.mallocgcSmallScanNoHeaderSC3
+     0.12s  0.53% 85.34%     11.89s 52.82%  github.com/xtls/xray-core/common/buf.(*BufferToBytesWriter).WriteMultiBuffer
+     0.10s  0.44% 85.78%      0.14s  0.62%  github.com/xtls/xray-core/common/signal.(*ActivityTimer).Update
+     0.09s   0.4% 86.18%     22.08s 98.09%  github.com/xtls/xray-core/common/buf.copyInternal
+     0.09s   0.4% 86.58%      0.24s  1.07%  runtime.mallocgcSmallScanNoHeaderSC5
+     0.08s  0.36% 86.94%      0.30s  1.33%  runtime.convTslice
+     0.07s  0.31% 87.25%     11.45s 50.87%  github.com/xtls/xray-core/common/buf.(*BufferedWriter).WriteMultiBuffer
+     0.07s  0.31% 87.56%     10.05s 44.65%  internal/poll.(*FD).Writev
+     0.06s  0.27% 87.83%      0.49s  2.18%  github.com/xtls/xray-core/common/buf.(*Buffer).Release
+     0.06s  0.27% 88.09%     19.01s 84.45%  syscall.RawSyscall6
+     0.06s  0.27% 88.36%     19.24s 85.47%  syscall.Syscall
+     0.05s  0.22% 88.58%     11.57s 51.40%  github.com/xtls/xray-core/app/dispatcher.(*SizeStatWriter).WriteMultiBuffer
+     0.05s  0.22% 88.80%      9.86s 43.80%  internal/poll.writev
+     0.04s  0.18% 88.98%      9.63s 42.78%  github.com/xtls/xray-core/common/buf.(*ReadVReader).ReadMultiBuffer

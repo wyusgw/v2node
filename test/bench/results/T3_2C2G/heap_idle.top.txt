@@ -1,0 +1,19 @@
+File: v2node
+Build ID: 56e624574ac585ee7d2ccd9179b8ebd90226ff42
+Type: inuse_space
+Time: 2026-11-11 16:36:19 UTC
+Showing nodes accounting for 8146.15kB, 84.13% of 9682.85kB total
+Showing top 12 nodes out of 83
+      flat  flat%   sum%        cum   cum%
+ 1024.61kB 10.58% 10.58%  1024.61kB 10.58%  runtime.mallocgc
+ 1024.11kB 10.58% 21.16%  1024.11kB 10.58%  github.com/xtls/xray-core/proxy/vless.(*Account).AsAccount
+ 1024.08kB 10.58% 31.73%  1024.08kB 10.58%  fmt.Sprintf
+  727.78kB  7.52% 39.25%   727.78kB  7.52%  reflect.compiledTypelinks
+  678.95kB  7.01% 46.26%   678.95kB  7.01%  github.com/wyusgw/v2node/api/v2board.(*Client).GetUserList
+  532.26kB  5.50% 51.76%   532.26kB  5.50%  google.golang.org/protobuf/reflect/protoregistry.(*Files).RegisterFile.func2
+  525.43kB  5.43% 57.19%   525.43kB  5.43%  github.com/go-playground/validator/v10.map.init.7
+  525.43kB  5.43% 62.61%  2573.62kB 26.58%  github.com/wyusgw/v2node/core.(*V2Core).AddUsers
+  525.43kB  5.43% 68.04%  1037.51kB 10.71%  github.com/wyusgw/v2node/limiter.AddLimiter
+  525.43kB  5.43% 73.46%   525.43kB  5.43%  golang.org/x/net/html.map.init.1
+  516.64kB  5.34% 78.80%  1028.98kB 10.63%  github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints.init
+  516.01kB  5.33% 84.13%   516.01kB  5.33%  github.com/xtls/xray-core/common/bytespool.createAllocFunc.func1
