@@ -102,9 +102,15 @@ func setLegacyUser(uid, m int) {
 func (p *mockPanel) serve() {
 	ob, _ := json.Marshal(map[string]any{"tag": "rlout", "protocol": "freedom",
 		"settings": map[string]any{"finalRules": []any{map[string]any{"action": "allow", "ip": []string{"127.0.0.1/32"}}}}})
-	cfg, _ := json.Marshal(map[string]any{"protocol": "vless", "listen_ip": "127.0.0.1", "server_port": nodePort, "network": "tcp", "tls": 0,
+	node := map[string]any{"protocol": *proto, "listen_ip": "127.0.0.1", "server_port": nodePort, "network": "tcp", "tls": 0,
 		"routes":      []any{map[string]any{"id": 1, "match": []string{}, "action": "default_out", "action_value": string(ob)}},
-		"base_config": map[string]any{"push_interval": pushSec, "pull_interval": pullSec}})
+		"base_config": map[string]any{"push_interval": pushSec, "pull_interval": pullSec}}
+	if *proto != "vless" {
+		node["tls"] = 1
+		node["tls_settings"] = map[string]any{"cert_mode": "self", "server_name": "test.local"}
+		node["congestion_control"] = "bbr"
+	}
+	cfg, _ := json.Marshal(node)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/v2/server/config", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("ETag", "cfg1")
@@ -250,17 +256,22 @@ func targets() {
 var flowID atomic.Uint64
 
 type flow struct {
-	name     string
-	ctr      *atomic.Int64 // bytes moved through the proxy
-	accepted chan bool     // true once the VLESS response arrived, false if rejected
-	closed   atomic.Bool
-	closedAt atomic.Int64 // unix nano
-	conn     net.Conn
+	name       string
+	ctr        *atomic.Int64 // bytes moved through the proxy
+	accepted   chan bool     // true once the VLESS response arrived, false if rejected
+	closed     atomic.Bool
+	closedAt   atomic.Int64 // unix nano
+	conn       net.Conn
+	extra      io.Closer
+	acceptOnce sync.Once
 }
 
 func (f *flow) stop() {
 	if f.conn != nil {
 		f.conn.Close()
+	}
+	if f.extra != nil {
+		f.extra.Close()
 	}
 }
 
@@ -288,26 +299,31 @@ func markClosed(f *flow) {
 // client itself read no faster than pace bytes/s (used for the baseline).
 func download(name string, uid int, srcIP string, pace int64) *flow {
 	f := &flow{name: name, ctr: new(atomic.Int64), accepted: make(chan bool, 1)}
-	c, err := dialFrom(srcIP)
+	c, vlessResp, err := openTCP(uid, srcIP, srcPort, []byte{'x'})
 	if err != nil {
-		f.accepted <- false
+		setAccepted(f, false)
 		markClosed(f)
 		return f
 	}
 	f.conn = c
-	c.Write(append(vlessHeader(uid, srcPort), 'x'))
 	go func() {
 		defer markClosed(f)
 		r := bufio.NewReaderSize(c, 64<<10)
-		var h [2]byte
 		c.SetReadDeadline(time.Now().Add(8 * time.Second))
-		if _, err := io.ReadFull(r, h[:]); err != nil {
-			f.accepted <- false
+		if vlessResp {
+			var h [2]byte
+			if _, err := io.ReadFull(r, h[:]); err != nil {
+				setAccepted(f, false)
+				return
+			}
+			r.Discard(int(h[1]))
+		} else if _, err := r.Peek(1); err != nil {
+			// through a socks client the first byte of data is the acceptance
+			setAccepted(f, false)
 			return
 		}
-		r.Discard(int(h[1]))
 		c.SetReadDeadline(time.Time{})
-		f.accepted <- true
+		setAccepted(f, true)
 		buf := make([]byte, 32<<10)
 		start := time.Now()
 		var got int64
@@ -333,25 +349,22 @@ func download(name string, uid int, srcIP string, pace int64) *flow {
 func upload(name string, uid int, srcIP string) *flow {
 	id := flowID.Add(1)
 	f := &flow{name: name, ctr: sinkCounter(id), accepted: make(chan bool, 1)}
-	c, err := dialFrom(srcIP)
+	c, _, err := openTCP(uid, srcIP, sinkPort, binary.BigEndian.AppendUint64(nil, id))
 	if err != nil {
-		f.accepted <- false
+		setAccepted(f, false)
 		markClosed(f)
 		return f
 	}
 	f.conn = c
-	first := vlessHeader(uid, sinkPort)
-	first = binary.BigEndian.AppendUint64(first, id)
-	c.Write(first)
 	// accepted once bytes reach the sink; rejected if the node closes first
 	go func() {
 		for {
 			if f.ctr.Load() > 0 {
-				f.accepted <- true
+				setAccepted(f, true)
 				return
 			}
 			if f.closed.Load() {
-				f.accepted <- false
+				setAccepted(f, false)
 				return
 			}
 			time.Sleep(10 * time.Millisecond)
@@ -373,10 +386,15 @@ func upload(name string, uid int, srcIP string) *flow {
 	return f
 }
 
+// setAccepted records whether the flow got through; the first answer wins.
+func setAccepted(f *flow, v bool) {
+	f.acceptOnce.Do(func() { f.accepted <- v })
+}
+
 func acceptedWithin(f *flow, d time.Duration) bool {
 	select {
 	case a := <-f.accepted:
-		f.accepted <- a
+		f.accepted <- a // the channel was emptied above and is only written once
 		return a
 	case <-time.After(d):
 		return false
@@ -932,6 +950,7 @@ func main() {
 	}
 	P.serve()
 	targets()
+	udpTargets()
 	cfgPath, _ := filepath.Abs(filepath.Join(*out, "config.json"))
 	os.WriteFile(cfgPath, []byte(fmt.Sprintf(`{"Log":{"Level":"warning","Access":"none"},"PprofPort":%d,"Nodes":[{"ApiHost":"http://127.0.0.1:%d","NodeID":1,"ApiKey":"k","Timeout":30}]}`, pprofPort, panelPort)), 0644)
 	cmd := exec.Command("taskset", "-c", *cpus, *bin, "server", "-c", cfgPath, "-w=false")
@@ -942,6 +961,10 @@ func main() {
 	}
 	defer cmd.Process.Kill()
 	nodePid = cmd.Process.Pid
+	if *proto != "vless" {
+		startXrayClient()
+		defer stopXrayClient()
+	}
 	for {
 		f := download("ready", 410, "127.0.0.1", 0)
 		if acceptedWithin(f, 2*time.Second) {
@@ -956,7 +979,7 @@ func main() {
 		fn   func()
 	}{
 		{"accuracy", scAccuracy}, {"directions", scDirections}, {"shared", scShared}, {"isolation", scIsolation},
-		{"live", scLive}, {"device", scDevice}, {"kick", scKick}, {"overhead", scOverhead},
+		{"live", scLive}, {"device", scDevice}, {"kick", scKick}, {"overhead", scOverhead}, {"udp", scUDP},
 	}
 	for _, sc := range scenarios {
 		if *only != "" && !strings.Contains(","+*only+",", ","+sc.name+",") {

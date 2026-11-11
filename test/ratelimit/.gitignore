@@ -1,3 +1,6 @@
 /ratelimit
 results/*/config.json
 results/*/v2node.log
+results/*/xray-client.*
+*.cer
+*.key
