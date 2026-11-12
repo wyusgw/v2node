@@ -18,24 +18,16 @@ type OnlineUser struct {
 }
 
 type UserInfo struct {
-	Id         int    `json:"id" msgpack:"id"`
-	Uuid       string `json:"uuid" msgpack:"uuid"`
-	SpeedLimit int    `json:"speed_limit" msgpack:"speed_limit"`
-	// SpeedLimitBps is the exact per-user limit in bytes/s. The panel sends it
-	// alongside SpeedLimit (whole Mbps, rounded up) so limits set in KB/s or
-	// MB/s aren't rounded; older panels omit it and SpeedLimit is used instead.
-	SpeedLimitBps int64 `json:"speed_limit_bps" msgpack:"speed_limit_bps"`
-	// SpeedLimitUpBps is the upload limit in bytes/s (SpeedLimitBps is then
-	// the download limit), 0 meaning unlimited. nil means the panel predates
-	// separate upload/download limits, and the one limit applies both ways.
+	Id            int    `json:"id" msgpack:"id"`
+	Uuid          string `json:"uuid" msgpack:"uuid"`
+	SpeedLimit    int    `json:"speed_limit" msgpack:"speed_limit"`
+	SpeedLimitBps int64  `json:"speed_limit_bps" msgpack:"speed_limit_bps"`
+	// nil: the panel predates separate limits, and the one limit applies both ways.
 	SpeedLimitUpBps *int64 `json:"speed_limit_up_bps" msgpack:"speed_limit_up_bps"`
 	DeviceLimit     int    `json:"device_limit" msgpack:"device_limit"`
-	// SpeedLimitGroup is the plan id when the user shares one speed limit with
-	// the other users of that plan, 0 meaning the user is limited on their own.
-	SpeedLimitGroup int `json:"speed_limit_group" msgpack:"speed_limit_group"`
+	SpeedLimitGroup int    `json:"speed_limit_group" msgpack:"speed_limit_group"`
 }
 
-// SpeedLimitBytes returns the user's speed limit in bytes/s, 0 meaning unlimited.
 func (u UserInfo) SpeedLimitBytes() int64 {
 	if u.SpeedLimitBps > 0 {
 		return u.SpeedLimitBps
@@ -43,7 +35,6 @@ func (u UserInfo) SpeedLimitBytes() int64 {
 	return MbpsToBytes(u.SpeedLimit)
 }
 
-// SpeedLimitUpBytes returns the user's upload limit in bytes/s, 0 meaning unlimited.
 func (u UserInfo) SpeedLimitUpBytes() int64 {
 	if u.SpeedLimitUpBps != nil {
 		return *u.SpeedLimitUpBps
@@ -51,7 +42,6 @@ func (u UserInfo) SpeedLimitUpBytes() int64 {
 	return u.SpeedLimitBytes()
 }
 
-// MbpsToBytes converts a Mbps rate to bytes/s.
 func MbpsToBytes(mbps int) int64 {
 	return int64(mbps) * 1000000 / 8
 }
@@ -196,8 +186,6 @@ type claimDeviceResult struct {
 	Allow bool `json:"allow"`
 }
 
-// ClaimDevice atomically checks and registers ip against uid's device limit in the panel's
-// cross-node online-IP set, as each node's alive count only refreshes periodically.
 // Callers must treat an error as a reject (fail-closed).
 func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimit int) (bool, error) {
 	const path = "/api/v1/server/UniProxy/claimDevice"
@@ -227,8 +215,6 @@ type userVersionBody struct {
 	Version string `json:"version"`
 }
 
-// GetUserVersion returns the panel's user version, which changes whenever a
-// user's speed limit changes. An empty version means none changed yet.
 func (c *Client) GetUserVersion(ctx context.Context) (string, error) {
 	const path = "/api/v1/server/UniProxy/userVersion"
 	r, err := c.client.R().

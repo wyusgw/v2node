@@ -29,8 +29,6 @@ type Client struct {
 	AliveMap         *AliveMap
 }
 
-// pinnedNodeTypes are the protocol tables a node can be pinned to instead of the unified
-// v2node table. Others are rejected up front, as the panel answers them with an unhelpful 404.
 var pinnedNodeTypes = map[string]bool{
 	"vless":       true,
 	"vmess":       true,

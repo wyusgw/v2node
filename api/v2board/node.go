@@ -124,10 +124,8 @@ type EncSettings struct {
 }
 
 func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
-	// A pinned NodeType reads its own protocol-specific table through the
-	// legacy UniProxy endpoint, which never sends a "protocol" field back
-	// since node_type already told it which table to use. The default
-	// "v2node" instead reads the panel's unified table, which does send one.
+	// A pinned NodeType reads the legacy endpoint, which sends no "protocol" field;
+	// "v2node" reads the unified table, which does.
 	path := "/api/v1/server/UniProxy/config"
 	if c.NodeType == "v2node" {
 		path = "/api/v2/server/config"
@@ -174,9 +172,6 @@ func (c *Client) GetNodeInfo(ctx context.Context) (node *NodeInfo, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("decode node params error: %s", err)
 	}
-	// Under "v2node", the protocol comes from the response's "protocol"
-	// field. Under a pinned NodeType, the endpoint above never sends one, so
-	// the protocol is whatever node_type already told the panel to use.
 	protocol := cm.Protocol
 	if c.NodeType != "v2node" {
 		protocol = c.NodeType

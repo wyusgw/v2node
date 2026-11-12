@@ -14,11 +14,9 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-// A Shadowsocks (not 2022) node tries every user's key per connection, so reconnecting clients
-// of removed users are expensive. The core only knows users removed since it started, so the
-// node saves its users and the last week's removed ones and restores them on start.
+// Shadowsocks (not 2022) tries every key per connection, so clients of removed users are
+// costly; the node saves its users and last week's removed ones to restore on start.
 const (
-	// Same as how long the core keeps keys of removed users.
 	ssRemovedMaxAge = 7 * 24 * time.Hour
 	ssRemovedMax    = 10000
 )
@@ -40,8 +38,7 @@ func (c *Controller) isLegacySS() bool {
 		c.info.Common != nil && c.info.Common.ServerKey == ""
 }
 
-// ssStatePath returns the file of this node's Shadowsocks users. It holds
-// user UUIDs, which are passwords, so it is only readable by its owner.
+// The file holds user UUIDs, which are passwords, so it is owner-readable only.
 func (c *Controller) ssStatePath() string {
 	dir := "/etc/v2node"
 	host := ""
@@ -89,8 +86,6 @@ func saveSSState(path string, state *ssUserState) error {
 	return nil
 }
 
-// pruneSSRemoved drops users removed too long ago, then the oldest ones over
-// the limit. removed is oldest first.
 func pruneSSRemoved(removed []ssRemovedUser, now time.Time) []ssRemovedUser {
 	oldest := now.Add(-ssRemovedMaxAge).Unix()
 	i := 0
@@ -104,9 +99,6 @@ func pruneSSRemoved(removed []ssRemovedUser, now time.Time) []ssRemovedUser {
 	return removed
 }
 
-// restoredSSRemoved returns the removed users to keep after a start with the
-// current users: the saved removed users, and the saved users that are gone
-// now, removed while the node was down. Current users are left out.
 func restoredSSRemoved(state *ssUserState, current []panel.UserInfo, now time.Time) []ssRemovedUser {
 	active := make(map[string]bool, len(current))
 	for _, u := range current {
@@ -131,7 +123,6 @@ func restoredSSRemoved(state *ssUserState, current []panel.UserInfo, now time.Ti
 	return pruneSSRemoved(removed, now)
 }
 
-// updatedSSRemoved adds deleted users to removed and drops added ones.
 func updatedSSRemoved(removed []ssRemovedUser, deleted, added []panel.UserInfo, cipher string, now time.Time) []ssRemovedUser {
 	back := make(map[string]bool, len(added))
 	for _, u := range added {
@@ -162,8 +153,6 @@ func (c *Controller) saveSSUsers() {
 	}
 }
 
-// restoreSSUsers hands the users removed before this start to the core and
-// saves the current users. It is called after the node's users are added.
 func (c *Controller) restoreSSUsers() {
 	if !c.isLegacySS() {
 		return
@@ -193,8 +182,6 @@ func (c *Controller) restoreSSUsers() {
 	c.saveSSUsers()
 }
 
-// updateSSUsers records a user list change. c.userList must already be the
-// new list.
 func (c *Controller) updateSSUsers(deleted, added []panel.UserInfo) {
 	if !c.isLegacySS() || len(deleted)+len(added) == 0 {
 		return

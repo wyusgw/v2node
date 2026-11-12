@@ -60,8 +60,6 @@ func (t *Task) Start(first bool) error {
 	return nil
 }
 
-// Trigger runs the task now instead of at its next interval. A run already
-// requested and not started yet is not requested twice.
 func (t *Task) Trigger() {
 	t.Access.RLock()
 	trigger := t.trigger

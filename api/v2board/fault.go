@@ -6,9 +6,6 @@ import (
 	"strconv"
 )
 
-// ReportFault tells the panel about a local fault of this node (failed start,
-// cert error, ...) so it shows as faulty with the reason. An empty message
-// clears a previously reported fault.
 func (c *Client) ReportFault(ctx context.Context, message string) error {
 	const path = "/api/v1/server/UniProxy/fault"
 	r, err := c.client.R().

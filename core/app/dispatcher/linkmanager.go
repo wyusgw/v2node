@@ -14,23 +14,13 @@ import (
 type ManagedWriter struct {
 	writer  buf.Writer
 	manager *LinkManager
-	// killed is set by CloseAll. Closing/interrupting the underlying writer
-	// and reader only works when they're pipes (Dispatch); links handed in
-	// ready-made through DispatchLink wrap the raw client connection, where
-	// Close/Interrupt can be no-ops. Failing the next read/write instead
-	// makes the protocol handler tear the connection down itself.
+	// Close/Interrupt can be no-ops on DispatchLink's raw client conns, so CloseAll sets this
+	// and the next read/write fails, making the protocol handler tear the connection down.
 	killed atomic.Bool
-	// downlink is the download pipe of a Dispatch link. Killing only the
-	// upload side leaves data from the target still flowing to the client,
-	// so CloseAll interrupts this one as well.
+	// Killing only the upload side would leave target data flowing to the client.
 	downlink []interface{}
-	// ip is the client address the link was opened from, so CloseIP can
-	// drop a single device without touching the user's other links.
-	ip string
-	// conn is the client connection, nil when the inbound has none (e.g. UDP).
-	// Zero-copy splice runs on the raw sockets and never touches the pipes, so
-	// only closing the connection ends it. Mux streams share it, which is fine:
-	// they belong to the same user and device.
+	ip       string
+	// Splice runs on the raw sockets and never touches the pipes, so only closing conn ends it.
 	conn net.Conn
 }
 
@@ -42,7 +32,6 @@ func (w *ManagedWriter) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	return w.writer.WriteMultiBuffer(mb)
 }
 
-// ManagedReader fails reads once its link has been killed by CloseAll.
 type ManagedReader struct {
 	reader buf.TimeoutReader
 	writer *ManagedWriter
@@ -80,9 +69,7 @@ func (w *ManagedWriter) Close() error {
 	return common.Close(w.writer)
 }
 
-// Interrupt forwards a real interrupt to the underlying pipe. Without it,
-// common.Interrupt falls back to Close, which lets a failed connection's
-// buffered data be drained instead of released right away.
+// Without it common.Interrupt falls back to Close, which drains buffered data first.
 func (w *ManagedWriter) Interrupt() {
 	w.manager.RemoveWriter(w)
 	common.Interrupt(w.writer)
@@ -101,7 +88,6 @@ func (m *LinkManager) AddLink(writer *ManagedWriter, reader buf.Reader) {
 		m.links[writer] = reader
 	}
 	m.mu.Unlock()
-	// CloseAll ran after this link passed the limiter check, nothing else would stop it
 	if closed {
 		killLink(writer, reader)
 	}
@@ -132,7 +118,6 @@ func (m *LinkManager) CloseAll() {
 	}
 }
 
-// IPs returns the client ips that have a link open, each once.
 func (m *LinkManager) IPs() []string {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
@@ -147,8 +132,6 @@ func (m *LinkManager) IPs() []string {
 	return ips
 }
 
-// CloseIP drops only the links opened from ip. Unlike CloseAll the manager
-// stays open, so the user's other devices keep connecting through it.
 func (m *LinkManager) CloseIP(ip string) {
 	m.mu.Lock()
 	if m.closed {

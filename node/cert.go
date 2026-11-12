@@ -21,8 +21,6 @@ import (
 
 func (c *Controller) renewCertTask(_ context.Context) error {
 	cert := c.info.Common.CertInfo
-	// requestCert keeps the node up on the old files when obtaining a
-	// replacement fails, so retry that here before trying a plain renewal.
 	if !certUsable(cert.CertFile, cert.KeyFile, cert.CertDomain, true) {
 		if err := obtainCert(cert); err != nil {
 			log.WithField("tag", c.tag).Info("obtain cert error: ", err)
@@ -60,9 +58,6 @@ func (c *Controller) requestCert() error {
 		if cert.CertFile == "" || cert.KeyFile == "" {
 			return fmt.Errorf("cert file path or key file path not exist")
 		}
-		// Existing files are only reused when they still match the panel's
-		// settings: a changed domain, or a self-signed cert left over from
-		// the self/remote modes, gets a fresh one from the CA.
 		if certUsable(cert.CertFile, cert.KeyFile, cert.CertDomain, true) {
 			return nil
 		}
@@ -96,8 +91,6 @@ func (c *Controller) requestCert() error {
 			}
 			return fmt.Errorf("tls cert or tls key not exist")
 		}
-		// The panel's cert replaces whatever is on disk whenever they differ,
-		// so a cert regenerated on the panel reaches the node on its next reload.
 		if fileContentIs(cert.CertFile, cert.TlsCert) && fileContentIs(cert.KeyFile, cert.TlsKey) {
 			return nil
 		}
@@ -125,9 +118,6 @@ func obtainCert(cert *panel.CertInfo) error {
 	return nil
 }
 
-// certUsable reports whether certPath and keyPath hold a matching cert/key
-// pair that covers domain (skipped when empty). requireCA additionally
-// rejects self-signed certs.
 func certUsable(certPath, keyPath, domain string, requireCA bool) bool {
 	pair, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
@@ -152,9 +142,7 @@ func fileContentIs(path, content string) bool {
 	return err == nil && string(data) == content
 }
 
-// generateSelfSslCertificate uses an ECDSA P-256 key: the server signs once
-// per TLS handshake, and an RSA-2048 signature costs many times as much CPU,
-// which dominated nodes that take many new connections.
+// ECDSA P-256: RSA-2048 signing per handshake dominated CPU on busy nodes.
 func generateSelfSslCertificate(domain, certPath, keyPath string) error {
 	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {

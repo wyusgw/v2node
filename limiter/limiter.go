@@ -17,10 +17,6 @@ import (
 var limitLock sync.RWMutex
 var limiter map[string]*Limiter
 
-// claimDeviceTimeout bounds how long a brand-new device's first connection
-// on a node can be held up waiting on the panel's cross-node device-claim
-// check, so a slow/unreachable panel delays new connections by a fixed,
-// short amount rather than the client's full request timeout/retry budget.
 const claimDeviceTimeout = 3 * time.Second
 
 func Init() {
@@ -47,9 +43,6 @@ type UserLimitInfo struct {
 	OverLimit    bool
 }
 
-// BucketKey returns the SpeedLimiter key of u, "" when u is unlimited. Users
-// sharing a plan's limit share one bucket per limit value, so a user given a
-// different limit than the rest of the plan isn't throttled by their bucket.
 func BucketKey(tag string, u panel.UserInfo) string {
 	up := u.SpeedLimitUpBytes()
 	down := u.SpeedLimitBytes()
@@ -140,8 +133,7 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 			u.DeviceLimit = modified[i].DeviceLimit
 		})
 		if deviceLimitChanged {
-			// Admitted devices aren't re-checked until the report cycle rolls over, so drop
-			// this user's tracking to apply the new limit on their next connection.
+			// Admitted devices aren't re-checked until the cycle ends: apply the new limit now.
 			l.clearOnlineState(key)
 		}
 		up := modified[i].SpeedLimitUpBytes()
@@ -179,7 +171,6 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 	}
 }
 
-// pruneSharedBuckets drops the shared buckets no user of tag maps to anymore.
 func (l *Limiter) pruneSharedBuckets(tag string) {
 	used := make(map[string]struct{})
 	l.UserLimitInfo.Range(func(_, value interface{}) bool {
@@ -198,9 +189,7 @@ func (l *Limiter) pruneSharedBuckets(tag string) {
 	})
 }
 
-// updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
-// copy. CheckLimit reads these entries without a lock on every new
-// connection, so they are never modified in place.
+// CheckLimit reads these without a lock, so entries are copied, never modified in place.
 func (l *Limiter) updateInfo(key string, fn func(*UserLimitInfo)) bool {
 	for {
 		v, ok := l.UserLimitInfo.Load(key)
@@ -237,11 +226,8 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	if l.isKicked(uid, ip) {
 		return nil, true
 	}
-	// Applies to UDP-only devices too. UserOnlineIP is wiped every report cycle, so each ip
-	// goes through claimDevice at least once per cycle: the panel's claim entry would otherwise
-	// expire while the device is connected and free its slot for another device.
-	// An ip is stored only after the claim succeeds, since GetOnlineDevice snapshots this map
-	// concurrently and could otherwise report a device that is about to be rejected.
+	// UserOnlineIP is wiped every cycle so each ip reclaims its panel slot before it expires.
+	// Store only after the claim succeeds: GetOnlineDevice snapshots this map concurrently.
 	var ipMap *sync.Map
 	if v, ok := l.UserOnlineIP.Load(taguuid); ok {
 		ipMap = v.(*sync.Map)
@@ -269,8 +255,7 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 		if v, ok := l.SpeedLimiter.Load(bucketKey); ok {
 			return v.(*rate.DuplexBucket), false
 		}
-		// Concurrent first connections of a user must share one bucket, or
-		// each would get the full rate.
+		// Concurrent first connections of a user must share one bucket, or each gets the full rate.
 		v, _ := l.SpeedLimiter.LoadOrStore(bucketKey, rate.NewDuplexBucket(up, down))
 		return v.(*rate.DuplexBucket), false
 	} else {
@@ -287,9 +272,6 @@ func (l *Limiter) isKicked(uid int, ip string) bool {
 	return ok && v.(int64) > time.Now().Unix()
 }
 
-// ApplyKicks blocks the ips the panel kicked offline until their block ends,
-// and drops them from this cycle's admitted set so they aren't reported as
-// online again. Expired blocks are cleared here as well.
 func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
 	now := time.Now().Unix()
 	l.Kicked.Range(func(key, value interface{}) bool {
@@ -320,15 +302,11 @@ func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
 	})
 }
 
-// clearOnlineState drops taguuid's per-cycle admitted-IP set, so the next
-// connection from every device this user currently has open is treated as
-// new-this-cycle and goes through claimDevice again immediately.
 func (l *Limiter) clearOnlineState(taguuid string) {
 	l.UserOnlineIP.Delete(taguuid)
 }
 
-// claimDevice asks the panel to atomically check and register ip against uid's device limit.
-// A nil client means no limit configured and allows; any request error rejects (fail-closed).
+// A nil client means no limit configured; any request error rejects (fail-closed).
 func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLimit int) bool {
 	if l.Client == nil {
 		return true
@@ -342,7 +320,6 @@ func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLim
 	return allow
 }
 
-// UID returns the panel user id of taguuid.
 func (l *Limiter) UID(taguuid string) (int, bool) {
 	v, ok := l.UserLimitInfo.Load(taguuid)
 	if !ok {
@@ -351,10 +328,7 @@ func (l *Limiter) UID(taguuid string) (int, bool) {
 	return v.(*UserLimitInfo).UID, true
 }
 
-// Reclaim asks the panel again for the slot of a device of taguuid that is
-// already connected, after its device limit changed, and reports whether the
-// panel refused it. A failed request is not a refusal: it must not drop
-// devices that hold their slot.
+// A failed request is not a refusal: it must not drop devices holding their slot.
 func (l *Limiter) Reclaim(ctx context.Context, taguuid string, ip string) bool {
 	v, ok := l.UserLimitInfo.Load(taguuid)
 	if !ok || l.Client == nil {

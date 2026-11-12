@@ -8,8 +8,6 @@ import (
 	"github.com/xtls/xray-core/common/net"
 )
 
-// behaviorTracker accumulates one connection's upload/download byte counts with the same
-// counter wiring as the per-user totals, read back once the connection finishes.
 type behaviorTracker struct {
 	tag         string
 	email       string
@@ -19,10 +17,6 @@ type behaviorTracker struct {
 	down        atomic.Int64
 }
 
-// finish records the completed connection against destination (the final,
-// post-sniffing destination) once the proxy handler has returned - i.e. once
-// the connection has actually closed, so Duration/Upload/Download reflect the
-// whole connection rather than a snapshot mid-flight.
 func (t *behaviorTracker) finish(destination net.Destination) {
 	if t == nil {
 		return

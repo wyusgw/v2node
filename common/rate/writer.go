@@ -18,8 +18,7 @@ type DynamicBucket struct {
 	v atomic.Value // *ratelimit.Bucket
 }
 
-// fillInterval is how often the bucket is refilled. Refilling a whole second's quota at once
-// lets a connection burst uncapped and then stall; small slices keep the speed near the limit.
+// Refill in small slices: a whole second's quota at once lets a connection burst, then stall.
 const fillInterval = 20 * time.Millisecond
 const ticksPerSecond = int64(time.Second / fillInterval)
 
@@ -48,15 +47,11 @@ func (d *DynamicBucket) Update(rate int64) {
 	d.v.Store(newBucket(rate))
 }
 
-// DuplexBucket holds separate upload and download buckets for one user, so
-// each direction gets the full configured rate instead of sharing it.
 type DuplexBucket struct {
 	Up   *DynamicBucket
 	Down *DynamicBucket
 }
 
-// NewDuplexBucket takes the upload and download rates in bytes/s; a rate of
-// 0 leaves that direction unlimited.
 func NewDuplexBucket(up, down int64) *DuplexBucket {
 	return &DuplexBucket{
 		Up:   NewDynamicBucket(up),
@@ -69,9 +64,6 @@ func (d *DuplexBucket) Update(up, down int64) {
 	d.Down.Update(down)
 }
 
-// Wait blocks until n bytes are allowed through, or returns at once when the
-// bucket is currently unlimited. It lets a DynamicBucket pace raw connection
-// reads outside the buf.Reader/Writer pipeline.
 func (d *DynamicBucket) Wait(n int64) {
 	if b := d.Get(); b != nil {
 		b.Wait(n)
@@ -93,8 +85,6 @@ func (w *Writer) Interrupt() {
 	common.Interrupt(w.writer)
 }
 
-// WriteMultiBuffer passes mb on in parts of at most one refill each: waiting
-// for all of it at once makes a low limit deliver tens of KB in one burst.
 func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	limiter := w.limiter.Get()
 	if limiter == nil {
@@ -113,8 +103,6 @@ func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	return nil
 }
 
-// splitRefill cuts mb after the buffers that fit in limit bytes, keeping at
-// least one buffer in part.
 func splitRefill(mb buf.MultiBuffer, limit int64) (part, rest buf.MultiBuffer, size int64) {
 	n := 0
 	for n < len(mb) && (n == 0 || size+int64(mb[n].Len()) <= limit) {

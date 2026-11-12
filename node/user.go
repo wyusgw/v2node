@@ -10,9 +10,7 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-// logSummary writes a compact "timestamp\tLEVEL\tmessage" status line to the app's log output,
-// without logrus's key=value fields. The lines are logged at Warn severity to stay visible at
-// the normal Log.Level, but display as INFO; minLevel gates them like any other log call.
+// Logged at Warn to stay visible at the normal Log.Level, but shown as INFO.
 func logSummary(minLevel log.Level, format string, args ...interface{}) {
 	if log.GetLevel() < minLevel {
 		return
@@ -29,8 +27,6 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 		devicemin = c.info.Common.BaseConfig.DeviceOnlineMinTraffic
 	}
 
-	// c.userList only holds users with a valid subscription on this node, so this counts them
-	// whether or not they have ever connected.
 	logSummary(log.WarnLevel, "current user num: %d", c.userNum.Load())
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
@@ -86,9 +82,6 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				}
 			} else {
 				logSummary(log.WarnLevel, "submit data success, alive user: %d", len(data))
-				// len(result) counts one entry per (uid, ip) pair reported
-				// this cycle, i.e. total online devices - distinct from
-				// alive user above, which counts distinct users.
 				logSummary(log.WarnLevel, "device num: %d", len(result))
 			}
 		}
@@ -97,9 +90,6 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 	return nil
 }
 
-// addOpenLinkDevices adds the devices that still have connections open but
-// opened none this cycle, so a device on one long connection stays reported
-// online and keeps its slot in the panel.
 func (c *Controller) addOpenLinkDevices(devices []panel.OnlineUser) []panel.OnlineUser {
 	seen := make(map[panel.OnlineUser]struct{}, len(devices))
 	for _, d := range devices {

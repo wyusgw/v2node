@@ -37,8 +37,6 @@ type V2Core struct {
 	dispatcher *dispatcher.DefaultDispatcher
 }
 
-// errCoreClosed is returned by calls that arrive after Close, e.g. from a node
-// task that was still running when a reload closed this core.
 var errCoreClosed = errors.New("core is closed")
 
 type UserMap struct {

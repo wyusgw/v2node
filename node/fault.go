@@ -11,7 +11,6 @@ import (
 
 const faultReportTimeout = 10 * time.Second
 
-// setFault records a fault under its source and syncs it to the panel.
 func (c *Controller) setFault(source, message string) {
 	c.faultMu.Lock()
 	if c.faults == nil {
@@ -22,7 +21,6 @@ func (c *Controller) setFault(source, message string) {
 	c.syncFault()
 }
 
-// clearFault drops the fault of one source and syncs the remaining ones.
 func (c *Controller) clearFault(source string) {
 	c.faultMu.Lock()
 	delete(c.faults, source)
@@ -30,9 +28,6 @@ func (c *Controller) clearFault(source string) {
 	c.syncFault()
 }
 
-// syncFault sends the current fault set unless the panel already has it. The first sync always
-// sends, clearing a fault left by a crashed run; a failed send is retried by the next sync.
-// Best effort: an unreachable or older panel only logs.
 func (c *Controller) syncFault() {
 	c.faultMu.Lock()
 	defer c.faultMu.Unlock()
@@ -58,8 +53,6 @@ func (c *Controller) syncFault() {
 	c.faultReported = desired
 }
 
-// SetFault records a fault on every node, for failures that happen before or
-// outside any single controller (e.g. the core failing to start).
 func (n *Node) SetFault(source, message string) {
 	for _, c := range n.controllers {
 		c.setFault(source, message)

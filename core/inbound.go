@@ -369,8 +369,7 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 	cipher := s.Cipher
 	if s.ServerKey != "" {
 		settings.Password = s.ServerKey
-		// A 2022 user key must be exactly the cipher's key length, or the
-		// inbound refuses to start.
+		// A 2022 user key must be exactly the cipher's key length, or the inbound refuses to start.
 		randomPasswd = base64.StdEncoding.EncodeToString(p[:ss2022KeyLength(s.Cipher)])
 		cipher = ""
 	}
@@ -435,9 +434,7 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 }
 
 func setReceiveWindows(q *coreConf.QuicParamsConfig) {
-	// Start from small receive windows so a rate-limited user cannot burst a
-	// full default window past the limit; quic-go grows them to the same caps
-	// only while the application keeps reading.
+	// Small initial windows so a rate-limited user cannot burst a default window past the limit.
 	q.InitStreamReceiveWindow = 128 << 10
 	q.MaxStreamReceiveWindow = 8 << 20
 	q.InitConnectionReceiveWindow = 320 << 10
@@ -580,9 +577,7 @@ func buildAnyTLS(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig
 	return nil
 }
 
-// buildMieru builds the mieru inbound, which binds its own sockets and needs no TLS or
-// stream settings beyond the "mieru" network marker. Its listener refuses to start with
-// zero users, so the user list is baked into the config here instead of added by AddUsers.
+// mieru refuses to start with zero users, so the user list is baked into the config here.
 func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig, tag string, users []panel.UserInfo) error {
 	inbound.Protocol = "mieru"
 	s := nodeInfo.Common
@@ -602,9 +597,6 @@ func buildMieru(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourConfig,
 	return nil
 }
 
-// buildMieruConfigUsers maps panel users onto mieru's config-level user list,
-// the same UUID-as-both-credentials convention buildMieruUser uses for the
-// AddUser path.
 func buildMieruConfigUsers(tag string, userInfo []panel.UserInfo) []*coreConf.MieruUserConfig {
 	users := make([]*coreConf.MieruUserConfig, len(userInfo))
 	for i := range userInfo {

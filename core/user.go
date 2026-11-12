@@ -80,8 +80,6 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 	return nil
 }
 
-// CloseUserLinks drops the given users' open connections so they reconnect under the current
-// limits: a speed limit switching between limited and unlimited doesn't reach existing ones.
 func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -96,8 +94,6 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	}
 }
 
-// OpenLinkIPs returns, keyed by user email, the client ips that have a
-// connection open on inbound tag.
 func (vc *V2Core) OpenLinkIPs(tag string) map[string][]string {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -118,9 +114,6 @@ func (vc *V2Core) OpenLinkIPs(tag string) map[string][]string {
 	return result
 }
 
-// CloseIPLinks drops the connections users have open from the given ips,
-// keyed by uuid. Used when the panel kicks a device offline, leaving the
-// user's other devices connected.
 func (vc *V2Core) CloseIPLinks(tag string, links map[string][]string) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -154,9 +147,7 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 			up := traffic.UpCounter.Load()
 			down := traffic.DownCounter.Load()
 			if up+down > int64(mintraffic*1000) {
-				// Swap rather than Store(0): traffic counted by live
-				// connections between the Load above and here would
-				// otherwise be dropped instead of reported.
+				// Swap, not Store(0): traffic counted since the Load above would be lost.
 				up = traffic.UpCounter.Swap(0)
 				down = traffic.DownCounter.Swap(0)
 				if vc.users.uidMap[email] == 0 {
@@ -179,8 +170,6 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 	return nil, nil
 }
 
-// GetBehaviorSlice drains tag's behavior records and resolves each email to a panel UID.
-// Records of users no longer in the map are dropped rather than reported with UID 0.
 func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	entries := behavior.Drain(tag)
 	if len(entries) == 0 {
@@ -212,9 +201,7 @@ func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	return records, nil
 }
 
-// RegisterUidMap fills the tag+uuid -> UID lookup GetUserTrafficSlice needs. mieru's initial
-// users are baked into its config and never go through AddUsers, so without this their
-// traffic would be dropped silently and they would never be reported as online.
+// mieru's initial users skip AddUsers; without this their traffic would be dropped.
 func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()
@@ -229,10 +216,6 @@ type ssRetirer interface {
 
 var _ ssRetirer = (*shadowsocks.Server)(nil)
 
-// RetireSSUsers tells the Shadowsocks (not 2022) inbound tag about users
-// removed while it was not running, so that it recognizes their clients that
-// keep reconnecting instead of rate-limiting their source IP, which may be a
-// relay shared with other users.
 func (v *V2Core) RetireSSUsers(tag string, users []panel.UserInfo, cipher string) error {
 	v.access.RLock()
 	defer v.access.RUnlock()
@@ -404,8 +387,6 @@ func buildSSUser(tag string, userInfo *panel.UserInfo, cypher string, serverKey 
 	}
 }
 
-// ss2022KeyLength returns the key length in bytes of a Shadowsocks 2022
-// cipher.
 func ss2022KeyLength(cipher string) int {
 	if cipher == "2022-blake3-aes-128-gcm" {
 		return 16
@@ -492,9 +473,6 @@ func buildMieruUsers(tag string, userInfo []panel.UserInfo) (users []*protocol.U
 	return users
 }
 
-// buildMieruUser maps a panel user onto a mieru account. mieru keys on a user
-// name as well as a password, and the panel has only the one credential, so the
-// UUID fills both — the same way buildTuicUser handles TUIC's uuid/password pair.
 func buildMieruUser(tag string, userInfo *panel.UserInfo) (user *protocol.User) {
 	mieruAccount := &mieru.Account{
 		Username: userInfo.Uuid,

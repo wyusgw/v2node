@@ -38,8 +38,7 @@ type Controller struct {
 	faults                  map[string]string // Key: source, value: message
 	faultReported           string
 	faultSynced             bool
-	// userNum is len(userList) for the traffic report task, which runs on
-	// its own goroutine while nodeInfoMonitor replaces userList.
+	// Read by the traffic report task while nodeInfoMonitor replaces userList.
 	userNum atomic.Int64
 }
 
@@ -105,9 +104,7 @@ func (c *Controller) start(x *core.V2Core) error {
 	if err != nil {
 		return fmt.Errorf("add new node error: %s", err)
 	}
-	// mieru's listener refuses to start with zero users, so AddNode already
-	// baked c.userList into its config at construction time; adding them
-	// again here would just fail as duplicates.
+	// mieru's users are already baked into its config; adding them again would fail.
 	if node.Type != "mieru" {
 		added, err := c.server.AddUsers(&core.AddUsersParams{
 			Tag:      c.tag,
@@ -119,8 +116,7 @@ func (c *Controller) start(x *core.V2Core) error {
 		}
 		log.WithField("tag", c.tag).Infof("Added %d new users", added)
 	} else {
-		// AddUsers would fail as a duplicate for mieru's baked-in users, but it is also what
-		// fills the uidMap traffic reporting needs, so register that directly.
+		// AddUsers would fail for mieru's baked-in users, but traffic reporting needs the uidMap.
 		c.server.RegisterUidMap(c.tag, c.userList)
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
