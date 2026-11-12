@@ -10,16 +10,7 @@ import (
 	panel "github.com/wyusgw/v2node/api/v2board"
 )
 
-// logSummary writes a compact "timestamp\tLEVEL\tmessage" status line
-// directly to the same output the rest of the app logs to (respecting
-// -o/Log.Output), instead of the tag=/err= key=value fields logrus's
-// TextFormatter attaches to every other log call. These three lines are
-// meant to be read as an at-a-glance status feed, not troubleshooting
-// detail, so they're deliberately logged at Warn severity - that's what
-// keeps them visible at the normal "warning" Log.Level instead of
-// requiring "info" - while still displaying as "INFO" since that's what
-// they semantically are. minLevel gates them the same way any other log
-// call is gated by the configured level.
+// Logged at Warn to stay visible at the normal Log.Level, but shown as INFO.
 func logSummary(minLevel log.Level, format string, args ...interface{}) {
 	if log.GetLevel() < minLevel {
 		return
@@ -36,12 +27,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 		devicemin = c.info.Common.BaseConfig.DeviceOnlineMinTraffic
 	}
 
-	// c.userList is the panel's /user response for this node, which only
-	// ever contains users with a currently valid subscription assigned to
-	// it - not a locally-tracked online-history set, so this is the count
-	// of currently-valid-subscription users regardless of whether they've
-	// ever connected.
-	logSummary(log.WarnLevel, "current user num: %d", len(c.userList))
+	logSummary(log.WarnLevel, "current user num: %d", c.userNum.Load())
 
 	userTraffic, _ := c.server.GetUserTrafficSlice(c.tag, reportmin)
 	if len(userTraffic) > 0 {
@@ -65,7 +51,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 			"tag": c.tag,
 			"err": err,
 		}).Info("Get online device failed")
-	} else if len(*onlineDevice) > 0 {
+	} else if devices := c.addOpenLinkDevices(*onlineDevice); len(devices) > 0 {
 		var result []panel.OnlineUser
 		var nocountUID = make(map[int]struct{})
 		for _, traffic := range userTraffic {
@@ -74,7 +60,7 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				nocountUID[traffic.UID] = struct{}{}
 			}
 		}
-		for _, online := range *onlineDevice {
+		for _, online := range devices {
 			if _, ok := nocountUID[online.UID]; !ok {
 				result = append(result, online)
 			}
@@ -96,15 +82,33 @@ func (c *Controller) reportUserTrafficTask(ctx context.Context) (err error) {
 				}
 			} else {
 				logSummary(log.WarnLevel, "submit data success, alive user: %d", len(data))
-				// len(result) counts one entry per (uid, ip) pair reported
-				// this cycle, i.e. total online devices - distinct from
-				// alive user above, which counts distinct users.
 				logSummary(log.WarnLevel, "device num: %d", len(result))
 			}
 		}
 	}
 
 	return nil
+}
+
+func (c *Controller) addOpenLinkDevices(devices []panel.OnlineUser) []panel.OnlineUser {
+	seen := make(map[panel.OnlineUser]struct{}, len(devices))
+	for _, d := range devices {
+		seen[d] = struct{}{}
+	}
+	for email, ips := range c.server.OpenLinkIPs(c.tag) {
+		uid, ok := c.limiter.UID(email)
+		if !ok {
+			continue
+		}
+		for _, ip := range ips {
+			d := panel.OnlineUser{UID: uid, IP: ip}
+			if _, ok := seen[d]; !ok {
+				seen[d] = struct{}{}
+				devices = append(devices, d)
+			}
+		}
+	}
+	return devices
 }
 
 func (c *Controller) reportBehaviorLogTask(ctx context.Context) (err error) {
@@ -137,7 +141,7 @@ func compareUserList(old, new []panel.UserInfo) (deleted, added, modified []pane
 		if o, ok := oldMap[u.Uuid]; !ok {
 			added = append(added, u)
 		} else {
-			if o.SpeedLimitBytes() != u.SpeedLimitBytes() || o.SpeedLimitUpBytes() != u.SpeedLimitUpBytes() || o.DeviceLimit != u.DeviceLimit {
+			if o.SpeedLimitBytes() != u.SpeedLimitBytes() || o.SpeedLimitUpBytes() != u.SpeedLimitUpBytes() || o.DeviceLimit != u.DeviceLimit || o.SpeedLimitGroup != u.SpeedLimitGroup {
 				modified = append(modified, u)
 			}
 			delete(oldMap, u.Uuid)

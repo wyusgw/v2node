@@ -7,13 +7,10 @@ import (
 	"github.com/xtls/xray-core/common/buf"
 )
 
-// Reader throttles data read from the client (upload) for inbounds that hand
-// the dispatcher a ready-made link, where there's no upload writer to wrap.
-// Waiting after each read applies backpressure, so the client is slowed to
-// the configured rate.
 type Reader struct {
 	reader  buf.TimeoutReader
 	limiter *DynamicBucket
+	pending buf.MultiBuffer
 }
 
 func NewRateLimitReader(reader buf.TimeoutReader, limiter *DynamicBucket) *Reader {
@@ -23,24 +20,41 @@ func NewRateLimitReader(reader buf.TimeoutReader, limiter *DynamicBucket) *Reade
 	}
 }
 
-func (r *Reader) wait(mb buf.MultiBuffer) {
-	if n := int64(mb.Len()); n > 0 {
-		if limiter := r.limiter.Get(); limiter != nil {
+func (r *Reader) take(mb buf.MultiBuffer, err error) (buf.MultiBuffer, error) {
+	limiter := r.limiter.Get()
+	if limiter == nil {
+		return mb, err
+	}
+	if err != nil {
+		if n := int64(mb.Len()); n > 0 {
 			limiter.Wait(n)
 		}
+		return mb, err
 	}
+	part, rest, size := splitRefill(mb, limiter.Capacity())
+	if len(rest) > 0 {
+		r.pending = rest
+	}
+	if size > 0 {
+		limiter.Wait(size)
+	}
+	return part, nil
 }
 
 func (r *Reader) ReadMultiBuffer() (buf.MultiBuffer, error) {
-	mb, err := r.reader.ReadMultiBuffer()
-	r.wait(mb)
-	return mb, err
+	if mb := r.pending; len(mb) > 0 {
+		r.pending = nil
+		return r.take(mb, nil)
+	}
+	return r.take(r.reader.ReadMultiBuffer())
 }
 
 func (r *Reader) ReadMultiBufferTimeout(timeout time.Duration) (buf.MultiBuffer, error) {
-	mb, err := r.reader.ReadMultiBufferTimeout(timeout)
-	r.wait(mb)
-	return mb, err
+	if mb := r.pending; len(mb) > 0 {
+		r.pending = nil
+		return r.take(mb, nil)
+	}
+	return r.take(r.reader.ReadMultiBufferTimeout(timeout))
 }
 
 func (r *Reader) Interrupt() {

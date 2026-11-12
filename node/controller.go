@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"sync/atomic"
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
@@ -21,6 +22,7 @@ type Controller struct {
 	tag                     string
 	limiter                 *limiter.Limiter
 	userList                []panel.UserInfo
+	ssRemoved               []ssRemovedUser // see ssusers.go
 	aliveMap                map[int]int
 	conf                    *conf.NodeConfig
 	info                    *panel.NodeInfo
@@ -28,10 +30,16 @@ type Controller struct {
 	userReportPeriodic      *task.Task
 	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
+	userVersionPeriodic     *task.Task
+	userVersion             string
+	userVersionSeen         bool
+	userVersionSkip         int
 	faultMu                 sync.Mutex
-	faults                  map[string]string
+	faults                  map[string]string // Key: source, value: message
 	faultReported           string
 	faultSynced             bool
+	// Read by the traffic report task while nodeInfoMonitor replaces userList.
+	userNum atomic.Int64
 }
 
 // NewController return a Node controller with default parameters.
@@ -75,6 +83,7 @@ func (c *Controller) start(x *core.V2Core) error {
 	if len(c.userList) == 0 {
 		return errors.New("add users error: not have any user")
 	}
+	c.userNum.Store(int64(len(c.userList)))
 	c.aliveMap, err = c.apiClient.GetUserAlive(context.Background())
 	if err != nil {
 		return fmt.Errorf("failed to get user alive list: %s", err)
@@ -95,9 +104,7 @@ func (c *Controller) start(x *core.V2Core) error {
 	if err != nil {
 		return fmt.Errorf("add new node error: %s", err)
 	}
-	// mieru's listener refuses to start with zero users, so AddNode already
-	// baked c.userList into its config at construction time; adding them
-	// again here would just fail as duplicates.
+	// mieru's users are already baked into its config; adding them again would fail.
 	if node.Type != "mieru" {
 		added, err := c.server.AddUsers(&core.AddUsersParams{
 			Tag:      c.tag,
@@ -109,15 +116,12 @@ func (c *Controller) start(x *core.V2Core) error {
 		}
 		log.WithField("tag", c.tag).Infof("Added %d new users", added)
 	} else {
-		// AddNode already baked c.userList into mieru's inbound config, so
-		// calling AddUsers here would just fail as a duplicate registration —
-		// but AddUsers is also the only thing that populates the uidMap
-		// GetUserTrafficSlice needs to report traffic back to the panel.
-		// Register it directly instead of skipping it entirely.
+		// AddUsers would fail for mieru's baked-in users, but traffic reporting needs the uidMap.
 		c.server.RegisterUidMap(c.tag, c.userList)
 		log.WithField("tag", c.tag).Infof("Added %d new users", len(c.userList))
 	}
 	c.info = node
+	c.restoreSSUsers()
 	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
 		behavior.AddRecorder(c.tag)
 	}
@@ -140,6 +144,9 @@ func (c *Controller) Close() error {
 	}
 	if c.renewCertPeriodic != nil {
 		c.renewCertPeriodic.Close()
+	}
+	if c.userVersionPeriodic != nil {
+		c.userVersionPeriodic.Close()
 	}
 	err := c.server.DelNode(c.tag)
 	if err != nil {

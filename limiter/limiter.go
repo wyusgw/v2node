@@ -3,6 +3,7 @@ package limiter
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,10 +17,6 @@ import (
 var limitLock sync.RWMutex
 var limiter map[string]*Limiter
 
-// claimDeviceTimeout bounds how long a brand-new device's first connection
-// on a node can be held up waiting on the panel's cross-node device-claim
-// check, so a slow/unreachable panel delays new connections by a fixed,
-// short amount rather than the client's full request timeout/retry budget.
 const claimDeviceTimeout = 3 * time.Second
 
 func Init() {
@@ -28,24 +25,38 @@ func Init() {
 
 type Limiter struct {
 	Nodetype      string         // Node type, e.g. "v2ray", "trojan", "shadowsocks"
-	SpeedLimit    int            // Node speed limit in Mbps
 	UserOnlineIP  *sync.Map      // Key: TagUUID, value: {Key: Ip, value: Uid}
 	UUIDtoUID     map[string]int // Key: UUID, value: Uid
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
-	SpeedLimiter  *sync.Map      // key: TagUUID, value: *rate.DuplexBucket
+	SpeedLimiter  *sync.Map      // key: BucketKey, value: *rate.DuplexBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
 	Kicked        *sync.Map      // Key: "Uid|Ip", value: unix time the kick block ends
 	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
 }
 
 type UserLimitInfo struct {
-	UID               int
-	SpeedLimit        int64 // download, bytes/s
-	SpeedLimitUp      int64 // upload, bytes/s
-	DeviceLimit       int
-	DynamicSpeedLimit int64 // bytes/s
-	ExpireTime        int64
-	OverLimit         bool
+	UID          int
+	SpeedLimit   int64 // download, bytes/s
+	SpeedLimitUp int64 // upload, bytes/s
+	BucketKey    string
+	DeviceLimit  int
+	OverLimit    bool
+}
+
+func BucketKey(tag string, u panel.UserInfo) string {
+	up := u.SpeedLimitUpBytes()
+	down := u.SpeedLimitBytes()
+	if up <= 0 && down <= 0 {
+		return ""
+	}
+	if u.SpeedLimitGroup > 0 {
+		return fmt.Sprintf("%s|#%d|%d|%d", tag, u.SpeedLimitGroup, up, down)
+	}
+	return format.UserTag(tag, u.Uuid)
+}
+
+func isSharedKey(tag string, key string) bool {
+	return strings.HasPrefix(key, tag+"|#")
 }
 
 func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList map[int]int, client *panel.Client) *Limiter {
@@ -65,6 +76,7 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		userLimit.UID = users[i].Id
 		userLimit.SpeedLimit = users[i].SpeedLimitBytes()
 		userLimit.SpeedLimitUp = users[i].SpeedLimitUpBytes()
+		userLimit.BucketKey = BucketKey(tag, users[i])
 		if users[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = users[i].DeviceLimit
 		}
@@ -95,7 +107,11 @@ func DeleteLimiter(tag string) {
 }
 
 func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel.UserInfo, modified []panel.UserInfo) {
+	prune := false
 	for i := range deleted {
+		if deleted[i].SpeedLimitGroup > 0 {
+			prune = true
+		}
 		l.UserLimitInfo.Delete(format.UserTag(tag, deleted[i].Uuid))
 		l.UserOnlineIP.Delete(format.UserTag(tag, deleted[i].Uuid))
 		l.SpeedLimiter.Delete(format.UserTag(tag, deleted[i].Uuid))
@@ -105,31 +121,32 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 	for i := range modified {
 		key := format.UserTag(tag, modified[i].Uuid)
 		deviceLimitChanged := false
+		bucketKey := BucketKey(tag, modified[i])
 		l.updateInfo(key, func(u *UserLimitInfo) {
+			if isSharedKey(tag, u.BucketKey) && u.BucketKey != bucketKey {
+				prune = true
+			}
 			u.SpeedLimit = modified[i].SpeedLimitBytes()
 			u.SpeedLimitUp = modified[i].SpeedLimitUpBytes()
+			u.BucketKey = bucketKey
 			deviceLimitChanged = u.DeviceLimit != modified[i].DeviceLimit
 			u.DeviceLimit = modified[i].DeviceLimit
 		})
 		if deviceLimitChanged {
-			// Devices already admitted this report cycle won't be
-			// re-checked against the limit until the cycle rolls over
-			// (up to one PushInterval away). Drop this user's
-			// per-cycle tracking now so the very next connection from
-			// every device re-earns admission under the new limit
-			// immediately instead of waiting for that rollover.
+			// Admitted devices aren't re-checked until the cycle ends: apply the new limit now.
 			l.clearOnlineState(key)
 		}
-		nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
-		up := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitUpBytes())
-		down := determineSpeedLimit(nodeLimit, modified[i].SpeedLimitBytes())
-		if up > 0 || down > 0 {
-			if v, ok := l.SpeedLimiter.Load(format.UserTag(tag, modified[i].Uuid)); ok {
-				d := v.(*rate.DuplexBucket)
-				d.Update(up, down)
+		up := modified[i].SpeedLimitUpBytes()
+		down := modified[i].SpeedLimitBytes()
+		if bucketKey == key {
+			if v, ok := l.SpeedLimiter.Load(key); ok {
+				v.(*rate.DuplexBucket).Update(up, down)
 			} else {
-				d := rate.NewDuplexBucket(up, down)
-				l.SpeedLimiter.Store(format.UserTag(tag, modified[i].Uuid), d)
+				// LoadOrStore: a bucket CheckLimit creates meanwhile must not be replaced.
+				v, loaded := l.SpeedLimiter.LoadOrStore(key, rate.NewDuplexBucket(up, down))
+				if loaded {
+					v.(*rate.DuplexBucket).Update(up, down)
+				}
 			}
 		} else {
 			l.SpeedLimiter.Delete(format.UserTag(tag, modified[i].Uuid))
@@ -141,6 +158,7 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		}
 		userLimit.SpeedLimit = added[i].SpeedLimitBytes()
 		userLimit.SpeedLimitUp = added[i].SpeedLimitUpBytes()
+		userLimit.BucketKey = BucketKey(tag, added[i])
 		if added[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = added[i].DeviceLimit
 		}
@@ -148,21 +166,30 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		l.UserLimitInfo.Store(format.UserTag(tag, added[i].Uuid), userLimit)
 		l.UUIDtoUID[added[i].Uuid] = added[i].Id
 	}
-}
-
-func (l *Limiter) UpdateDynamicSpeedLimit(tag, uuid string, limit int, expire time.Time) error {
-	if !l.updateInfo(format.UserTag(tag, uuid), func(u *UserLimitInfo) {
-		u.DynamicSpeedLimit = panel.MbpsToBytes(limit)
-		u.ExpireTime = expire.Unix()
-	}) {
-		return errors.New("not found")
+	if prune {
+		l.pruneSharedBuckets(tag)
 	}
-	return nil
 }
 
-// updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
-// copy. CheckLimit reads these entries without a lock on every new
-// connection, so they are never modified in place.
+func (l *Limiter) pruneSharedBuckets(tag string) {
+	used := make(map[string]struct{})
+	l.UserLimitInfo.Range(func(_, value interface{}) bool {
+		k := value.(*UserLimitInfo).BucketKey
+		if isSharedKey(tag, k) {
+			used[k] = struct{}{}
+		}
+		return true
+	})
+	l.SpeedLimiter.Range(func(key, _ interface{}) bool {
+		k := key.(string)
+		if _, ok := used[k]; !ok && isSharedKey(tag, k) {
+			l.SpeedLimiter.Delete(k)
+		}
+		return true
+	})
+}
+
+// CheckLimit reads these without a lock, so entries are copied, never modified in place.
 func (l *Limiter) updateInfo(key string, fn func(*UserLimitInfo)) bool {
 	for {
 		v, ok := l.UserLimitInfo.Load(key)
@@ -182,62 +209,25 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	// check if ipv4 mapped ipv6
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
-	// check and gen speed limit Bucket
-	nodeLimit := panel.MbpsToBytes(l.SpeedLimit)
-	var userLimit, userLimitUp int64
+	var down, up int64
+	var bucketKey string
 	deviceLimit := 0
 	var uid int
 	if v, ok := l.UserLimitInfo.Load(taguuid); ok {
 		u := v.(*UserLimitInfo)
 		deviceLimit = u.DeviceLimit
 		uid = u.UID
-		if u.ExpireTime < time.Now().Unix() && u.ExpireTime != 0 {
-			// The dynamic limit has expired: fall back to the user's own
-			// limits. The entry must stay - a missing entry means "unknown
-			// user" and every later connection would be rejected.
-			userLimit = u.SpeedLimit
-			userLimitUp = u.SpeedLimitUp
-			expired := *u
-			expired.DynamicSpeedLimit = 0
-			expired.ExpireTime = 0
-			// Lose to a concurrent update rather than overwrite it.
-			l.UserLimitInfo.CompareAndSwap(taguuid, u, &expired)
-		} else {
-			userLimit = determineSpeedLimit(u.SpeedLimit, u.DynamicSpeedLimit)
-			userLimitUp = determineSpeedLimit(u.SpeedLimitUp, u.DynamicSpeedLimit)
-		}
+		down = u.SpeedLimit
+		up = u.SpeedLimitUp
+		bucketKey = u.BucketKey
 	} else {
 		return nil, true
 	}
 	if l.isKicked(uid, ip) {
 		return nil, true
 	}
-	// Store online user for device limit. This runs for every inbound
-	// regardless of TCP/UDP: a device whose only traffic to this node is UDP
-	// (e.g. DNS-only, or a protocol other than hysteria2/tuic that never
-	// opens a TCP connection here) used to skip this whole block and so was
-	// never subject to the device limit at all.
-	//
-	// UserOnlineIP only dedups within the current report cycle (it's wiped
-	// by GetOnlineDevice() every cycle): the first connection this cycle
-	// from a given ip always goes through claimDevice, including for a
-	// device that's been continuously online for a while. That's
-	// deliberate, not just an optimization boundary - the panel's
-	// Redis-backed claim entry for that ip has to be re-confirmed at least
-	// once per cycle, or it ages out of the shared claim set (device_claim
-	// TTL) while the device is still connected, freeing its slot for a
-	// different device to claim and letting the user exceed deviceLimit in
-	// aggregate even though no single node ever saw too many at once.
-	//
-	// An ip is only ever written into UserOnlineIP after claimDevice has
-	// confirmed it (or immediately, when there's no limit to confirm against).
-	// GetOnlineDevice() - the periodic report to the panel - runs
-	// concurrently on its own timer and takes a live snapshot of this map.
-	// claimDevice's HTTP round trip can take up to claimDeviceTimeout, so
-	// writing the ip optimistically and deleting it again on rejection would
-	// leave a window where a report snapshot lands between the write and the
-	// delete and wrongly tells the panel a device is online right before
-	// it's rejected.
+	// UserOnlineIP is wiped every cycle so each ip reclaims its panel slot before it expires.
+	// Store only after the claim succeeds: GetOnlineDevice snapshots this map concurrently.
 	var ipMap *sync.Map
 	if v, ok := l.UserOnlineIP.Load(taguuid); ok {
 		ipMap = v.(*sync.Map)
@@ -261,16 +251,13 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	}
 	ipMap.Store(ip, uid)
 
-	down := determineSpeedLimit(nodeLimit, userLimit)
-	up := determineSpeedLimit(nodeLimit, userLimitUp)
-	if up > 0 || down > 0 {
-		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
+	if bucketKey != "" {
+		if v, ok := l.SpeedLimiter.Load(bucketKey); ok {
 			return v.(*rate.DuplexBucket), false
-		} else {
-			d := rate.NewDuplexBucket(up, down)
-			l.SpeedLimiter.Store(taguuid, d)
-			return d, false
 		}
+		// Concurrent first connections of a user must share one bucket, or each gets the full rate.
+		v, _ := l.SpeedLimiter.LoadOrStore(bucketKey, rate.NewDuplexBucket(up, down))
+		return v.(*rate.DuplexBucket), false
 	} else {
 		return nil, false
 	}
@@ -285,9 +272,6 @@ func (l *Limiter) isKicked(uid int, ip string) bool {
 	return ok && v.(int64) > time.Now().Unix()
 }
 
-// ApplyKicks blocks the ips the panel kicked offline until their block ends,
-// and drops them from this cycle's admitted set so they aren't reported as
-// online again. Expired blocks are cleared here as well.
 func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
 	now := time.Now().Unix()
 	l.Kicked.Range(func(key, value interface{}) bool {
@@ -318,19 +302,11 @@ func (l *Limiter) ApplyKicks(kicks map[int]map[string]int) {
 	})
 }
 
-// clearOnlineState drops taguuid's per-cycle admitted-IP set, so the next
-// connection from every device this user currently has open is treated as
-// new-this-cycle and goes through claimDevice again immediately.
 func (l *Limiter) clearOnlineState(taguuid string) {
 	l.UserOnlineIP.Delete(taguuid)
 }
 
-// claimDevice asks the panel to atomically check ip against uid's device
-// limit in its cross-node online-IP set and register it if admitted. It
-// fails closed: a nil client (gating not wired up) is treated as "no limit
-// configured" and allowed, but any request error (panel or Redis
-// unreachable, timeout, bad response) is treated as a reject rather than
-// letting an unverifiable device through.
+// A nil client means no limit configured; any request error rejects (fail-closed).
 func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLimit int) bool {
 	if l.Client == nil {
 		return true
@@ -342,6 +318,30 @@ func (l *Limiter) claimDevice(ctx context.Context, uid int, ip string, deviceLim
 		return false
 	}
 	return allow
+}
+
+func (l *Limiter) UID(taguuid string) (int, bool) {
+	v, ok := l.UserLimitInfo.Load(taguuid)
+	if !ok {
+		return 0, false
+	}
+	return v.(*UserLimitInfo).UID, true
+}
+
+// A failed request is not a refusal: it must not drop devices holding their slot.
+func (l *Limiter) Reclaim(ctx context.Context, taguuid string, ip string) bool {
+	v, ok := l.UserLimitInfo.Load(taguuid)
+	if !ok || l.Client == nil {
+		return false
+	}
+	u := v.(*UserLimitInfo)
+	if u.DeviceLimit <= 0 {
+		return false
+	}
+	cctx, cancel := context.WithTimeout(ctx, claimDeviceTimeout)
+	defer cancel()
+	allow, err := l.Client.ClaimDevice(cctx, u.UID, ip, u.DeviceLimit)
+	return err == nil && !allow
 }
 
 func (l *Limiter) GetOnlineDevice() (*[]panel.OnlineUser, error) {

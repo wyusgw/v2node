@@ -80,11 +80,6 @@ func (vc *V2Core) DelUsers(users []panel.UserInfo, tag string, _ *panel.NodeInfo
 	return nil
 }
 
-// CloseUserLinks drops every open connection of the given users so they
-// reconnect under the current limits. Used when a user's speed limit switches
-// between limited and unlimited: connections opened while unlimited carry no
-// rate limiter (and may be using zero-copy splice), and ones opened while
-// limited keep their bucket, so neither would otherwise pick up the change.
 func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -99,9 +94,26 @@ func (vc *V2Core) CloseUserLinks(tag string, users []panel.UserInfo) {
 	}
 }
 
-// CloseIPLinks drops the connections users have open from the given ips,
-// keyed by uuid. Used when the panel kicks a device offline, leaving the
-// user's other devices connected.
+func (vc *V2Core) OpenLinkIPs(tag string) map[string][]string {
+	vc.access.RLock()
+	defer vc.access.RUnlock()
+	if vc.dispatcher == nil {
+		return nil
+	}
+	prefix := tag + "|"
+	result := make(map[string][]string)
+	vc.dispatcher.LinkManagers.Range(func(key, value interface{}) bool {
+		email := key.(string)
+		if strings.HasPrefix(email, prefix) {
+			if ips := value.(*dispatcher.LinkManager).IPs(); len(ips) > 0 {
+				result[email] = ips
+			}
+		}
+		return true
+	})
+	return result
+}
+
 func (vc *V2Core) CloseIPLinks(tag string, links map[string][]string) {
 	vc.access.RLock()
 	defer vc.access.RUnlock()
@@ -135,9 +147,7 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 			up := traffic.UpCounter.Load()
 			down := traffic.DownCounter.Load()
 			if up+down > int64(mintraffic*1000) {
-				// Swap rather than Store(0): traffic counted by live
-				// connections between the Load above and here would
-				// otherwise be dropped instead of reported.
+				// Swap, not Store(0): traffic counted since the Load above would be lost.
 				up = traffic.UpCounter.Swap(0)
 				down = traffic.DownCounter.Swap(0)
 				if vc.users.uidMap[email] == 0 {
@@ -160,12 +170,6 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 	return nil, nil
 }
 
-// GetBehaviorSlice drains this tag's buffered behavior records (see
-// common/behavior) and resolves each one's dispatcher-session email back to
-// a panel UID via the same tag+uuid -> UID map GetUserTrafficSlice uses.
-// Records whose email isn't in the map (e.g. the user was removed between
-// connecting and this drain) are dropped rather than reported with a UID of
-// 0.
 func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	entries := behavior.Drain(tag)
 	if len(entries) == 0 {
@@ -197,23 +201,45 @@ func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
 	return records, nil
 }
 
-// RegisterUidMap populates the tag+uuid -> panel UID lookup that
-// GetUserTrafficSlice uses to resolve a traffic counter's email back to a
-// user. mieru's initial user set is baked into the inbound config at
-// construction time by AddNode, because its listener refuses to start
-// with zero users and adding them again afterward via AddUsers would
-// fail as a duplicate (see Controller.Start) — so unlike every other
-// protocol, mieru's initial users never go through AddUsers() and never
-// get a uidMap entry. Without one, GetUserTrafficSlice can't resolve
-// their traffic counters to a UID and silently drops them every
-// reporting cycle (uidMap[email] == 0 looks identical to "unknown user"),
-// so mieru's online users never get reported to the panel at all.
+// mieru's initial users skip AddUsers; without this their traffic would be dropped.
 func (v *V2Core) RegisterUidMap(tag string, users []panel.UserInfo) {
 	v.users.mapLock.Lock()
 	defer v.users.mapLock.Unlock()
 	for i := range users {
 		v.users.uidMap[format.UserTag(tag, users[i].Uuid)] = users[i].Id
 	}
+}
+
+type ssRetirer interface {
+	RetireUsers(context.Context, []*protocol.MemoryUser)
+}
+
+var _ ssRetirer = (*shadowsocks.Server)(nil)
+
+func (v *V2Core) RetireSSUsers(tag string, users []panel.UserInfo, cipher string) error {
+	v.access.RLock()
+	defer v.access.RUnlock()
+	if v.ihm == nil {
+		return errCoreClosed
+	}
+	man, err := v.getUserManager(tag)
+	if err != nil {
+		return fmt.Errorf("get user manager error: %s", err)
+	}
+	retirer, ok := man.(ssRetirer)
+	if !ok {
+		return fmt.Errorf("inbound %s cannot retire users", tag)
+	}
+	mUsers := make([]*protocol.MemoryUser, 0, len(users))
+	for i := range users {
+		mUser, err := buildSSUser(tag, &users[i], cipher, "").ToMemoryUser()
+		if err != nil {
+			return err
+		}
+		mUsers = append(mUsers, mUser)
+	}
+	retirer.RetireUsers(context.Background(), mUsers)
+	return nil
 }
 
 func (v *V2Core) AddUsers(p *AddUsersParams) (added int, err error) {
@@ -349,15 +375,7 @@ func buildSSUser(tag string, userInfo *panel.UserInfo, cypher string, serverKey 
 			Account: serial.ToTypedMessage(ssAccount),
 		}
 	} else {
-		var keyLength int
-		switch cypher {
-		case "2022-blake3-aes-128-gcm":
-			keyLength = 16
-		case "2022-blake3-aes-256-gcm":
-			keyLength = 32
-		case "2022-blake3-chacha20-poly1305":
-			keyLength = 32
-		}
+		keyLength := ss2022KeyLength(cypher)
 		ssAccount := &shadowsocks_2022.Account{
 			Key: base64.StdEncoding.EncodeToString([]byte(userInfo.Uuid[:keyLength])),
 		}
@@ -367,6 +385,13 @@ func buildSSUser(tag string, userInfo *panel.UserInfo, cypher string, serverKey 
 			Account: serial.ToTypedMessage(ssAccount),
 		}
 	}
+}
+
+func ss2022KeyLength(cipher string) int {
+	if cipher == "2022-blake3-aes-128-gcm" {
+		return 16
+	}
+	return 32
 }
 
 func getCipherFromString(c string) shadowsocks.CipherType {
@@ -448,9 +473,6 @@ func buildMieruUsers(tag string, userInfo []panel.UserInfo) (users []*protocol.U
 	return users
 }
 
-// buildMieruUser maps a panel user onto a mieru account. mieru keys on a user
-// name as well as a password, and the panel has only the one credential, so the
-// UUID fills both — the same way buildTuicUser handles TUIC's uuid/password pair.
 func buildMieruUser(tag string, userInfo *panel.UserInfo) (user *protocol.User) {
 	mieruAccount := &mieru.Account{
 		Username: userInfo.Uuid,

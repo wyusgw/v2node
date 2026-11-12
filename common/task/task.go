@@ -17,6 +17,7 @@ type Task struct {
 	Running  bool
 	ReloadCh chan struct{}
 	Stop     chan struct{}
+	trigger  chan struct{}
 }
 
 func (t *Task) Start(first bool) error {
@@ -27,6 +28,8 @@ func (t *Task) Start(first bool) error {
 	}
 	t.Running = true
 	t.Stop = make(chan struct{})
+	t.trigger = make(chan struct{}, 1)
+	trigger := t.trigger
 	t.Access.Unlock()
 	go func() {
 		timer := time.NewTimer(t.Interval)
@@ -42,6 +45,7 @@ func (t *Task) Start(first bool) error {
 			select {
 			case <-timer.C:
 				// continue
+			case <-trigger:
 			case <-t.Stop:
 				return
 			}
@@ -54,6 +58,19 @@ func (t *Task) Start(first bool) error {
 	}()
 
 	return nil
+}
+
+func (t *Task) Trigger() {
+	t.Access.RLock()
+	trigger := t.trigger
+	t.Access.RUnlock()
+	if trigger == nil {
+		return
+	}
+	select {
+	case trigger <- struct{}{}:
+	default:
+	}
 }
 
 func (t *Task) ExecuteWithTimeout() error {

@@ -11,12 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// setMemoryLimitFromCgroup gives the Go runtime a soft memory limit of 90%
-// of the cgroup's memory limit (systemd MemoryMax, docker --memory), unless
-// GOMEMLIMIT already sets one. Without it the GC lets the heap grow to twice
-// the live data before collecting, so a node near its limit, above all one
-// whose CPU is saturated and whose GC falls behind, gets OOM-killed instead
-// of collecting harder.
 func setMemoryLimitFromCgroup() {
 	if os.Getenv("GOMEMLIMIT") != "" {
 		return
@@ -30,9 +24,6 @@ func setMemoryLimitFromCgroup() {
 	log.Infof("cgroup memory limit %d MiB, Go soft memory limit set to %d MiB", limit>>20, soft>>20)
 }
 
-// cgroupMemoryLimit returns the memory limit of the cgroup this process is
-// in, trying cgroup v2 then v1. ok is false when there is no limit or it
-// can't be read.
 func cgroupMemoryLimit(procCgroup, root string) (limit int64, ok bool) {
 	f, err := os.Open(procCgroup)
 	if err != nil {
@@ -43,7 +34,6 @@ func cgroupMemoryLimit(procCgroup, root string) (limit int64, ok bool) {
 	haveV2 := false
 	s := bufio.NewScanner(f)
 	for s.Scan() {
-		// hierarchy-ID:controller-list:cgroup-path
 		parts := strings.SplitN(s.Text(), ":", 3)
 		if len(parts) != 3 {
 			continue
@@ -58,8 +48,7 @@ func cgroupMemoryLimit(procCgroup, root string) (limit int64, ok bool) {
 
 	var candidates []string
 	if v1Path != "" {
-		// In a container the path is the host's; the container sees its own
-		// cgroup at the root of the mount.
+		// In a container the path is the host's; the container sees its cgroup at the mount root.
 		candidates = append(candidates,
 			filepath.Join(root, "memory", v1Path, "memory.limit_in_bytes"),
 			filepath.Join(root, "memory", "memory.limit_in_bytes"))

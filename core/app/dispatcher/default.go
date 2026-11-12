@@ -148,9 +148,7 @@ func (*DefaultDispatcher) Start() error {
 // Close implements common.Closable.
 func (*DefaultDispatcher) Close() error { return nil }
 
-// getLinkManager returns email's LinkManager, creating it atomically so two
-// concurrent first connections can't each store their own and orphan one
-// (whose links CloseAll would then never reach).
+// Created atomically: two first connections must not each store one and orphan it.
 func (d *DefaultDispatcher) getLinkManager(email string) *LinkManager {
 	if v, ok := d.LinkManagers.Load(email); ok {
 		return v.(*LinkManager)
@@ -212,13 +210,12 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			manager:  lm,
 			downlink: []interface{}{downlinkReader, downlinkWriter},
 			ip:       strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
+			conn:     sessionInbound.Conn,
 		}
 		lm.AddLink(managedWriter, outboundLink.Reader)
 		inboundLink.Writer = managedWriter
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			// inboundLink.Writer is the uplink (client to target) and outboundLink.Writer the
-			// downlink, each with its own bucket
 			inboundLink.Writer = rate.NewRateLimitWriter(inboundLink.Writer, w.Up)
 			outboundLink.Writer = rate.NewRateLimitWriter(outboundLink.Writer, w.Down)
 		}
@@ -406,20 +403,16 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 			writer:  outbound.Writer,
 			manager: lm,
 			ip:      strings.TrimPrefix(sessionInbound.Source.Address.IP().String(), "::ffff:"),
+			conn:    sessionInbound.Conn,
 		}
 		outbound.Writer = managedWriter
-		// Closing or interrupting a client connection handed to DispatchLink may not
-		// disconnect it, so ManagedReader fails the next read once CloseAll has run
+		// Closing a DispatchLink client may not disconnect it, so fail the next read after CloseAll
 		outbound.Reader = NewManagedReader(outbound.Reader, managedWriter)
 		if w != nil {
 			sessionInbound.CanSpliceCopy = 3
-			// outbound.Writer is the downlink; the uplink has no writer to wrap, so client
-			// reads are rate limited instead
 			outbound.Writer = rate.NewRateLimitWriter(outbound.Writer, w.Down)
-			// mieru buffers tens of MB of client uploads per session, so limiting here only
-			// slows forwarding while the client keeps uploading at full speed. Limit reads on
-			// the raw TCP connection instead, falling back to reader limiting when there is
-			// none (e.g. over UDP)
+			// mieru buffers tens of MB per session: pace the raw TCP conn (reader limit on UDP).
+			// Known cost: new streams wait while a closed upload's backlog is read at the limit
 			if !(sessionInbound.Name == "mieru" && mieru.AttachIngressLimiter(sessionInbound.Source.NetAddr(), w.Up)) {
 				outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
 			}

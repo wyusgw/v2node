@@ -18,14 +18,7 @@ type DynamicBucket struct {
 	v atomic.Value // *ratelimit.Bucket
 }
 
-// fillInterval controls how often the bucket is refilled. Refilling the
-// whole per-second quota in one go (fillInterval = time.Second) lets a
-// connection burst at full, uncapped speed until that quota is drained,
-// then stall until the next tick - measured/instantaneous throughput
-// spikes well above the configured limit even though the 1s average is
-// correct. Refilling in smaller slices bounds the burst size to a
-// fraction of a second, so the observed speed tracks the configured
-// limit much more precisely.
+// Refill in small slices: a whole second's quota at once lets a connection burst, then stall.
 const fillInterval = 20 * time.Millisecond
 const ticksPerSecond = int64(time.Second / fillInterval)
 
@@ -54,15 +47,11 @@ func (d *DynamicBucket) Update(rate int64) {
 	d.v.Store(newBucket(rate))
 }
 
-// DuplexBucket holds separate upload and download buckets for one user, so
-// each direction gets the full configured rate instead of sharing it.
 type DuplexBucket struct {
 	Up   *DynamicBucket
 	Down *DynamicBucket
 }
 
-// NewDuplexBucket takes the upload and download rates in bytes/s; a rate of
-// 0 leaves that direction unlimited.
 func NewDuplexBucket(up, down int64) *DuplexBucket {
 	return &DuplexBucket{
 		Up:   NewDynamicBucket(up),
@@ -75,9 +64,6 @@ func (d *DuplexBucket) Update(up, down int64) {
 	d.Down.Update(down)
 }
 
-// Wait blocks until n bytes are allowed through, or returns at once when the
-// bucket is currently unlimited. It lets a DynamicBucket pace raw connection
-// reads outside the buf.Reader/Writer pipeline.
 func (d *DynamicBucket) Wait(n int64) {
 	if b := d.Get(); b != nil {
 		b.Wait(n)
@@ -101,8 +87,27 @@ func (w *Writer) Interrupt() {
 
 func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 	limiter := w.limiter.Get()
-	if limiter != nil {
-		limiter.Wait(int64(mb.Len()))
+	if limiter == nil {
+		return w.writer.WriteMultiBuffer(mb)
 	}
-	return w.writer.WriteMultiBuffer(mb)
+	for len(mb) > 0 {
+		var part buf.MultiBuffer
+		var size int64
+		part, mb, size = splitRefill(mb, limiter.Capacity())
+		limiter.Wait(size)
+		if err := w.writer.WriteMultiBuffer(part); err != nil {
+			buf.ReleaseMulti(mb)
+			return err
+		}
+	}
+	return nil
+}
+
+func splitRefill(mb buf.MultiBuffer, limit int64) (part, rest buf.MultiBuffer, size int64) {
+	n := 0
+	for n < len(mb) && (n == 0 || size+int64(mb[n].Len()) <= limit) {
+		size += int64(mb[n].Len())
+		n++
+	}
+	return mb[:n:n], mb[n:], size
 }
