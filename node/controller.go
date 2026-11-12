@@ -30,6 +30,10 @@ type Controller struct {
 	userReportPeriodic      *task.Task
 	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
+	userVersionPeriodic     *task.Task
+	userVersion             string
+	userVersionSeen         bool
+	userVersionSkip         int
 	faultMu                 sync.Mutex
 	faults                  map[string]string // Key: source, value: message
 	faultReported           string
@@ -144,6 +148,9 @@ func (c *Controller) Close() error {
 	}
 	if c.renewCertPeriodic != nil {
 		c.renewCertPeriodic.Close()
+	}
+	if c.userVersionPeriodic != nil {
+		c.userVersionPeriodic.Close()
 	}
 	err := c.server.DelNode(c.tag)
 	if err != nil {

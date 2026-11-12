@@ -222,3 +222,28 @@ func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimi
 	}
 	return result.Allow, nil
 }
+
+type userVersionBody struct {
+	Version string `json:"version"`
+}
+
+// GetUserVersion returns the panel's user version, which changes whenever a
+// user's speed limit changes. An empty version means none changed yet.
+func (c *Client) GetUserVersion(ctx context.Context) (string, error) {
+	const path = "/api/v1/server/UniProxy/userVersion"
+	r, err := c.client.R().
+		SetContext(ctx).
+		ForceContentType("application/json").
+		Get(path)
+	if err != nil {
+		return "", err
+	}
+	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
+		return "", fmt.Errorf("get user version: unexpected response")
+	}
+	var body userVersionBody
+	if err := json.Unmarshal(r.Body(), &body); err != nil {
+		return "", fmt.Errorf("unmarshal user version: %w", err)
+	}
+	return body.Version, nil
+}

@@ -33,6 +33,13 @@ func (c *Controller) startTasks(node *panel.NodeInfo) {
 	_ = c.nodeInfoMonitorPeriodic.Start(false)
 	log.WithField("tag", c.tag).Info("Start report node status")
 	_ = c.userReportPeriodic.Start(false)
+	c.userVersionPeriodic = &task.Task{
+		Name:     "userVersionMonitor",
+		Interval: userVersionInterval,
+		Execute:  c.userVersionMonitor,
+		ReloadCh: c.server.ReloadCh,
+	}
+	_ = c.userVersionPeriodic.Start(false)
 	// behavior logging is opt-in per node (behavior.AddRecorder was only
 	// called in Start() when the panel turned it on for this node), so only
 	// pay for a periodic report cycle when there's actually something to
@@ -62,6 +69,40 @@ func (c *Controller) startTasks(node *panel.NodeInfo) {
 			_ = c.renewCertPeriodic.Start(true)
 		}
 	}
+}
+
+const (
+	userVersionInterval = 3 * time.Second
+	// userVersionBackoff is the number of intervals skipped after a failed
+	// request, so a panel without the endpoint is asked about once a minute.
+	userVersionBackoff = 20
+)
+
+// userVersionMonitor pulls the user list at once when the panel's user version
+// changes, so speed limit changes don't wait for the pull interval.
+func (c *Controller) userVersionMonitor(ctx context.Context) error {
+	if c.userVersionSkip > 0 {
+		c.userVersionSkip--
+		return nil
+	}
+	cctx, cancel := context.WithTimeout(ctx, userVersionInterval)
+	defer cancel()
+	version, err := c.apiClient.GetUserVersion(cctx)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"tag": c.tag,
+			"err": err,
+		}).Debug("Get user version failed")
+		c.userVersionSkip = userVersionBackoff
+		return nil
+	}
+	if c.userVersionSeen && version != c.userVersion {
+		log.WithField("tag", c.tag).Info("User version changed, pull user list")
+		c.nodeInfoMonitorPeriodic.Trigger()
+	}
+	c.userVersion = version
+	c.userVersionSeen = true
+	return nil
 }
 
 func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
