@@ -10,6 +10,7 @@ import (
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/common/task"
 	vCore "github.com/wyusgw/v2node/core"
+	"github.com/wyusgw/v2node/limiter"
 )
 
 func (c *Controller) startTasks(node *panel.NodeInfo) {
@@ -133,23 +134,21 @@ func (c *Controller) nodeInfoMonitor(ctx context.Context) (err error) {
 		return nil
 	}
 	deleted, added, modified := compareUserList(c.userList, newU)
-	// Open connections don't pick up a new limiter when the speed limit switches
-	// between unlimited and limited, so they are dropped to make clients reconnect;
-	// changes between two limits are applied live by the bucket
+	// Open connections keep the bucket they started with, so they are dropped to
+	// make clients reconnect when a user moves to another bucket (unlimited and
+	// limited, own and shared limit, or another shared limit); changes of a
+	// user's own limit are applied live by the bucket
 	var speedToggled []panel.UserInfo
 	var deviceChanged []panel.UserInfo
 	if len(modified) > 0 {
-		limited := func(u panel.UserInfo) bool {
-			return u.SpeedLimitBytes() > 0 || u.SpeedLimitUpBytes() > 0
-		}
-		oldLimited := make(map[string]bool, len(c.userList))
+		oldBucket := make(map[string]string, len(c.userList))
 		oldDeviceLimit := make(map[string]int, len(c.userList))
 		for _, u := range c.userList {
-			oldLimited[u.Uuid] = limited(u)
+			oldBucket[u.Uuid] = limiter.BucketKey(c.tag, u)
 			oldDeviceLimit[u.Uuid] = u.DeviceLimit
 		}
 		for _, u := range modified {
-			if oldLimited[u.Uuid] != limited(u) {
+			if oldBucket[u.Uuid] != limiter.BucketKey(c.tag, u) {
 				speedToggled = append(speedToggled, u)
 			}
 			if oldDeviceLimit[u.Uuid] != u.DeviceLimit {

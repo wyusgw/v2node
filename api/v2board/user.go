@@ -30,6 +30,9 @@ type UserInfo struct {
 	// separate upload/download limits, and the one limit applies both ways.
 	SpeedLimitUpBps *int64 `json:"speed_limit_up_bps" msgpack:"speed_limit_up_bps"`
 	DeviceLimit     int    `json:"device_limit" msgpack:"device_limit"`
+	// SpeedLimitGroup is the plan id when the user shares one speed limit with
+	// the other users of that plan, 0 meaning the user is limited on their own.
+	SpeedLimitGroup int `json:"speed_limit_group" msgpack:"speed_limit_group"`
 }
 
 // SpeedLimitBytes returns the user's speed limit in bytes/s, 0 meaning unlimited.

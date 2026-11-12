@@ -3,6 +3,7 @@ package limiter
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"sync"
@@ -31,7 +32,7 @@ type Limiter struct {
 	UserOnlineIP  *sync.Map      // Key: TagUUID, value: {Key: Ip, value: Uid}
 	UUIDtoUID     map[string]int // Key: UUID, value: Uid
 	UserLimitInfo *sync.Map      // Key: TagUUID value: UserLimitInfo
-	SpeedLimiter  *sync.Map      // key: TagUUID, value: *rate.DuplexBucket
+	SpeedLimiter  *sync.Map      // key: BucketKey, value: *rate.DuplexBucket
 	AliveList     map[int]int    // Key: Uid, value: alive_ip
 	Kicked        *sync.Map      // Key: "Uid|Ip", value: unix time the kick block ends
 	Client        *panel.Client  // used to claim a device slot cross-node for genuinely new IPs
@@ -41,8 +42,28 @@ type UserLimitInfo struct {
 	UID          int
 	SpeedLimit   int64 // download, bytes/s
 	SpeedLimitUp int64 // upload, bytes/s
+	BucketKey    string
 	DeviceLimit  int
 	OverLimit    bool
+}
+
+// BucketKey returns the SpeedLimiter key of u, "" when u is unlimited. Users
+// sharing a plan's limit share one bucket per limit value, so a user given a
+// different limit than the rest of the plan isn't throttled by their bucket.
+func BucketKey(tag string, u panel.UserInfo) string {
+	up := u.SpeedLimitUpBytes()
+	down := u.SpeedLimitBytes()
+	if up <= 0 && down <= 0 {
+		return ""
+	}
+	if u.SpeedLimitGroup > 0 {
+		return fmt.Sprintf("%s|#%d|%d|%d", tag, u.SpeedLimitGroup, up, down)
+	}
+	return format.UserTag(tag, u.Uuid)
+}
+
+func isSharedKey(tag string, key string) bool {
+	return strings.HasPrefix(key, tag+"|#")
 }
 
 func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList map[int]int, client *panel.Client) *Limiter {
@@ -62,6 +83,7 @@ func AddLimiter(nodetype string, tag string, users []panel.UserInfo, aliveList m
 		userLimit.UID = users[i].Id
 		userLimit.SpeedLimit = users[i].SpeedLimitBytes()
 		userLimit.SpeedLimitUp = users[i].SpeedLimitUpBytes()
+		userLimit.BucketKey = BucketKey(tag, users[i])
 		if users[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = users[i].DeviceLimit
 		}
@@ -92,7 +114,11 @@ func DeleteLimiter(tag string) {
 }
 
 func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel.UserInfo, modified []panel.UserInfo) {
+	prune := false
 	for i := range deleted {
+		if deleted[i].SpeedLimitGroup > 0 {
+			prune = true
+		}
 		l.UserLimitInfo.Delete(format.UserTag(tag, deleted[i].Uuid))
 		l.UserOnlineIP.Delete(format.UserTag(tag, deleted[i].Uuid))
 		l.SpeedLimiter.Delete(format.UserTag(tag, deleted[i].Uuid))
@@ -102,9 +128,14 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 	for i := range modified {
 		key := format.UserTag(tag, modified[i].Uuid)
 		deviceLimitChanged := false
+		bucketKey := BucketKey(tag, modified[i])
 		l.updateInfo(key, func(u *UserLimitInfo) {
+			if isSharedKey(tag, u.BucketKey) && u.BucketKey != bucketKey {
+				prune = true
+			}
 			u.SpeedLimit = modified[i].SpeedLimitBytes()
 			u.SpeedLimitUp = modified[i].SpeedLimitUpBytes()
+			u.BucketKey = bucketKey
 			deviceLimitChanged = u.DeviceLimit != modified[i].DeviceLimit
 			u.DeviceLimit = modified[i].DeviceLimit
 		})
@@ -115,7 +146,7 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		}
 		up := modified[i].SpeedLimitUpBytes()
 		down := modified[i].SpeedLimitBytes()
-		if up > 0 || down > 0 {
+		if bucketKey == key {
 			if v, ok := l.SpeedLimiter.Load(key); ok {
 				v.(*rate.DuplexBucket).Update(up, down)
 			} else {
@@ -135,6 +166,7 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		}
 		userLimit.SpeedLimit = added[i].SpeedLimitBytes()
 		userLimit.SpeedLimitUp = added[i].SpeedLimitUpBytes()
+		userLimit.BucketKey = BucketKey(tag, added[i])
 		if added[i].DeviceLimit != 0 {
 			userLimit.DeviceLimit = added[i].DeviceLimit
 		}
@@ -142,6 +174,28 @@ func (l *Limiter) UpdateUser(tag string, added []panel.UserInfo, deleted []panel
 		l.UserLimitInfo.Store(format.UserTag(tag, added[i].Uuid), userLimit)
 		l.UUIDtoUID[added[i].Uuid] = added[i].Id
 	}
+	if prune {
+		l.pruneSharedBuckets(tag)
+	}
+}
+
+// pruneSharedBuckets drops the shared buckets no user of tag maps to anymore.
+func (l *Limiter) pruneSharedBuckets(tag string) {
+	used := make(map[string]struct{})
+	l.UserLimitInfo.Range(func(_, value interface{}) bool {
+		k := value.(*UserLimitInfo).BucketKey
+		if isSharedKey(tag, k) {
+			used[k] = struct{}{}
+		}
+		return true
+	})
+	l.SpeedLimiter.Range(func(key, _ interface{}) bool {
+		k := key.(string)
+		if _, ok := used[k]; !ok && isSharedKey(tag, k) {
+			l.SpeedLimiter.Delete(k)
+		}
+		return true
+	})
 }
 
 // updateInfo applies fn to a copy of key's UserLimitInfo and publishes the
@@ -167,6 +221,7 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	ip = strings.TrimPrefix(ip, "::ffff:")
 
 	var down, up int64
+	var bucketKey string
 	deviceLimit := 0
 	var uid int
 	if v, ok := l.UserLimitInfo.Load(taguuid); ok {
@@ -175,6 +230,7 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 		uid = u.UID
 		down = u.SpeedLimit
 		up = u.SpeedLimitUp
+		bucketKey = u.BucketKey
 	} else {
 		return nil, true
 	}
@@ -209,13 +265,13 @@ func (l *Limiter) CheckLimit(ctx context.Context, taguuid string, ip string) (Bu
 	}
 	ipMap.Store(ip, uid)
 
-	if up > 0 || down > 0 {
-		if v, ok := l.SpeedLimiter.Load(taguuid); ok {
+	if bucketKey != "" {
+		if v, ok := l.SpeedLimiter.Load(bucketKey); ok {
 			return v.(*rate.DuplexBucket), false
 		}
 		// Concurrent first connections of a user must share one bucket, or
 		// each would get the full rate.
-		v, _ := l.SpeedLimiter.LoadOrStore(taguuid, rate.NewDuplexBucket(up, down))
+		v, _ := l.SpeedLimiter.LoadOrStore(bucketKey, rate.NewDuplexBucket(up, down))
 		return v.(*rate.DuplexBucket), false
 	} else {
 		return nil, false
