@@ -159,6 +159,15 @@ func (d *DefaultDispatcher) getLinkManager(email string) *LinkManager {
 	return v.(*LinkManager)
 }
 
+// Created atomically: a counter stored over another loses the traffic of the links holding it.
+func (d *DefaultDispatcher) getTrafficCounter(tag string) *counter.TrafficCounter {
+	if v, ok := d.Counter.Load(tag); ok {
+		return v.(*counter.TrafficCounter)
+	}
+	v, _ := d.Counter.LoadOrStore(tag, counter.NewTrafficCounter())
+	return v.(*counter.TrafficCounter)
+}
+
 func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *transport.Link, *limiter.Limiter, *behaviorTracker, error) {
 	opt := pipe.OptionsFromContext(ctx)
 	uplinkReader, uplinkWriter := pipe.New(opt...)
@@ -219,15 +228,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 			inboundLink.Writer = rate.NewRateLimitWriter(inboundLink.Writer, w.Up)
 			outboundLink.Writer = rate.NewRateLimitWriter(outboundLink.Writer, w.Down)
 		}
-		var t *counter.TrafficCounter
-		if c, ok := d.Counter.Load(sessionInbound.Tag); !ok {
-			t = counter.NewTrafficCounter()
-			d.Counter.Store(sessionInbound.Tag, t)
-		} else {
-			t = c.(*counter.TrafficCounter)
-		}
-
-		ts := t.GetCounter(user.Email)
+		ts := d.getTrafficCounter(sessionInbound.Tag).GetCounter(user.Email)
 		upcounter := &counter.XrayTrafficCounter{V: &ts.UpCounter}
 		downcounter := &counter.XrayTrafficCounter{V: &ts.DownCounter}
 		inboundLink.Writer = &dispatcher.SizeStatWriter{
@@ -417,15 +418,7 @@ func (d *DefaultDispatcher) DispatchLink(ctx context.Context, destination net.De
 				outbound.Reader = rate.NewRateLimitReader(&buf.TimeoutWrapperReader{Reader: outbound.Reader}, w.Up)
 			}
 		}
-		var t *counter.TrafficCounter
-		if c, ok := d.Counter.Load(sessionInbound.Tag); !ok {
-			t = counter.NewTrafficCounter()
-			d.Counter.Store(sessionInbound.Tag, t)
-		} else {
-			t = c.(*counter.TrafficCounter)
-		}
-
-		ts := t.GetCounter(user.Email)
+		ts := d.getTrafficCounter(sessionInbound.Tag).GetCounter(user.Email)
 		downcounter := &counter.XrayTrafficCounter{V: &ts.DownCounter}
 		outbound.Reader = &CounterReader{
 			Reader:  &buf.TimeoutWrapperReader{Reader: outbound.Reader},
