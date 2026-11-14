@@ -108,7 +108,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.27.1'
+          go-version: '1.27.3'
 
       - name: Configure access to private module
         env:
@@ -190,12 +190,31 @@ jobs:
           file: ./v2node-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
           tag: ${{ github.ref }}
           file_glob: true
-      - name: Upload dev build to rolling beta release
-        uses: svenstaro/upload-release-action@v2
+      - name: Upload beta files to Artifacts
+        uses: actions/upload-artifact@v6
         if: ${{ github.ref == 'refs/heads/dev' }}
         with:
+          name: beta-${{ steps.get_filename.outputs.ASSET_NAME }}
+          path: ./v2node-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
+          retention-days: 1
+
+  # One job uploads: matrix jobs replacing assets in parallel make the paginated duplicate check skip existing ones
+  beta:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/dev' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download beta files
+        uses: actions/download-artifact@v7
+        with:
+          pattern: beta-*
+          path: beta
+          merge-multiple: true
+      - name: Upload dev build to rolling beta release
+        uses: svenstaro/upload-release-action@v2
+        with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./v2node-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
+          file: ./beta/*
           tag: beta
           file_glob: true
           overwrite: true

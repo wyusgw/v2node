@@ -77,6 +77,9 @@ func buildInbound(nodeInfo *panel.NodeInfo, tag string, users []panel.UserInfo) 
 	if err != nil {
 		return nil, err
 	}
+	if in.StreamSetting != nil && in.StreamSetting.SplitHTTPSettings != nil {
+		setUploadBuffer(in.StreamSetting.SplitHTTPSettings)
+	}
 	// Set network protocol
 	if len(nodeInfo.Common.NetworkSettings) > 0 {
 		n := &NetworkSettingsProxyProtocol{}
@@ -431,6 +434,15 @@ func buildShadowsocks(nodeInfo *panel.NodeInfo, inbound *coreConf.InboundDetourC
 		return fmt.Errorf("marshal shadowsocks settings error: %s", err)
 	}
 	return nil
+}
+
+// Xray's default of 30 lets one rate-limited packet-up upload hold about 30 MB on the node.
+const xhttpMaxBufferedPosts = 4
+
+func setUploadBuffer(c *coreConf.SplitHTTPConfig) {
+	if c.ScMaxBufferedPosts == 0 {
+		c.ScMaxBufferedPosts = xhttpMaxBufferedPosts
+	}
 }
 
 func setReceiveWindows(q *coreConf.QuicParamsConfig) {

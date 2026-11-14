@@ -99,6 +99,14 @@ func (w *Writer) WriteMultiBuffer(mb buf.MultiBuffer) error {
 			buf.ReleaseMulti(mb)
 			return err
 		}
+		// Re-read per part, or a limit changed mid-call only applies from the next call
+		limiter = w.limiter.Get()
+		if limiter == nil {
+			if len(mb) > 0 {
+				return w.writer.WriteMultiBuffer(mb)
+			}
+			return nil
+		}
 	}
 	return nil
 }
