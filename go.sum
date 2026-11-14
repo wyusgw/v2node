@@ -1720,8 +1720,8 @@ github.com/wyusgw/REALITY v0.0.0-20261102081311-25ea3c0fa255 h1:AH3PKkLLryc74Hk1
 github.com/wyusgw/REALITY v0.0.0-20261102081311-25ea3c0fa255/go.mod h1:ptlSkJ8k/7IDauNH0SA96JPOo+nYGLTv2Y3UMpwvAsY=
 github.com/wyusgw/mieru/v3 v3.35.1-0.20261108091727-02202bdaf1b3 h1:0dT8uTBr3+uPoLc7AXMWcumS8K6KvufSzb2ZgUJutnk=
 github.com/wyusgw/mieru/v3 v3.35.1-0.20261108091727-02202bdaf1b3/go.mod h1:zJBUCsi5rxyvHM8fjFf+GLaEl4OEjjBXr1s5F6Qd3hM=
-github.com/wyusgw/xray-core v0.0.0-20261114100602-0e1511bdc6d2 h1:o16kgR0m8Q/1MxChsrvKNVJGr7/yBV+Pqkjx/xZEEfs=
-github.com/wyusgw/xray-core v0.0.0-20261114100602-0e1511bdc6d2/go.mod h1:RNaw8NdeMsYLGNoX8onyTDGRishbwwOb4mLPs9v3p5o=
+github.com/wyusgw/xray-core v0.0.0-20261114125436-2f08bb2800fb h1:ZWxNxkIJMqJQhnWJZqTXdlLtjdjraT4NA7iuXYqJYz0=
+github.com/wyusgw/xray-core v0.0.0-20261114125436-2f08bb2800fb/go.mod h1:RNaw8NdeMsYLGNoX8onyTDGRishbwwOb4mLPs9v3p5o=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.0.2/go.mod h1:1WAq6h33pAW+iRreB34OORO2Nf7qel3VV3fjBj+hCSs=
 github.com/xdg-go/scram v1.1.2/go.mod h1:RT/sEzTbU5y00aCK8UOx6R7YryM0iF1N2MOmC3kKLN4=
