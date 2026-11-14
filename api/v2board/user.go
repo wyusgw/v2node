@@ -202,11 +202,11 @@ func (c *Client) ClaimDevice(ctx context.Context, uid int, ip string, deviceLimi
 		return false, err
 	}
 	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
-		return false, fmt.Errorf("claim device: unexpected response")
+		return false, fmt.Errorf("claim device error: unexpected response")
 	}
 	var result claimDeviceResult
 	if err := json.Unmarshal(r.Body(), &result); err != nil {
-		return false, fmt.Errorf("unmarshal claim device response: %w", err)
+		return false, fmt.Errorf("unmarshal claim device result error: %w", err)
 	}
 	return result.Allow, nil
 }
@@ -225,11 +225,11 @@ func (c *Client) GetUserVersion(ctx context.Context) (string, error) {
 		return "", err
 	}
 	if r == nil || r.RawResponse == nil || r.StatusCode() >= 399 {
-		return "", fmt.Errorf("get user version: unexpected response")
+		return "", fmt.Errorf("get user version error: unexpected response")
 	}
 	var body userVersionBody
 	if err := json.Unmarshal(r.Body(), &body); err != nil {
-		return "", fmt.Errorf("unmarshal user version: %w", err)
+		return "", fmt.Errorf("unmarshal user version error: %w", err)
 	}
 	return body.Version, nil
 }
