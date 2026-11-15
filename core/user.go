@@ -8,7 +8,6 @@ import (
 	"time"
 
 	panel "github.com/wyusgw/v2node/api/v2board"
-	"github.com/wyusgw/v2node/common/behavior"
 	"github.com/wyusgw/v2node/common/counter"
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/core/app/dispatcher"
@@ -168,37 +167,6 @@ func (vc *V2Core) GetUserTrafficSlice(tag string, mintraffic int) ([]panel.UserT
 		return trafficSlice, nil
 	}
 	return nil, nil
-}
-
-func (vc *V2Core) GetBehaviorSlice(tag string) ([]panel.BehaviorRecord, error) {
-	entries := behavior.Drain(tag)
-	if len(entries) == 0 {
-		return nil, nil
-	}
-	vc.users.mapLock.RLock()
-	defer vc.users.mapLock.RUnlock()
-	records := make([]panel.BehaviorRecord, 0, len(entries))
-	for _, e := range entries {
-		uid := vc.users.uidMap[e.Email]
-		if uid == 0 {
-			continue
-		}
-		records = append(records, panel.BehaviorRecord{
-			UID:         uid,
-			SourceIP:    e.SourceIP,
-			Domain:      e.Domain,
-			Port:        e.Port,
-			Network:     e.Network,
-			ConnectedAt: e.ConnectedAt.Unix(),
-			Duration:    int64(e.Duration.Seconds()),
-			Upload:      e.Upload,
-			Download:    e.Download,
-		})
-	}
-	if len(records) == 0 {
-		return nil, nil
-	}
-	return records, nil
 }
 
 // mieru's initial users skip AddUsers; without this their traffic would be dropped.

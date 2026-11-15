@@ -9,7 +9,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	panel "github.com/wyusgw/v2node/api/v2board"
-	"github.com/wyusgw/v2node/common/behavior"
 	"github.com/wyusgw/v2node/common/task"
 	"github.com/wyusgw/v2node/conf"
 	"github.com/wyusgw/v2node/core"
@@ -28,7 +27,6 @@ type Controller struct {
 	info                    *panel.NodeInfo
 	nodeInfoMonitorPeriodic *task.Task
 	userReportPeriodic      *task.Task
-	behaviorReportPeriodic  *task.Task
 	renewCertPeriodic       *task.Task
 	userVersionPeriodic     *task.Task
 	userVersion             string
@@ -122,9 +120,6 @@ func (c *Controller) start(x *core.V2Core) error {
 	}
 	c.info = node
 	c.restoreSSUsers()
-	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
-		behavior.AddRecorder(c.tag)
-	}
 	c.startTasks(node)
 	return nil
 }
@@ -132,15 +127,11 @@ func (c *Controller) start(x *core.V2Core) error {
 // Close implement the Close() function of the service interface
 func (c *Controller) Close() error {
 	limiter.DeleteLimiter(c.tag)
-	behavior.DeleteRecorder(c.tag)
 	if c.nodeInfoMonitorPeriodic != nil {
 		c.nodeInfoMonitorPeriodic.Close()
 	}
 	if c.userReportPeriodic != nil {
 		c.userReportPeriodic.Close()
-	}
-	if c.behaviorReportPeriodic != nil {
-		c.behaviorReportPeriodic.Close()
 	}
 	if c.renewCertPeriodic != nil {
 		c.renewCertPeriodic.Close()

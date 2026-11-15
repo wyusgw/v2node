@@ -111,26 +111,6 @@ func (c *Controller) addOpenLinkDevices(devices []panel.OnlineUser) []panel.Onli
 	return devices
 }
 
-func (c *Controller) reportBehaviorLogTask(ctx context.Context) (err error) {
-	records, _ := c.server.GetBehaviorSlice(c.tag)
-	if len(records) == 0 {
-		return nil
-	}
-	err = c.apiClient.ReportBehaviorLog(ctx, records)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"tag": c.tag,
-			"err": err,
-		}).Info("Report behavior log failed")
-		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
-			return err
-		}
-		return nil
-	}
-	log.WithField("tag", c.tag).Infof("Report %d behavior log records", len(records))
-	return nil
-}
-
 func compareUserList(old, new []panel.UserInfo) (deleted, added, modified []panel.UserInfo) {
 	oldMap := make(map[string]panel.UserInfo, len(old))
 	for _, u := range old {
