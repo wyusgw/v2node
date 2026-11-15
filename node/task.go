@@ -40,16 +40,6 @@ func (c *Controller) startTasks(node *panel.NodeInfo) {
 		ReloadCh: c.server.ReloadCh,
 	}
 	_ = c.userVersionPeriodic.Start(false)
-	if node.Common != nil && node.Common.BaseConfig != nil && node.Common.BaseConfig.BehaviorLogEnable {
-		c.behaviorReportPeriodic = &task.Task{
-			Name:     "reportBehaviorLogTask",
-			Interval: node.PushInterval,
-			Execute:  c.reportBehaviorLogTask,
-			ReloadCh: c.server.ReloadCh,
-		}
-		log.WithField("tag", c.tag).Info("Start report behavior log")
-		_ = c.behaviorReportPeriodic.Start(false)
-	}
 	if node.Security == panel.Tls {
 		switch c.info.Common.CertInfo.CertMode {
 		case "none", "", "file", "self", "remote":
