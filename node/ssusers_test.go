@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 )
 
 func uuids(removed []ssRemovedUser) map[string]string {
