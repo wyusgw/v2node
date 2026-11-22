@@ -11,7 +11,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 )
 
 // Shadowsocks (not 2022) tries every key per connection, so clients of removed users are

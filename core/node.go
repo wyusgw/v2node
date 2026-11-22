@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 )
 
 func (v *V2Core) AddNode(tag string, info *panel.NodeInfo, users []panel.UserInfo) error {

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 	coreConf "github.com/xtls/xray-core/infra/conf"
 )
 

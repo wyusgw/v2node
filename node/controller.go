@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 
 	log "github.com/sirupsen/logrus"
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 	"github.com/wyusgw/v2node/common/task"
 	"github.com/wyusgw/v2node/conf"
 	"github.com/wyusgw/v2node/core"

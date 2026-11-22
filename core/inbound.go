@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/core"

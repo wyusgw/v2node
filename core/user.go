@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	panel "github.com/wyusgw/v2node/api/v2board"
+	panel "github.com/wyusgw/v2node/api/panel"
 	"github.com/wyusgw/v2node/common/counter"
 	"github.com/wyusgw/v2node/common/format"
 	"github.com/wyusgw/v2node/core/app/dispatcher"

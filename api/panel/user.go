@@ -55,7 +55,7 @@ type AliveMap struct {
 	Kick  map[int]map[string]int `json:"kick"`  // Key: Uid, value: {Key: Ip, value: seconds blocked}
 }
 
-// GetUserList will pull user from v2board
+// GetUserList retrieves users from the configured panel.
 func (c *Client) GetUserList(ctx context.Context) ([]UserInfo, error) {
 	const path = "/api/v1/server/UniProxy/user"
 	r, err := c.client.R().
